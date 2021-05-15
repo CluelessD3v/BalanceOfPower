@@ -2,7 +2,38 @@
     "name": "BalanceOfPower",
     "tree": {
         "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "$ignoreUnknownInstances": false,
+            "$path": "src/Shared"
+        },
 
+        "ServerScriptService": {
+            "$className": "ServerScriptService",
+            "$ignoreUnknownInstances": false,
+            "$path": "src/Server"
+        },
+
+        "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "$ignoreUnknownInstances": false,
+            "StarterPlayerScripts": {
+                "$className": "StarterPlayerScripts",
+                "$path": "src/Client/PlayerScripts",
+                "$ignoreUnknownInstances": false
+            },
+            "StarterCharacterScripts": {
+                "$className": "StarterCharacterScripts",
+                "$path": "src/Client/CharacterScripts",
+                "$ignoreUnknownInstances": true
+            }
+        },
+
+        "ServerStorage": {
+            "$className": "ServerStorage",
+            "$path": "src/Storage",
+            "$ignoreUnknownInstances": false
+        },
 
         "Workspace": {
             "$className": "Workspace",
