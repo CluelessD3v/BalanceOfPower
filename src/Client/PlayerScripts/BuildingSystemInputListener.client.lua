@@ -30,11 +30,11 @@ UserInputService.InputBegan:Connect(function(anInput)
         local isInBuildmode = ToggleBuildMode(player)
         
         if isInBuildmode then
-            local buildingPreview = BuildableEntity.new(prototypeAsset)
-            buildingPreview.Model.Parent = workspace
-            playerValues.SelectedObject.Value = buildingPreview.Model
+            local buildingPreview = prototypeAsset:Clone()
+            buildingPreview.Parent = workspace
+            playerValues.SelectedObject.Value = buildingPreview
 
-            mouse.TargetFilter = buildingPreview.Model
+            mouse.TargetFilter = buildingPreview
 
             RunService.Heartbeat:Connect(function()
                 local target = mouse.Target
@@ -45,5 +45,15 @@ UserInputService.InputBegan:Connect(function(anInput)
             playerValues.SelectedObject.Value:Destroy()
         
         end
+    end
+end)
+
+
+UserInputService.InputBegan:Connect(function(anInput)
+    if anInput.UserInputType  == Enum.UserInputType.MouseButton1 and playerValues.IsInBuildMode.Value then
+        print("...")
+        local building = BuildableEntity.new(playerValues.SelectedObject.Value, mouse)
+        building.Model.Parent = workspace
+        print(building, "something")
     end
 end)

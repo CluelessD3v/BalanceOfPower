@@ -5,7 +5,6 @@ local CollectionService = game:GetService('CollectionService')
 local PreviewBuildingEvent = ReplicatedStorage.Events.PreviewBuildingEvent
 
 
-PreviewBuildingEvent.OnServerEvent:Connect(function(aPlayer: Player, aMouse: Mouse)
-
-
+PreviewBuildingEvent.OnServerEvent:Connect(function(player, aTarget: Instance)
+    player.Values.SelectedObject.Value = nil
 end)
