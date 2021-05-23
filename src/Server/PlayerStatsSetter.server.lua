@@ -11,12 +11,15 @@ end
 
 Players.PlayerAdded:Connect(function(aPlayer)
     
-    local states = NewValue("States", "Folder")
+    local values = NewValue("values", "Folder")
     
     local isInBuildMode = NewValue("IsInBuildMode", "BoolValue")
-    isInBuildMode.Parent = states
+    isInBuildMode.Parent = values
 
-    states.Parent = aPlayer
+    local selectedObject = NewValue("SelectedObject", "ObjectValue")
+    selectedObject.Parent = values
+    
+    values.Parent = aPlayer
 
     
 end)
