@@ -25,27 +25,25 @@ local mouse = Players.LocalPlayer:GetMouse()
 
 local prototypeAsset = CollectionService:GetTagged("Building")[1]
 
-
-
-
 UserInputService.InputBegan:Connect(function(anInput)
     if anInput.KeyCode == Enum.KeyCode.E then
         local isInBuildmode = ToggleBuildMode(player)
         
         if isInBuildmode then
             local buildingPreview = BuildableEntity.new(prototypeAsset)
-            local buildingPreviewModel = buildingPreview.Model
-            buildingPreviewModel.Parent = workspace
-            
-            mouse.TargetFilter = buildingPreview.Model
+            buildingPreview.Model.Parent = workspace
             playerValues.SelectedObject.Value = buildingPreview.Model
+
+            mouse.TargetFilter = buildingPreview.Model
 
             RunService.Heartbeat:Connect(function()
                 local target = mouse.Target
-                buildingPreviewModel:SetPrimaryPartCFrame(CFrame.new(target.Position + Vector3.new(0, 2, 0 )))
+                playerValues.SelectedObject.Value:SetPrimaryPartCFrame(CFrame.new(target.Position + Vector3.new(0, 2, 0 )))
             end)
+        
         else
             playerValues.SelectedObject.Value:Destroy()
+        
         end
     end
 end)
