@@ -18,8 +18,11 @@ local function StartBuildMode()
     p.Parent = workspace
     p.Size = Vector3.new(10, 2, 10)
     p.BrickColor = BrickColor.new("Really red")
+    
+    Mouse.TargetFilter = p
+
     RunService.Heartbeat:Connect(function()
-        p.Position = Mouse.Target.Position + Vector3.new(0, 2, 0)
+        p.Position = Mouse.Target.Position + Vector3.new(0, 1, 0)
     end)
 end
 
