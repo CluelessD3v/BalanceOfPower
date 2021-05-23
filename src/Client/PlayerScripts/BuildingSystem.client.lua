@@ -15,6 +15,6 @@ UserInputService.InputBegan:Connect(function(anInput)
 
     if anInput.KeyCode == Enum.KeyCode.E then
         isInBuildMode.Value = not isInBuildMode.Value
-        BuildingSystem.ActivateBuildMode(player, mouse)
+        BuildingSystem.ToggleBuildMode(player, mouse)
     end
 end)

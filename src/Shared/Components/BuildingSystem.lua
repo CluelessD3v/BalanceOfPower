@@ -4,7 +4,7 @@ local RunService = game:GetService('RunService')
 
 local BuildingSystem = {}
 
-function BuildingSystem.ActivateBuildMode(aPlayer: Player, aMouse: Mouse)
+function BuildingSystem.ToggleBuildMode(aPlayer: Player, aMouse: Mouse)
     local isInBuildMode = aPlayer.Values.IsInBuildMode
     local selectedObjc = aPlayer.Values.SelectedObject
 
