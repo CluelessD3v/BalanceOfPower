@@ -11,7 +11,7 @@ end
 
 Players.PlayerAdded:Connect(function(aPlayer)
     
-    local values = NewValue("values", "Folder")
+    local values = NewValue("Values", "Folder")
     
     local isInBuildMode = NewValue("IsInBuildMode", "BoolValue")
     isInBuildMode.Parent = values
