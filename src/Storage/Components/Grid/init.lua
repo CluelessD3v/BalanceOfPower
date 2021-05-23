@@ -7,7 +7,7 @@ local function NewCell(aSize)
     cell.Size = Vector3.new(aSize, 1, aSize)
     cell.Anchored = true
     cell.Material = Enum.Material.SmoothPlastic
-    cell.Parent = workspace
+    cell.Parent = workspace.Grid
     return cell
 end
 
