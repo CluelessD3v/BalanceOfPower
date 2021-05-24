@@ -1,18 +1,7 @@
-
+-- Utils
+local CustomInstance = require(game:GetService('ReplicatedStorage').Utilities.CustomInstance)
 
 local Grid = {} 
-
-local function NewCell(aClassName, aParent, aFieldMap)
-    local cell = Instance.new(aClassName)
-
-    for property, value in pairs (aFieldMap.Properties) do 
-        cell[property] = value
-    end
-
-    cell.Parent = aParent
-    return cell
-end
-
 
 Grid.__index = Grid
 
@@ -25,7 +14,7 @@ function Grid.new(aCollumnNumber: number, aRowNumber: number)
     for i = 1, self.Collums do
         for j = 1, self.Rows do
             
-            local cell = NewCell("Part",  workspace.Grid, 
+            local cell = CustomInstance.new("Part",  workspace.Grid, 
         {
             Properties = {
                 Size = Vector3.new(20, 2, 20),
