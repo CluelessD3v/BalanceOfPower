@@ -22,6 +22,8 @@ local player = Players.LocalPlayer
 local playerValues = player:WaitForChild("Values")
 local mouse = Players.LocalPlayer:GetMouse()
 
+local filteredEntities = {}
+
 
 local prototypeAsset = CollectionService:GetTagged("Building")[1]
 
@@ -51,9 +53,20 @@ end)
 
 UserInputService.InputBegan:Connect(function(anInput)
     if anInput.UserInputType  == Enum.UserInputType.MouseButton1 and playerValues.IsInBuildMode.Value then
-        print("...")
+        local target = mouse.Target        
+        if target:GetAttribute("IsOccupied") or target:GetAttribute("IsABuilding") then
+            print("Cell occupied")
+            return
+        end
+
+        print(target)
+
         local building = BuildableEntity.new(playerValues.SelectedObject.Value, mouse)
-        building.Model.Parent = workspace
-        print(building, "something")
+        building.Model.Parent = mouse.Target
+        mouse.Target:SetAttribute("IsOccupied", true)
+        building.PrimaryPart:SetAttribute("IsABuilding", true)
+        filteredEntities.Insert(building.Model)
     end
 end)
+
+mouse.TargetFilter(unpack(filteredEntities))
