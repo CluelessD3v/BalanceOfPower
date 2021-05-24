@@ -61,6 +61,7 @@ UserInputService.InputBegan:Connect(function(anInput)
 
         local building = BuildableEntity.new(playerValues.SelectedObject.Value, mouse)
         building.Model.Parent = mouse.Target
+        building.Model.Parent:SetAttribute("OccupiedBy", building.Model.Name)
         target:SetAttribute("IsOccupied", true)
         filteredEntities.Insert(building.Model)
     end
