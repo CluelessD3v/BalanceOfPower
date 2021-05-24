@@ -8,8 +8,8 @@ function CustomInstance.new(aClassName, aParent, aFieldMap)
     end
 
  
-    for atribute, value in pairs(aFieldMap.Attributes) do
-        newInstance:SetAttribute(atribute, value)
+    for attribute, value in pairs(aFieldMap.Attributes) do
+        newInstance:SetAttribute(attribute, value)
     end
 
     newInstance.Parent = aParent

@@ -22,6 +22,10 @@ function Grid.new(aCollumnNumber: number, aRowNumber: number)
                 Anchored = true,
                 CanCollide = true,
                 Name = i..","..j,    
+            },
+
+            Attributes = {
+                IsOccupied = false,   
             }
         }) 
         
