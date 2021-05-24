@@ -1,36 +1,32 @@
-
+-- Utils
+local CustomInstance = require(game:GetService('ReplicatedStorage').Utilities.CustomInstance)
 
 local Grid = {} 
-
-local function NewCell(aSize)
-    local cell = Instance.new("Part")
-    cell.Size = Vector3.new(aSize, 1, aSize)
-    cell.Anchored = true
-    cell.Material = Enum.Material.SmoothPlastic
-    cell.Parent = workspace.Grid
-    return cell
-end
 
 Grid.__index = Grid
 
 function Grid.new(aCollumnNumber: number, aRowNumber: number)
     local self = setmetatable({}, Grid)
     
-    -- Optional designer mode for fast testing or simply making grids on the fly, WILL OVERWRITE RUNNER!
-    self.DesginerMode = script:GetAttribute("DesignerMode")
-
-    if self.DesginerMode then
-        self.Collums = script:GetAttribute("Height")
-        self.Rows = script:GetAttribute("Width")
-    else
-        self.Collums = aCollumnNumber
-        self.Rows = aRowNumber
-    end
+    self.Collums = aCollumnNumber
+    self.Rows = aRowNumber
 
     for i = 1, self.Collums do
         for j = 1, self.Rows do
-            local cell = NewCell(20)
-            cell.Position = Vector3.new(i * cell.Size.X, 1, j * cell.Size.Z )
+            
+            local cell = CustomInstance.new("Part",  workspace.Grid, 
+        {
+            Properties = {
+                Size = Vector3.new(20, 2, 20),
+                BrickColor = BrickColor.new("Lime green"),
+                Anchored = true,
+                CanCollide = true,
+                Name = i..","..j,    
+            }
+        }) 
+        
+            cell.Position = Vector3.new(i * cell.Size.X, 1, j * cell.Size.Z ) -- set cell size
+
         end
 
     end
@@ -40,4 +36,5 @@ function Grid.new(aCollumnNumber: number, aRowNumber: number)
 end
     
 
+ 
 return Grid
