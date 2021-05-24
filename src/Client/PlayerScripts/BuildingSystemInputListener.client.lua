@@ -7,15 +7,7 @@ local RunService = game:GetService('RunService')
 
 -- modules
 local BuildableEntity = require(ReplicatedStorage.Components.BuildableEntity)
-
-
-local function ToggleBuildMode(aPlayer: Player)
-    local isInBuildMode = aPlayer.Values.IsInBuildMode
-    isInBuildMode.Value = not isInBuildMode.Value
-    return isInBuildMode.Value
-end
-
-
+local ConstructionService = require(ReplicatedStorage.Systems.ConstructionService)
 
 -- Data
 local player = Players.LocalPlayer
@@ -29,13 +21,12 @@ local prototypeAsset = CollectionService:GetTagged("Building")[1]
 
 UserInputService.InputBegan:Connect(function(anInput)
     if anInput.KeyCode == Enum.KeyCode.E then
-        local isInBuildmode = ToggleBuildMode(player)
+        local isInBuildmode = ConstructionService.ToggleBuildMode(player)
         
         if isInBuildmode then
-            local buildingPreview = prototypeAsset:Clone()
-            buildingPreview.Parent = workspace
+            local buildingPreview =  ConstructionService.GetPreview(prototypeAsset)
+            
             playerValues.SelectedObject.Value = buildingPreview
-
             mouse.TargetFilter = buildingPreview
 
             RunService.Heartbeat:Connect(function()
@@ -45,15 +36,16 @@ UserInputService.InputBegan:Connect(function(anInput)
         
         else
             playerValues.SelectedObject.Value:Destroy()
-        
+            playerValues.SelectedObject.Value = nil
         end
     end
 end)
 
-
+--//TODO Check if this code can be simplified in a way that makes sensae
 UserInputService.InputBegan:Connect(function(anInput)
     if anInput.UserInputType  == Enum.UserInputType.MouseButton1 and playerValues.IsInBuildMode.Value then
-        local target = mouse.Target        
+        local target = mouse.Target
+        
         if target:GetAttribute("IsOccupied") or not target:GetAttribute("IsACell") then
             print("Cell occupied or not a cell")
             return
