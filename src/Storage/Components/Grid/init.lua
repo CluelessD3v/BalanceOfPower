@@ -25,7 +25,8 @@ function Grid.new(aCollumnNumber: number, aRowNumber: number)
             },
 
             Attributes = {
-                IsOccupied = false,   
+                IsOccupied = false,
+                IsACell = true   
             }
         }) 
         

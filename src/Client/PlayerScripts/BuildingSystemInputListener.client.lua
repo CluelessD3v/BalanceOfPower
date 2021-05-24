@@ -54,17 +54,14 @@ end)
 UserInputService.InputBegan:Connect(function(anInput)
     if anInput.UserInputType  == Enum.UserInputType.MouseButton1 and playerValues.IsInBuildMode.Value then
         local target = mouse.Target        
-        if target:GetAttribute("IsOccupied") or target:GetAttribute("IsABuilding") then
-            print("Cell occupied")
+        if target:GetAttribute("IsOccupied") or not target:GetAttribute("IsACell") then
+            print("Cell occupied or not a cell")
             return
         end
 
-        print(target)
-
         local building = BuildableEntity.new(playerValues.SelectedObject.Value, mouse)
         building.Model.Parent = mouse.Target
-        mouse.Target:SetAttribute("IsOccupied", true)
-        building.PrimaryPart:SetAttribute("IsABuilding", true)
+        target:SetAttribute("IsOccupied", true)
         filteredEntities.Insert(building.Model)
     end
 end)
