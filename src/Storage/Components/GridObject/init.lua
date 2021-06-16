@@ -14,7 +14,7 @@ function GridObject.new(theGridSize, theTileSize)
             tile.Anchored = true
             tile.BrickColor = BrickColor.new("Really red")
 
-            tile.Parent = workspace
+            tile.Parent = workspace.Grid
         end
     end
 
