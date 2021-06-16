@@ -1,3 +1,8 @@
+--[[
+This module is public and was made by roblox user Diegnified
+link: https://devforum.roblox.com/t/perlin-noise-library-module-4d-and-octaves/600192
+--]]
+
 local PerlinNoiseAPI = {}
 
 function PerlinNoiseAPI.new(coords,amplitude,octaves,persistence)
