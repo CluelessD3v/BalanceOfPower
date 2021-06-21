@@ -1,7 +1,6 @@
-local Map = require(game:GetService('ServerStorage').Components.MapGenerator)
-local NormalizeValue = require(game:GetService('ReplicatedStorage').Utilities.NormalizeValue)
+local MapGenerator = require(game:GetService('ServerStorage').Components.MapGenerator)
+local TerrainGenerator = require(game:GetService('ServerStorage').Components.TerrainGenerator)
 local CollectionService = game:GetService('CollectionService')
-
 
 local mapGenFieldMap  = {}
 
@@ -18,8 +17,8 @@ mapGenFieldMap.FallOffOffset = math.clamp(script:GetAttribute("FallOffOffset"), 
 mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)
 
 if script:GetAttribute("IsMapGenerationRandom") then 
-    mapGenFieldMap.FallOffOffset = math.random(5,9) 
-    mapGenFieldMap.FallOffPower = math.random(5,9)
+    mapGenFieldMap.FallOffOffset = math.random(6,9) 
+    mapGenFieldMap.FallOffPower = math.random(6,9)
 
     mapGenFieldMap.Amplitude = math.random(20, 30)
     mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .515 )
@@ -37,8 +36,15 @@ end
 
 
 
+
+local map = MapGenerator.new(mapGenFieldMap)
+print("Generating Forest")
+wait(3)
+
+if map.Generated then
+    TerrainGenerator.GenerateForest(CollectionService:GetTagged("Forest"))
+end
 --print(mapGenFieldMap)
-local map = Map.new(mapGenFieldMap)
 --print(map)
 --print(#CollectionService:GetTagged("Tile"))
 

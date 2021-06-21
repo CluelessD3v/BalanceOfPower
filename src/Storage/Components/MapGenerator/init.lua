@@ -13,15 +13,15 @@ local function SetTileIdentificators(aTile: Instance, aValue: number)
         CollectionService:AddTag(aTile, "Sea")
         aTile:SetAttribute("TerrainType", "Sea")
 
-    elseif  aValue < .50 then
+    elseif  aValue < .48 then
         CollectionService:AddTag(aTile, "Littoral")
         aTile:SetAttribute("TerrainType", "Littoral")
         
-    elseif  aValue < .56 then
+    elseif  aValue < .53 then
         CollectionService:AddTag(aTile, "Beach")
         aTile:SetAttribute("TerrainType", "Beach")
 
-    elseif  aValue < .76 then
+    elseif  aValue < .82 then
         CollectionService:AddTag(aTile, "Plains")
         aTile:SetAttribute("TerrainType", "Plains")
 
@@ -43,6 +43,7 @@ function MapGenerator.new(aFieldMap)
     local self = setmetatable({}, MapGenerator)
     self.MapSize = aFieldMap.MapSize
     self.TileSize = aFieldMap.TileSize
+    self.Generated = false
     
 
     local seed = aFieldMap.Seed
@@ -95,7 +96,7 @@ function MapGenerator.new(aFieldMap)
 
 
     
-
+    self.Generated = true
     return self
 end
 
