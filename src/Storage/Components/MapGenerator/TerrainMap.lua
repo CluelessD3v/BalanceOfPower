@@ -46,9 +46,6 @@ local function SetTerrain(aTile: Instance)
         aTile.BrickColor = grassLand
     elseif CollectionService:HasTag(aTile, "Forest") then
         aTile.BrickColor = forest
-    elseif CollectionService:HasTag(aTile, "Hill") then
-        aTile.BrickColor = hill
-        aTile.CFrame = CFrame.new(aTile.Position + Vector3.new(0, 3, 0))
     elseif CollectionService:HasTag(aTile, "Mountain") then
         aTile.BrickColor = mountain
         aTile.CFrame = CFrame.new(aTile.Position + Vector3.new(0, 6, 0))
