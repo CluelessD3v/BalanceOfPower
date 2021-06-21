@@ -3,12 +3,37 @@ local CollectionService = game:GetService('CollectionService')
 
 local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
-local TerrainMap = require(script.TerrainMap)
+local ColorMap = require(script.ColorMap)
 
 
 local CustomInstance = require(ReplicatedStorage.Utilities.CustomInstance)
 
-local Lerp = require(ReplicatedStorage.Utilities.RbxCookbook.Lerp)
+local function SetTileIdentificators(aTile: Instance, aValue: number)
+    if aValue < 0.1 then 
+        CollectionService:AddTag(aTile, "Sea")
+        aTile:SetAttribute("TerrainType", "Sea")
+
+    elseif  aValue < .50 then
+        CollectionService:AddTag(aTile, "Littoral")
+        aTile:SetAttribute("TerrainType", "Littoral")
+        
+    elseif  aValue < .56 then
+        CollectionService:AddTag(aTile, "Beach")
+        aTile:SetAttribute("TerrainType", "Beach")
+
+    elseif  aValue < .76 then
+        CollectionService:AddTag(aTile, "Plains")
+        aTile:SetAttribute("TerrainType", "Plains")
+
+    elseif  aValue < .9999 then
+        CollectionService:AddTag(aTile, "Forest")
+        aTile:SetAttribute("TerrainType", "Forest")
+
+    elseif  aValue <= 1 then
+        CollectionService:AddTag(aTile, "Mountain")
+        aTile:SetAttribute("TerrainType", "Mountain")
+    end
+end
 
 
 local MapGenerator = {} 
@@ -31,17 +56,13 @@ function MapGenerator.new(aFieldMap)
 
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
+            -- Noise and fall off calculations
             local noiseResult = PerlinNoise.new({(i + seed) * scale, (j + seed) * scale}, amplitude, octaves, persistence)
+            local fallOff = FallOffMap.Generate(i, j , self.MapSize)        
+            noiseResult -= FallOffMap.Transform(fallOff, fallOffOffset, fallOffPower) -- substract the fall off result from the noise result
+            noiseResult = math.clamp(noiseResult + 0.5 , 0, 1) -- 2D perlin noise generates values from - .5 to + .5, added .5 to get full range
 
-            local widthFallOff = math.abs(i/self.MapSize * 2 - 1)
-            local lengthFallOff = math.abs(j/self.MapSize * 2 - 1)
-            local result = math.max(widthFallOff, lengthFallOff)
-            local fallOff = FallOffMap(result , fallOffOffset, fallOffPower)
-
-            
-            noiseResult -= fallOff
-            noiseResult = math.clamp(noiseResult + 0.5 , 0, 1)
-
+            -- Create tile //TODO CHECK IF I SHOULD ObjectIfy TILES
             local tile = CustomInstance.new("Part", {
                 Properties = {
                     Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize),   
@@ -49,26 +70,25 @@ function MapGenerator.new(aFieldMap)
                     Anchored = true,
                     Material = Enum.Material.SmoothPlastic,
                     BrickColor = BrickColor.new("Really red"),
-                    Name = i ..",".. j
+                    Name = i..","..j
                 },
-
                 Attributes = {
-                    NoiseValue = noiseResult
+                    NoiseValue = noiseResult,
+                    Xpos = i,
+                    Ypos = j,
+                    TerrainType = "NoTerrain"
                 },
-
-                
-
                 Tags = {
                     "Tile",
                 }
             })
 
 
+            --//TODO way to be able to visualize different maps simultaneously.
             --tile.Color = Color3.new(noiseResult, noiseResult, noiseResult)
             --tile.Color = Color3.new(fallOff, fallOff, fallOff)
-            TerrainMap.ApplyTerrain(tile, noiseResult)
-        
-            
+            SetTileIdentificators(tile, noiseResult)
+            ColorMap.SetTerrainColor(tile) -- applying terrain
             tile.Parent = workspace.Map
         end
     end
@@ -78,9 +98,6 @@ function MapGenerator.new(aFieldMap)
 
     return self
 end
-
-
-
 
 
 return MapGenerator

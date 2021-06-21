@@ -5,7 +5,7 @@ local CollectionService = game:GetService('CollectionService')
 
 local mapGenFieldMap  = {}
 
-mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 1, 512)
+mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 32, 512)
 mapGenFieldMap.TileSize = math.clamp(script:GetAttribute("TileSize"), 1, 100)
 mapGenFieldMap.Seed = math.clamp(script:GetAttribute("Seed"), -32768, 32768)
 
@@ -15,7 +15,7 @@ mapGenFieldMap.Octaves = math.clamp(script:GetAttribute("Octaves"), 1, 100)
 mapGenFieldMap.Persistence = math.clamp(script:GetAttribute("Persistence"), .01, 1)
 
 mapGenFieldMap.FallOffOffset = math.clamp(script:GetAttribute("FallOffOffset"), 1, 12)
-mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)--]]
+mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)
 
 if script:GetAttribute("IsMapGenerationRandom") then 
     mapGenFieldMap.FallOffOffset = math.random(5,9) 
@@ -25,6 +25,10 @@ if script:GetAttribute("IsMapGenerationRandom") then
     mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .515 )
     mapGenFieldMap.Octaves = math.random(6, 9)
     mapGenFieldMap.Scale =Random.new():NextNumber(.46, .52)
+
+    for attribute, value in pairs(mapGenFieldMap) do
+        script:SetAttribute(attribute, value)
+    end
 end
 
 if script:GetAttribute("Seed") == 0 then
@@ -33,9 +37,8 @@ end
 
 
 
-print(mapGenFieldMap)
+--print(mapGenFieldMap)
 local map = Map.new(mapGenFieldMap)
-print(map)
-print(#CollectionService:GetTagged("Tile"))
-print(#CollectionService:GetTagged("UseableTerrain"))
+--print(map)
+--print(#CollectionService:GetTagged("Tile"))
 
