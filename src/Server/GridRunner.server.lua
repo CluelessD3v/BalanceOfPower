@@ -1,10 +1,11 @@
 local Map = require(game:GetService('ServerStorage').Components.MapGenerator)
 local NormalizeValue = require(game:GetService('ReplicatedStorage').Utilities.NormalizeValue)
+local CollectionService = game:GetService('CollectionService')
 
 
 local mapGenFieldMap  = {}
 
-mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 32, 512)
+mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 1, 512)
 mapGenFieldMap.TileSize = math.clamp(script:GetAttribute("TileSize"), 1, 100)
 mapGenFieldMap.Seed = math.clamp(script:GetAttribute("Seed"), -32768, 32768)
 
@@ -21,9 +22,9 @@ if script:GetAttribute("IsMapGenerationRandom") then
     mapGenFieldMap.FallOffPower = math.random(5,9)
 
     mapGenFieldMap.Amplitude = math.random(20, 30)
-    mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .52 )
+    mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .515 )
     mapGenFieldMap.Octaves = math.random(6, 9)
-    mapGenFieldMap.Scale =Random.new():NextNumber(.46, .53)
+    mapGenFieldMap.Scale =Random.new():NextNumber(.46, .52)
 end
 
 if script:GetAttribute("Seed") == 0 then
@@ -33,7 +34,8 @@ end
 
 
 print(mapGenFieldMap)
-
-Map.new(mapGenFieldMap)
-
+local map = Map.new(mapGenFieldMap)
+print(map)
+print(#CollectionService:GetTagged("Tile"))
+print(#CollectionService:GetTagged("UseableTerrain"))
 
