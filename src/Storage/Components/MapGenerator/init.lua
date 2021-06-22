@@ -8,6 +8,7 @@ local ColorMap = require(script.ColorMap)
 
 local CustomInstance = require(ReplicatedStorage.Utilities.CustomInstance)
 
+-- Sets the attritube and tag of the tile depending of given noise value
 local function SetTileIdentificators(aTile: Instance, aValue: number)
     if aValue < 0.1 then 
         CollectionService:AddTag(aTile, "Sea")
@@ -21,7 +22,7 @@ local function SetTileIdentificators(aTile: Instance, aValue: number)
         CollectionService:AddTag(aTile, "Beach")
         aTile:SetAttribute("TerrainType", "Beach")
 
-    elseif  aValue < .82 then
+    elseif  aValue < .8 then
         CollectionService:AddTag(aTile, "Plains")
         aTile:SetAttribute("TerrainType", "Plains")
 

@@ -4,7 +4,7 @@ local CollectionService = game:GetService('CollectionService')
 
 local mapGenFieldMap  = {}
 
-mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 32, 512)
+mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 4, 512)
 mapGenFieldMap.TileSize = math.clamp(script:GetAttribute("TileSize"), 1, 100)
 mapGenFieldMap.Seed = math.clamp(script:GetAttribute("Seed"), -32768, 32768)
 
@@ -15,6 +15,11 @@ mapGenFieldMap.Persistence = math.clamp(script:GetAttribute("Persistence"), .01,
 
 mapGenFieldMap.FallOffOffset = math.clamp(script:GetAttribute("FallOffOffset"), 1, 12)
 mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)
+
+if script:GetAttribute("Seed") == 0 then
+    mapGenFieldMap.Seed = math.random(-32768, 32768)
+end
+
 
 if script:GetAttribute("IsMapGenerationRandom") then 
     mapGenFieldMap.FallOffOffset = math.random(6,9) 
@@ -30,16 +35,14 @@ if script:GetAttribute("IsMapGenerationRandom") then
     end
 end
 
-if script:GetAttribute("Seed") == 0 then
-    mapGenFieldMap.Seed = math.random(-32768, 32768)
-end
+
 
 
 
 
 local map = MapGenerator.new(mapGenFieldMap)
 print("Generating Forest")
-wait(3)
+wait(1)
 
 if map.Generated then
     TerrainGenerator.GenerateForest(CollectionService:GetTagged("Forest"))
