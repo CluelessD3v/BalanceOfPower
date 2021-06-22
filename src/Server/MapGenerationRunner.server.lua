@@ -43,10 +43,13 @@ end
 local map = MapGenerator.new(mapGenFieldMap)
 print("Generating Forest")
 wait(1)
-
 if map.Generated then
     TerrainGenerator.GenerateForest(CollectionService:GetTagged("Forest"))
 end
+
+wait(1)
+
+TerrainGenerator.GenerateGrass(CollectionService:GetTagged("Plain"))
 --print(mapGenFieldMap)
 --print(map)
 --print(#CollectionService:GetTagged("Tile"))

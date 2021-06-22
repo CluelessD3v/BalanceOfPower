@@ -22,11 +22,11 @@ local function SetTileIdentificators(aTile: Instance, aValue: number)
         CollectionService:AddTag(aTile, "Beach")
         aTile:SetAttribute("TerrainType", "Beach")
 
-    elseif  aValue < .8 then
-        CollectionService:AddTag(aTile, "Plains")
-        aTile:SetAttribute("TerrainType", "Plains")
+    elseif  aValue < .75 then
+        CollectionService:AddTag(aTile, "Plain")
+        aTile:SetAttribute("TerrainType", "Plain")
 
-    elseif  aValue < .9999 then
+    elseif  aValue < .98 then
         CollectionService:AddTag(aTile, "Forest")
         aTile:SetAttribute("TerrainType", "Forest")
 

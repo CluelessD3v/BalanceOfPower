@@ -5,7 +5,7 @@ local ColorMap = {}
 local sea = BrickColor.new("Bright blue")
 local littoral= BrickColor.new("Cyan")
 local beach = BrickColor.new("Daisy orange")
-local grassLand = BrickColor.new("Shamrock")
+local grassLand = BrickColor.new("Bright green")
 local forest = BrickColor.new("Forest green")
 local hill = BrickColor.new("Medium stone grey") 
 local mountain = BrickColor.new("Dark stone grey")
@@ -22,7 +22,7 @@ function ColorMap.SetTerrainColor(aTile: Instance)
     elseif CollectionService:HasTag(aTile, "Beach") then
 
         aTile.BrickColor = beach
-    elseif CollectionService:HasTag(aTile, "Plains") then
+    elseif CollectionService:HasTag(aTile, "Plain") then
         aTile.BrickColor = grassLand
     
     elseif CollectionService:HasTag(aTile, "Forest") then
