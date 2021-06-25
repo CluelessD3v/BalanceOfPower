@@ -21,7 +21,7 @@ function TerrainGenerator.GenerateForest(theForestTilesList: table)
                     local yOffset =  tile.Size.Y/2 + pine.Size.Y/2
                     pine.Position = tile.Position + Vector3.new(xOffset, yOffset, zOffset)
                     pine.Orientation = Vector3.new(0, math.random(0, 360),0)
-                    pine.Parent = tile    
+                    pine.Parent = tile
                 end
             end
         end

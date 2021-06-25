@@ -10,23 +10,23 @@ local CustomInstance = require(ReplicatedStorage.Utilities.CustomInstance)
 
 -- Sets the attritube and tag of the tile depending of given noise value
 local function SetTileIdentificators(aTile: Instance, aValue: number)
-    if aValue < 0.1 then 
+    if aValue < .1 then 
         CollectionService:AddTag(aTile, "Sea")
         aTile:SetAttribute("TerrainType", "Sea")
 
-    elseif  aValue < .48 then
+    elseif  aValue < .46 then
         CollectionService:AddTag(aTile, "Littoral")
         aTile:SetAttribute("TerrainType", "Littoral")
         
-    elseif  aValue < .53 then
+    elseif  aValue < .50 then
         CollectionService:AddTag(aTile, "Beach")
         aTile:SetAttribute("TerrainType", "Beach")
 
-    elseif  aValue < .75 then
+    elseif  aValue < .72 then
         CollectionService:AddTag(aTile, "Plain")
         aTile:SetAttribute("TerrainType", "Plain")
 
-    elseif  aValue < .98 then
+    elseif  aValue < .99 then
         CollectionService:AddTag(aTile, "Forest")
         aTile:SetAttribute("TerrainType", "Forest")
 
@@ -37,16 +37,16 @@ local function SetTileIdentificators(aTile: Instance, aValue: number)
 end
 
 
-local MapGenerator = {} 
-MapGenerator.__index = MapGenerator
 
-function MapGenerator.new(aFieldMap)
-    local self = setmetatable({}, MapGenerator)
+local Map = {} 
+Map.__index = Map
+
+function Map.new(aFieldMap, aTile)
+    local self = setmetatable({}, Map)
     self.MapSize = aFieldMap.MapSize
     self.TileSize = aFieldMap.TileSize
     self.Generated = false
     
-
     local seed = aFieldMap.Seed
     local amplitude = aFieldMap.Amplitude
     local scale = aFieldMap.Scale
@@ -63,35 +63,19 @@ function MapGenerator.new(aFieldMap)
             local fallOff = FallOffMap.Generate(i, j , self.MapSize)        
             noiseResult -= FallOffMap.Transform(fallOff, fallOffOffset, fallOffPower) -- substract the fall off result from the noise result
             noiseResult = math.clamp(noiseResult + 0.5 , 0, 1) -- 2D perlin noise generates values from - .5 to + .5, added .5 to get full range
-
+            
+            local tile = aTile.Asset:Clone()
+            tile.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
+            tile.Position = Vector3.new(i * tile.Size.X, 0, j * tile.Size.Z)
+ 
             -- Create tile //TODO CHECK IF I SHOULD ObjectIfy TILES
-            local tile = CustomInstance.new("Part", {
-                Properties = {
-                    Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize),   
-                    Position = Vector3.new(i * self.TileSize, 1, j * self.TileSize),
-                    Anchored = true,
-                    Material = Enum.Material.SmoothPlastic,
-                    BrickColor = BrickColor.new("Really red"),
-                    Name = i..","..j
-                },
-                Attributes = {
-                    NoiseValue = noiseResult,
-                    Xpos = i,
-                    Ypos = j,
-                    TerrainType = "NoTerrain"
-                },
-                Tags = {
-                    "Tile",
-                }
-            })
-
 
             --//TODO way to be able to visualize different maps simultaneously.
             --tile.Color = Color3.new(noiseResult, noiseResult, noiseResult)
             --tile.Color = Color3.new(fallOff, fallOff, fallOff)
             SetTileIdentificators(tile, noiseResult)
             ColorMap.SetTerrainColor(tile) -- applying terrain
-            tile.Parent = workspace.Map
+            tile.Parent = workspace.Map 
         end
     end
 
@@ -102,7 +86,7 @@ function MapGenerator.new(aFieldMap)
 end
 
 
-return MapGenerator
+return Map
 
 
 

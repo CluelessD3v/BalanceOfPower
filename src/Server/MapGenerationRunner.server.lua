@@ -1,54 +1,50 @@
-local MapGenerator = require(game:GetService('ServerStorage').Components.MapGenerator)
+local MapClass = require(game:GetService('ServerStorage').Components.Map)
 local TerrainGenerator = require(game:GetService('ServerStorage').Components.TerrainGenerator)
+local TileClass = require(game:GetService('ServerStorage').Components.Tile)
+
 local CollectionService = game:GetService('CollectionService')
 
 local mapGenFieldMap  = {}
-
 mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 4, 512)
 mapGenFieldMap.TileSize = math.clamp(script:GetAttribute("TileSize"), 1, 100)
 mapGenFieldMap.Seed = math.clamp(script:GetAttribute("Seed"), -32768, 32768)
 
-mapGenFieldMap.Amplitude = math.clamp(script:GetAttribute("Amplitude"), 1, 100)
-mapGenFieldMap.Scale = math.clamp(script:GetAttribute("Scale"), .1, 1)
-mapGenFieldMap.Octaves = math.clamp(script:GetAttribute("Octaves"), 1, 100)
-mapGenFieldMap.Persistence = math.clamp(script:GetAttribute("Persistence"), .01, 1)
+if script:GetAttribute("DoRandomMapGeneration") then
+    mapGenFieldMap.FallOffOffset = math.random(4,7) 
+    mapGenFieldMap.FallOffPower = math.random(4,7)
 
-mapGenFieldMap.FallOffOffset = math.clamp(script:GetAttribute("FallOffOffset"), 1, 12)
-mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)
+    mapGenFieldMap.Amplitude = math.random(24, 28)
+    mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .515 )
+    mapGenFieldMap.Octaves = math.random(6, 9)
+    mapGenFieldMap.Scale =Random.new():NextNumber(.46, .52)
+
+else
+    mapGenFieldMap.Amplitude = math.clamp(script:GetAttribute("Amplitude"), 1, 100)
+    mapGenFieldMap.Scale = math.clamp(script:GetAttribute("Scale"), .1, 1)
+    mapGenFieldMap.Octaves = math.clamp(script:GetAttribute("Octaves"), 1, 100)
+    mapGenFieldMap.Persistence = math.clamp(script:GetAttribute("Persistence"), .01, 1)
+    mapGenFieldMap.FallOffOffset = math.clamp(script:GetAttribute("FallOffOffset"), 1, 12)
+    mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)
+end
 
 if script:GetAttribute("Seed") == 0 then
     mapGenFieldMap.Seed = math.random(-32768, 32768)
 end
 
 
-if script:GetAttribute("IsMapGenerationRandom") then 
-    mapGenFieldMap.FallOffOffset = math.random(6,9) 
-    mapGenFieldMap.FallOffPower = math.random(6,9)
-
-    mapGenFieldMap.Amplitude = math.random(20, 30)
-    mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .515 )
-    mapGenFieldMap.Octaves = math.random(6, 9)
-    mapGenFieldMap.Scale =Random.new():NextNumber(.46, .52)
-
-    for attribute, value in pairs(mapGenFieldMap) do
-        script:SetAttribute(attribute, value)
-    end
+for attribute, value in pairs(mapGenFieldMap) do
+    script:SetAttribute(attribute, value)
 end
 
 
+print(mapGenFieldMap)
 
+local tile = TileClass.new()
+local map = MapClass.new(mapGenFieldMap, tile)
 
-
-
-local map = MapGenerator.new(mapGenFieldMap)
-print("Generating Forest")
-wait(1)
 if map.Generated then
     TerrainGenerator.GenerateForest(CollectionService:GetTagged("Forest"))
 end
-
-wait(1)
-
 TerrainGenerator.GenerateGrass(CollectionService:GetTagged("Plain"))
 --print(mapGenFieldMap)
 --print(map)
