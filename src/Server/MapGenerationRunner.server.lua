@@ -40,15 +40,43 @@ mapGenFieldMap.FallOffSmoothness =  math.clamp(mapGenConfig.FallOffSmoothness.Va
 
 
 
-print(mapGenFieldMap)
+
+local terrainTypes = {
+    Ocean = {
+        HeightValue = .1,
+        TerrainName = "Ocean"
+    },
+    Littoral = {
+        HeightValue = .45,
+        TerrainName = "Littoral"
+    },
+    Beach = {
+        HeightValue = .5,
+        TerrainName = "Beach"
+    },
+    Plain = {
+        HeightValue = .7,
+        TerrainName = "Plain"
+    },
+    Forest = {
+        HeightValue = .99,
+        TerrainName = "Forest"
+    },
+    Mountain = {
+        HeightValue = 1,
+        TerrainName = "Mountain"
+    },
+}
 
 local tile = TileClass.new()
-local map = MapClass.new(mapGenFieldMap, tile)
+local map = MapClass.new(mapGenFieldMap, tile, terrainTypes)
 
 if map.Generated then
     TerrainGenerator.GenerateForest(CollectionService:GetTagged("Forest"))
+    wait()
+    TerrainGenerator.GenerateGrass(CollectionService:GetTagged("Plain"))
 end
-TerrainGenerator.GenerateGrass(CollectionService:GetTagged("Plain"))
+
 --print(mapGenFieldMap)
 --print(map)
 --print(#CollectionService:GetTagged("Tile"))

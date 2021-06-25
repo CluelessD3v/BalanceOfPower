@@ -4,58 +4,27 @@ local CollectionService = game:GetService('CollectionService')
 local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
 local ColorMap = require(script.ColorMap)
-
+local TileMetadata = require(script.TileMetadata)
 
 local CustomInstance = require(ReplicatedStorage.Utilities.CustomInstance)
-
--- Sets the attritube and tag of the tile depending of given noise value
-local function SetTileIdentificators(aTile: Instance, aValue: number)
-    if aValue < .1 then 
-        CollectionService:AddTag(aTile, "Sea")
-        aTile:SetAttribute("TerrainType", "Sea")
-
-    elseif  aValue < .46 then
-        CollectionService:AddTag(aTile, "Littoral")
-        aTile:SetAttribute("TerrainType", "Littoral")
-        
-    elseif  aValue < .50 then
-        CollectionService:AddTag(aTile, "Beach")
-        aTile:SetAttribute("TerrainType", "Beach")
-
-    elseif  aValue < .72 then
-        CollectionService:AddTag(aTile, "Plain")
-        aTile:SetAttribute("TerrainType", "Plain")
-
-    elseif  aValue < .99 then
-        CollectionService:AddTag(aTile, "Forest")
-        aTile:SetAttribute("TerrainType", "Forest")
-
-    elseif  aValue <= 1 then
-        CollectionService:AddTag(aTile, "Mountain")
-        aTile:SetAttribute("TerrainType", "Mountain")
-    end
-end
-
-
-
 
 local Map = {} 
 Map.__index = Map
 
-function Map.new(aFieldMap, aTile)
+function Map.new(theMapGenValueMap: table, aTile, theTerrainTypesMap: table)
     local self = setmetatable({}, Map)
-    self.MapSize = aFieldMap.MapSize
-    self.TileSize = aFieldMap.TileSize
+    self.MapSize = theMapGenValueMap.MapSize
+    self.TileSize = theMapGenValueMap.TileSize
     self.Generated = false
     
-    local seed = aFieldMap.Seed
-    local amplitude = aFieldMap.Amplitude
-    local scale = aFieldMap.Scale
-    local octaves = aFieldMap.Octaves
-    local persistence = aFieldMap.Persistence
+    local seed = theMapGenValueMap.Seed
+    local amplitude = theMapGenValueMap.Amplitude
+    local scale = theMapGenValueMap.Scale
+    local octaves = theMapGenValueMap.Octaves
+    local persistence = theMapGenValueMap.Persistence
 
-    local fallOffOffset = aFieldMap.FallOffOffset
-    local fallOffPower = aFieldMap.FallOffSmoothness
+    local fallOffOffset = theMapGenValueMap.FallOffOffset
+    local fallOffPower = theMapGenValueMap.FallOffSmoothness
 
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
@@ -69,12 +38,12 @@ function Map.new(aFieldMap, aTile)
             tile.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
             tile.Position = Vector3.new(i * tile.Size.X, tile.Size.Y, j * tile.Size.Z)
  
-            -- Create tile //TODO CHECK IF I SHOULD ObjectIfy TILES
 
             --//TODO way to be able to visualize different maps simultaneously.
             --tile.Color = Color3.new(noiseResult, noiseResult, noiseResult)
             --tile.Color = Color3.new(fallOff, fallOff, fallOff)
-            SetTileIdentificators(tile, noiseResult)
+            
+            TileMetadata.SetMetadata(noiseResult, tile, theTerrainTypesMap)
             ColorMap.SetTerrainColor(tile) -- applying terrain
             tile.Parent = workspace.Map 
         end

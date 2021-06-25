@@ -11,8 +11,8 @@ local hill = BrickColor.new("Medium stone grey")
 local mountain = BrickColor.new("Dark stone grey")
 
 
-function ColorMap.SetTerrainColor(aTile: Instance)
-    if CollectionService:HasTag(aTile, "Sea") then 
+function ColorMap.SetTerrainColor(aTile: BasePart)
+    if CollectionService:HasTag(aTile, "Ocean") then 
         aTile.BrickColor = sea
         aTile.CFrame = CFrame.new(aTile.Position + Vector3.new(0, -2, 0))
     elseif CollectionService:HasTag(aTile, "Littoral") then 
