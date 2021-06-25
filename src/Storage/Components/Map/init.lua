@@ -38,6 +38,7 @@ end
 
 
 
+
 local Map = {} 
 Map.__index = Map
 
@@ -54,7 +55,7 @@ function Map.new(aFieldMap, aTile)
     local persistence = aFieldMap.Persistence
 
     local fallOffOffset = aFieldMap.FallOffOffset
-    local fallOffPower = aFieldMap.FallOffPower
+    local fallOffPower = aFieldMap.FallOffSmoothness
 
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
@@ -66,7 +67,7 @@ function Map.new(aFieldMap, aTile)
             
             local tile = aTile.Asset:Clone()
             tile.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
-            tile.Position = Vector3.new(i * tile.Size.X, 0, j * tile.Size.Z)
+            tile.Position = Vector3.new(i * tile.Size.X, tile.Size.Y, j * tile.Size.Z)
  
             -- Create tile //TODO CHECK IF I SHOULD ObjectIfy TILES
 

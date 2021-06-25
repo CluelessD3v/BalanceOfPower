@@ -1,40 +1,43 @@
+-- Services
+local CollectionService = game:GetService('CollectionService')
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+
+-- Classes
 local MapClass = require(game:GetService('ServerStorage').Components.Map)
 local TerrainGenerator = require(game:GetService('ServerStorage').Components.TerrainGenerator)
 local TileClass = require(game:GetService('ServerStorage').Components.Tile)
 
-local CollectionService = game:GetService('CollectionService')
 
 local mapGenFieldMap  = {}
-mapGenFieldMap.MapSize = math.clamp(script:GetAttribute("MapSize"), 4, 512)
-mapGenFieldMap.TileSize = math.clamp(script:GetAttribute("TileSize"), 1, 100)
-mapGenFieldMap.Seed = math.clamp(script:GetAttribute("Seed"), -32768, 32768)
+local mapGenConfig = ReplicatedStorage.Configuration.MapGenerationConfig
 
-if script:GetAttribute("DoRandomMapGeneration") then
-    mapGenFieldMap.FallOffOffset = math.random(4,7) 
-    mapGenFieldMap.FallOffPower = math.random(4,7)
+if mapGenConfig.DoRandomMapGeneration.Value then
+    mapGenConfig.FallOffOffset.Value = math.random(4,7) 
+    mapGenConfig.FallOffSmoothness.Value = math.random(4,7)
 
-    mapGenFieldMap.Amplitude = math.random(24, 28)
-    mapGenFieldMap.Persistence = Random.new():NextNumber(.48, .515 )
-    mapGenFieldMap.Octaves = math.random(6, 9)
-    mapGenFieldMap.Scale =Random.new():NextNumber(.46, .52)
+    mapGenConfig.Amplitude.Value = math.random(24, 28)
+    mapGenConfig.Persistence.Value = Random.new():NextNumber(.48, .515 )
+    mapGenConfig.Octaves.Value = math.random(6, 9)
+    mapGenConfig.Scale.Value =Random.new():NextNumber(.46, .52)
 
-else
-    mapGenFieldMap.Amplitude = math.clamp(script:GetAttribute("Amplitude"), 1, 100)
-    mapGenFieldMap.Scale = math.clamp(script:GetAttribute("Scale"), .1, 1)
-    mapGenFieldMap.Octaves = math.clamp(script:GetAttribute("Octaves"), 1, 100)
-    mapGenFieldMap.Persistence = math.clamp(script:GetAttribute("Persistence"), .01, 1)
-    mapGenFieldMap.FallOffOffset = math.clamp(script:GetAttribute("FallOffOffset"), 1, 12)
-    mapGenFieldMap.FallOffPower = math.clamp(script:GetAttribute("FallOffPower"), 1, 12)
 end
 
-if script:GetAttribute("Seed") == 0 then
-    mapGenFieldMap.Seed = math.random(-32768, 32768)
+if mapGenConfig.Seed.Value == 0 then
+    mapGenConfig.Seed.Value = math.random(-32768, 32768)
 end
 
+mapGenFieldMap.MapSize = math.clamp(mapGenConfig.MapSize.Value, 4, 512)
+mapGenFieldMap.TileSize = math.clamp(mapGenConfig.TileSize.Value, 1, 100)
+mapGenFieldMap.Seed = math.clamp(mapGenConfig.Seed.Value, -32768, 32768)
 
-for attribute, value in pairs(mapGenFieldMap) do
-    script:SetAttribute(attribute, value)
-end
+mapGenFieldMap.Amplitude =  math.clamp(mapGenConfig.Amplitude.Value, 1, 100)
+mapGenFieldMap.Scale =  math.clamp(mapGenConfig.Scale.Value, .1, 1)
+mapGenFieldMap.Octaves =  math.clamp(mapGenConfig.Octaves.Value, 1, 100)
+mapGenFieldMap.Persistence =  math.clamp(mapGenConfig.Persistence.Value, .01, 1)
+mapGenFieldMap.FallOffOffset =  math.clamp(mapGenConfig.FallOffOffset.Value, 1, 12)
+mapGenFieldMap.FallOffSmoothness =  math.clamp(mapGenConfig.FallOffSmoothness.Value, 1, 12)
+
+
 
 
 print(mapGenFieldMap)
