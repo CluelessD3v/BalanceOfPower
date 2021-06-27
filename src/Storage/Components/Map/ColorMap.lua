@@ -30,7 +30,6 @@ function ColorMap.SetTerrainColor(aTile: BasePart)
     
     elseif CollectionService:HasTag(aTile, "Mountain") then
         aTile.BrickColor = mountain
-        aTile.CFrame = CFrame.new(aTile.Position + Vector3.new(0, 6, 0))
     end
 
 end

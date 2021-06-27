@@ -11,7 +11,7 @@ function TileMetadata.SetMetadata(aValue: number, aTileAsset: BasePart, theTerra
     local mountain = theTerrainTypes.Mountain
 
     if aValue < ocean.HeightValue then 
-
+        
         CollectionService:AddTag(aTileAsset, ocean.TerrainName)
         aTileAsset:SetAttribute("TerrainType", ocean.TerrainName)
 
