@@ -22,7 +22,15 @@ function Tile.new()
 end
     
 
+--[[ 
+    tHIS PLACES AN ASSET EXACTLY IN THE MIDLE OF TILE + Y offset 
 
+            |\
+            |\  -- TREE ASSET EXAMPLE
+    ----------------------
+    ----------------------
+                specially good for grass and big rocks
+--]]
 function Tile:PlaceOnTop(aGameOBject, hasRandomOrientation: boolean)
     local tile = self.Asset     
     if hasRandomOrientation then
@@ -34,6 +42,15 @@ function Tile:PlaceOnTop(aGameOBject, hasRandomOrientation: boolean)
     aGameOBject.Parent = tile
 end
 
+
+--[[
+    this places N number of assets allong the tile
+    
+    x   o   x -- representation of a tile, each X is an asset, this is nice 
+    o   x   o -- specially good for trees and pebbles
+    x   x   o
+    o   x   x
+]]--
 
 function Tile:PlaceWithin(aGameObject, xOffsetFactor, zOffsetFactor, hasRandomOrientation: boolean)
     local tile = self.Asset

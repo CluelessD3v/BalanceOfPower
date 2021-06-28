@@ -42,39 +42,47 @@ mapGenFieldMap.FallOffSmoothness =  math.clamp(mapGenConfig.FallOffSmoothness.Va
 local terrainTypes = {
     Ocean = {
         HeightValue = .1,
-        TerrainName = "Ocean"
+        TerrainName = "Ocean",
+        BrickColor = BrickColor.new("Bright blue"),
     },
     Littoral = {
         HeightValue = .5,
-        TerrainName = "Littoral"
+        TerrainName = "Littoral",
+        BrickColor = BrickColor.new("Cyan"),
     },
     Beach = {
         HeightValue = .55,
-        TerrainName = "Beach"
+        TerrainName = "Beach",
+        BrickColor = BrickColor.new("Daisy orange")
     },
     Plain = {
         HeightValue = .7,
-        TerrainName = "Plain"
+        TerrainName = "Plain",
+        BrickColor = BrickColor.new("Bright green")
     },
     Forest = {
         HeightValue = .97,
-        TerrainName = "Forest"
+        TerrainName = "Forest",
+        BrickColor = BrickColor.new("Forest green")
     },
     Mountain = {
         HeightValue = 1,
-        TerrainName = "Mountain"
+        TerrainName = "Mountain",
+        BrickColor = BrickColor.new("Dark stone grey")
     },
 }
 
 local Tile = TileClass.new()
 
+
+--// Reminder N69 OF MAKING A FUCKING DEBUG TOOL MATE.
 local map = MapClass.new(mapGenFieldMap, Tile, terrainTypes)
 wait(1)
-FeatureGenerator.GenerateMountains(Tile, CollectionService:GetTagged("Mountain"))
+--FeatureGenerator.GenerateMountains(Tile, CollectionService:GetTagged("Mountain"))
 wait(1)
-FeatureGenerator.GenerateForest(Tile, CollectionService:GetTagged("Forest"))
+--FeatureGenerator.GenerateForest(Tile, CollectionService:GetTagged("Forest"))
 wait(1)
-FeatureGenerator.GenerateGrass(Tile, CollectionService:GetTagged("Plain"))
+--FeatureGenerator.GenerateGrass(Tile, CollectionService:GetTagged("Plain"))
 
 --print(mapGenFieldMap)
 --print(map)

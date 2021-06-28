@@ -4,6 +4,9 @@ local CollectionService = game:GetService('CollectionService')
 
 local FeatureGenerator = {}
 
+
+--THIS SHIT IS A FUCKING MESs...
+--//TODO MANAGE CHANCES OF SPAWNING IN THE FREAKING TERRAIN TABLE!!! MODULES SHOULD ONLY PROCESS NOT STORE!!! REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 function FeatureGenerator.GenerateForest(aTile, theForestTilesList: table)
     local treeList = CollectionService:GetTagged("Tree")
     for _, tile in ipairs(theForestTilesList) do
@@ -33,7 +36,7 @@ function FeatureGenerator.GenerateMountains(aTile, theMountainsTileList)
     for i, tile in ipairs(theMountainsTileList) do
         aTile.Asset = tile
 
-        --//TODO check into using fractal browning motion, as depicted here https://thebookofshaders.com/13/
+        --//TODO check into using fractal browning motion, as depicted here https://thebookofshaders.com/13/ 
         
         local noiseResult = PerlinNoise.new({i  * scale,  i * scale, 0}, 10, 6, .4)
         noiseResult = math.clamp(noiseResult + .5, 0, .5)

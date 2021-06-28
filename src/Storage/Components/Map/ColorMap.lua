@@ -1,6 +1,8 @@
 local CollectionService = game:GetService('CollectionService')
 
 local ColorMap = {}
+
+--//TODO REFACTOR THIS SCRIPT TO USE THE TERRAIN TABLE VALUES INSTEAD OF THEM BEING STORED HERE!!!
 -- Gives the given tile a terrain attribute and tag based on the given value
 local sea = BrickColor.new("Bright blue")
 local littoral= BrickColor.new("Cyan")
@@ -11,6 +13,8 @@ local hill = BrickColor.new("Medium stone grey")
 local mountain = BrickColor.new("Dark stone grey")
 
 
+
+--//TODO LOOK INTO PUTTING THIS IN A MOTHERFUCKING FOR LOOP...
 function ColorMap.SetTerrainColor(aTile: BasePart)
     if CollectionService:HasTag(aTile, "Ocean") then 
         aTile.BrickColor = sea
