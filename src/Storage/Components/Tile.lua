@@ -50,6 +50,8 @@ end
     o   x   o -- specially good for trees and pebbles
     x   x   o
     o   x   x
+
+    NOTE: this function will respect the boundaries of the tile INDEPENDENTLY of the asset size.
 ]]--
 
 function Tile:PlaceWithin(aGameObject, xOffsetFactor, zOffsetFactor, hasRandomOrientation: boolean)
