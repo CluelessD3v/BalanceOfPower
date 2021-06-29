@@ -8,6 +8,7 @@ local FeatureGenerator = {}
 --THIS SHIT IS A FUCKING MESs...
 --//TODO MANAGE CHANCES OF SPAWNING IN THE FREAKING TERRAIN TABLE!!! MODULES SHOULD ONLY PROCESS NOT STORE!!! REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 function FeatureGenerator.GenerateForest(aTile, theForestTilesList: table)
+    wait(1)
     local treeList = CollectionService:GetTagged("Tree")
     for _, tile in ipairs(theForestTilesList) do
         aTile.Asset = tile
@@ -31,8 +32,9 @@ end
 
 
 function FeatureGenerator.GenerateMountains(aTile, theMountainsTileList)
+    wait(1)
+    
     local scale = .5
-
     for i, tile in ipairs(theMountainsTileList) do
         aTile.Asset = tile
 
@@ -47,9 +49,12 @@ function FeatureGenerator.GenerateMountains(aTile, theMountainsTileList)
         end
             
     end
+    print("Mountains generated")
 end
 
+
 function FeatureGenerator.GenerateGrass(aTile, thePlainsTilesList)
+    wait(1)
     local grassList = CollectionService:GetTagged("Grass")
     
     for _, tile in ipairs(thePlainsTilesList) do

@@ -6,7 +6,6 @@ local FallOffMap = require(script.FallOffMap)
 local ColorMap = require(script.ColorMap)
 local TileMetadata = require(script.TileMetadata)
 
-
 local Map = {} 
 
 
@@ -44,6 +43,7 @@ function Map.new(theTerrainTypesMap: table, aTile: BasePart)
     local fallOffSmoothness =  math.clamp(mapGenConfig.FallOffSmoothness.Value, 1, 10)
     local filterType = math.clamp(mapGenConfig.FilterType.Value, 0, 2)
 
+    local DoGenerateColorMap = mapGenConfig.DoGenerateColorMap
     --Map generation    
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
@@ -52,26 +52,32 @@ function Map.new(theTerrainTypesMap: table, aTile: BasePart)
             local fallOff = nil
 
             -- Check which filter to use
-            if filterType == 0 then
+            if filterType == 1 then
                 fallOff = FallOffMap.GenerateSquareFallOff(i, j , self.MapSize)
-            elseif filterType == 1 then
+            elseif filterType == 2 then
                 fallOff = FallOffMap.GenerateCircularFallOff(i, j , self.MapSize)
             else
                 fallOff = 0
             end
 
             noiseResult  -= FallOffMap.Transform(fallOff, fallOffOffset, fallOffSmoothness)
-            noiseResult  = math.clamp(noiseResult  + 0.5 , 0, 1)
+            noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             local tile = aTile:Clone()
             tile.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
             tile.Position = Vector3.new(i * tile.Size.X, tile.Size.Y, j * tile.Size.Z)
-            tile.Name = fallOff
+            tile.Name = i..","..j
 
             --//TODO way to be able to visualize different maps simultaneously.
             tile.Color = Color3.new(noiseResult , noiseResult , noiseResult )
             TileMetadata.SetMetadata(noiseResult , tile, theTerrainTypesMap)
-            ColorMap.SetTerrainColor(tile) -- applying terrain
+
+            --[[if DoGenerateColorMap.Value then
+                ColorMap.SetTerrainColor(tile, theTerrainTypesMap) -- applying terrain
+            end--]]
+            
+
+            
             tile.Parent = workspace 
         end
     end
