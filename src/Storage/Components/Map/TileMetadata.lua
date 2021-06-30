@@ -3,11 +3,12 @@ local CollectionService = game:GetService('CollectionService')
 local TileMetadata = {}
 
 function TileMetadata.SetMetadata(theNoiseResult: number, aTile: BasePart, theTerrainTypesMap: table, DoGenerateColorMap)
-    for i = 1, #theTerrainTypesMap - 1 do
+    -- offset the index - 1 to get the current terrain and the next one
+    for i = 1, #theTerrainTypesMap -1 do
         local this = theTerrainTypesMap[i]
-        local next = theTerrainTypesMap[i + 1] or theTerrainTypesMap[#theTerrainTypesMap]
-        --print("this is:", this, "next is:",next)
-        print(i)
+        local next = theTerrainTypesMap[i + 1]
+
+
         if theNoiseResult >= this.HeightValue and theNoiseResult <= next.HeightValue then
             for _, tag in ipairs(this.TerrainTags) do
                 CollectionService:AddTag(aTile, tag)

@@ -36,7 +36,7 @@ local terrainTypes = {
         BrickColor = BrickColor.new("Cyan"),
     },
     {
-        HeightValue = .50,
+        HeightValue = .49,
         TerrainTags = {"Beach"},
         BrickColor = BrickColor.new("Daisy orange"),
     },
