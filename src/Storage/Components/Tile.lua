@@ -46,7 +46,7 @@ end
 --[[
     this places N number of assets allong the tile
     
-    x   o   x -- representation of a tile, each X is an asset, this is nice 
+    x   o   x -- representation of a tile, each X is an asset
     o   x   o -- specially good for trees and pebbles
     x   x   o
     o   x   x

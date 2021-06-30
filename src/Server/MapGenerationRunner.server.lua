@@ -7,49 +7,66 @@ local MapClass = require(game:GetService('ServerStorage').Components.Map)
 local FeatureGenerator = require(game:GetService('ServerStorage').Components.FeatureGenerator)
 local TileClass = require(game:GetService('ServerStorage').Components.Tile)
 
+-- Mapping MapGenerationConfig values to the map gen table
+local mapGenFolder = ReplicatedStorage.Configuration.MapGenerationConfig
+local mapGenConfigTable = {}
+mapGenConfigTable.MapSize = mapGenFolder.MapSize.Value
+mapGenConfigTable.TileSize = mapGenFolder.TileSize.Value
+mapGenConfigTable.DoRandomMapGeneration = mapGenFolder.DoRandomMapGeneration.Value
+mapGenConfigTable.DoGenerateColorMap = mapGenFolder.DoGenerateColorMap.Value
+mapGenConfigTable.Seed = mapGenFolder.Seed.Value
+mapGenConfigTable.Scale = mapGenFolder.Scale.Value
+mapGenConfigTable.Amplitude = mapGenFolder.Amplitude.Value
+mapGenConfigTable.Octaves = mapGenFolder.Octaves.Value
+mapGenConfigTable.Persistence = mapGenFolder.Persistence.Value
+mapGenConfigTable.FallOffOffset = mapGenFolder.FallOffOffset.Value
+mapGenConfigTable.FallOffSmoothness = mapGenFolder.FallOffSmoothness.Value
+mapGenConfigTable.FilterType = mapGenFolder.FilterType.Value
 
 
 local terrainTypes = {
     {
         HeightValue = 0,
-        TerrainName = "Ocean",
+        TerrainTags = {"Ocean", "Water"},
         BrickColor = BrickColor.new("Bright blue"),
     },
     {
-        HeightValue = .1,
-        TerrainName = "Littoral",
+        HeightValue = .45,
+        TerrainTags = {"Littoral", "Water"},
         BrickColor = BrickColor.new("Cyan"),
     },
     {
-        HeightValue = .45,
-        TerrainName = "Beach",
+        HeightValue = .50,
+        TerrainTags = {"Beach"},
         BrickColor = BrickColor.new("Daisy orange"),
     },
+
     {
-        HeightValue = .5,
-        TerrainName = "Plain",
+        HeightValue = .55,
+        TerrainTags = {"Plain"},
         BrickColor = BrickColor.new("Bright green")
     },
+
     {
-        HeightValue = .67,
-        TerrainName = "Forest",
-        BrickColor = BrickColor.new("Forest green")
+        HeightValue = .78,
+        TerrainTags = {"Forest"},
+        BrickColor = BrickColor.new("Forest green"),
     },
     {
-        HeightValue = .97,
-        TerrainName = "Mountain",
+        HeightValue = .99,
+        TerrainTags = {"Mountain"},
         BrickColor = BrickColor.new("Dark stone grey")
     },
     {
         HeightValue = 1,
-        TerrainName = "nil",
+        TerrainTags = {"nil"},
         BrickColor = BrickColor.new("Really black")
     }
 }
 
 local Tile = TileClass.new()
 
-MapClass.new(terrainTypes, Tile.Asset)
+MapClass.new(mapGenConfigTable, terrainTypes, Tile.Asset)
 
 local TerrainGenerationConfig = ReplicatedStorage.Configuration.TerrainGenerationConfig
 

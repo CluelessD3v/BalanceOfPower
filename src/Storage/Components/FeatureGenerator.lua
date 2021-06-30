@@ -42,10 +42,14 @@ function FeatureGenerator.GenerateMountains(aTile, theMountainsTileList)
         
         local noiseResult = PerlinNoise.new({i  * scale,  i * scale, 0}, 10, 6, .4)
         noiseResult = math.clamp(noiseResult + .5, 0, .5)
-        if noiseResult < .4 then
+        if noiseResult < .1 then
             tile.Position = tile.Position + Vector3.new(0,2,0)
-        elseif noiseResult <=5 then
+        elseif noiseResult <=.2 then
             tile.Position = tile.Position + Vector3.new(0, 4, 0)
+        elseif noiseResult <=.3 then
+            tile.Position = tile.Position + Vector3.new(0, 6, 0)
+        elseif noiseResult <=.4 then
+            tile.Position = tile.Position + Vector3.new(0, 8, 0)
         end
             
     end
