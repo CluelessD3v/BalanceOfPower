@@ -54,7 +54,7 @@ function Map.new(theMapGenerationTable, theTerrainTypesTable: table, aTile: Base
     self.TileSize = math.clamp(theMapGenerationTable.TileSize, 1, 100)
     self.Tiles = {}
 
-    print(scale, persistence, octaves)
+    --print(scale, persistence, octaves)
     --Map generation    
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
@@ -89,18 +89,68 @@ function Map.new(theMapGenerationTable, theTerrainTypesTable: table, aTile: Base
             tile.Parent = workspace 
         end
     end
-    
+    print("Map generated")
     return self
 end
 
 
-function Map:ElevateTerrain()
-    wait()
+function Map:SetMapElevation()
+    wait(1)
     for _, tile in ipairs(self.Tiles) do
-        tile.Position = tile.Position + Vector3.new(0, tile:GetAttribute("Elevation"), 0)
+        tile.Position = tile.Position + Vector3.new(0, tile:GetAttribute("ElevationOffset"), 0)
+
     end
     print("TerrainElevated")
 end
+
+function Map:GenerateResources()
+    
+end
+
+
+function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: string)
+    wait(1)
+    local taggedpropList = CollectionService:GetTagged(taggedProps)
+    
+    for i, tile in ipairs(CollectionService:GetTagged(taggedTilesList)) do
+        aTile.GameObject = tile
+
+        local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
+        prop.Name = "Grass"
+        prop.Size = Vector3.new(tile.Size.X-1, .5, tile.Size.Z-1)
+        
+        local chance = Random.new():NextNumber(0, 1)
+        if chance >= .65 then
+            aTile:PlaceOnTop(prop, true)    
+        end
+    end
+    print("Grass Generated")
+end
+
+
+function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps: string)
+    wait(1)
+    local taggedpropList = CollectionService:GetTagged(taggedProps)
+
+    for _, tile in ipairs(CollectionService:GetTagged(taggedTilesList)) do
+        aTile.Asset = tile
+
+        for i = 1, tile.Size.X do
+            for j = 1, tile.Size.Z do
+                local chance = Random.new():NextNumber(0, 1)
+
+                if chance >= .96 then
+                    local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
+                    aTile:PlaceWithin(prop, i, j, true)
+                end
+            end
+        end
+
+    end
+
+    print("Forest Generated")
+end
+
 
 
 

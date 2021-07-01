@@ -6,11 +6,14 @@ function TileMetadata.SetMetadata(theNoiseResult: number, aTile: BasePart, theTe
     -- offset the index - 1 to get the current terrain and the next one
     for i = 1, #theTerrainTypesTable -1 do
         local this = theTerrainTypesTable[i] -- current value in the list
-        local next = theTerrainTypesTable[i + 1] or theTerrainTypesTable[#theTerrainTypesTable] -- next value in the list
-        
+        local next = theTerrainTypesTable[i + 1] -- next value in the list
 
         if theNoiseResult >= this.TerrainThreshold and theNoiseResult <= next.TerrainThreshold then
-            aTile:SetAttribute("Elevation", this.Elevation)
+            CollectionService:AddTag(aTile, this.ElevationTag)
+
+            aTile:SetAttribute("ElevationOffset", this.ElevationOffset)
+            aTile:SetAttribute("ElevationLevel", this.ElevationTag)
+
             for _, tag in ipairs(this.TerrainTags) do
                 CollectionService:AddTag(aTile, tag)
                  aTile:SetAttribute("TerrainType", tag)
@@ -22,8 +25,7 @@ function TileMetadata.SetMetadata(theNoiseResult: number, aTile: BasePart, theTe
     end
 end
 
-
-
+    
 
 
 

@@ -31,15 +31,15 @@ end
     ----------------------
                 specially good for grass and big rocks
 --]]
-function Tile:PlaceOnTop(aGameOBject, hasRandomOrientation: boolean)
-    local tile = self.Asset     
+function Tile:PlaceOnTop(aGameOBjectToPlaceOnTop, hasRandomOrientation: boolean)
+    local tile = self.GameObject     
     if hasRandomOrientation then
-        aGameOBject.Orientation = Vector3.new(0, math.random(0, 360),0)
+        aGameOBjectToPlaceOnTop.Orientation = Vector3.new(0, math.random(0, 360),0)
     end
 
-    local yOffset =  tile.Size.Y/2 + aGameOBject.Size.Y/2
-    aGameOBject.Position = tile.Position + Vector3.new(0, yOffset, 0)
-    aGameOBject.Parent = tile
+    local yOffset =  tile.Size.Y/2 + aGameOBjectToPlaceOnTop.Size.Y/2
+    aGameOBjectToPlaceOnTop.Position = tile.Position + Vector3.new(0, yOffset, 0)
+    aGameOBjectToPlaceOnTop.Parent = tile
 end
 
 

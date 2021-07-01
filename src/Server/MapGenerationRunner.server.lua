@@ -24,6 +24,13 @@ mapGenerationTable.FallOffSmoothness = mapGenFolder.FallOffSmoothness.Value
 mapGenerationTable.FilterType = mapGenFolder.FilterType.Value
 
 
+local ResourcesTable = {
+    Lumber = {
+        
+    },
+
+}
+
 
 --[[
     the mapping method to set tile metadata based on the given terrain type table WILL NOT REACH THE LAST VALUE, add a place holder one at the end, e.g:
@@ -34,63 +41,85 @@ mapGenerationTable.FilterType = mapGenFolder.FilterType.Value
 local terrainTypesTable = {
     {
         TerrainThreshold = 0,
-        Elevation = 1,
+        ElevationOffset = 2,
+        ElevationTag = "None",
         TerrainColor = BrickColor.new("Bright blue"),
-        TerrainTags = {"Ocean", "Water"},
+        TerrainTags = {"Ocean", "WaterBody"},
 
     },
     {
         TerrainThreshold = .35,
-        Elevation = 1,
+        ElevationOffset = 2,
+        ElevationTag = "None",
         TerrainColor = BrickColor.new("Cyan"),
-        TerrainTags = {"Littoral", "Water"},
+        TerrainTags = {"Littoral", "WaterBody"},
     },
     {
         TerrainThreshold = .465,
-        Elevation = 3,
+        ElevationOffset = 4,
+        ElevationTag = "Flat",
         TerrainColor = BrickColor.new("Daisy orange"),
-        TerrainTags = {"Beach"},
+        TerrainTags = {"Beach"}
 
     },
 
     {
         TerrainThreshold = .52,
-        Elevation = 3,
+        ElevationOffset = 4,
+        ElevationTag = "Flat",
         TerrainColor = BrickColor.new("Bright green"),
-        TerrainTags = {"Plain"},
+        TerrainTags = {"Green", "Plain"},
+    },
+
+    {
+        TerrainThreshold = .7,
+        ElevationOffset = 6,
+        ElevationTag = "Mound",
+        TerrainColor = BrickColor.new("Sea green"),
+        TerrainTags = {"Green", "Plain", "Forest"},
     },
 
     
     {
-        
-        TerrainThreshold = .7,
-        Elevation = 3,
-        TerrainColor = BrickColor.new("Forest green"),
-        TerrainTags = {"Forest"},
-        
+        TerrainThreshold = .8,
+        ElevationOffset = 8,
+        ElevationTag = "Hilly",
+        TerrainColor = BrickColor.new("Dark green"),
+        TerrainTags = {"Green"},
     },
 
     {
+        TerrainThreshold = .9,
+        ElevationOffset = 10,
+        ElevationTag = "Mountainous",
+        TerrainColor = BrickColor.new("Slime green"),
+        TerrainTags = {"Green"},
+        PropsTags = {"Pebles", "Branches", "Grass"}
+    },
+
+
+    {
         TerrainThreshold = .99,
-        Elevation = 10,
+        ElevationOffset = 16,
+        ElevationTag = "ExtremelyMountainous",
         TerrainColor = BrickColor.new("Dark stone grey"),
-        TerrainTags = {"Mountain"},
+        TerrainTags = {"Impassable"},
 
     },
     {
         TerrainThreshold = 1,
-        TerrainColor = BrickColor.new("Really black"),
-        TerrainTags = {"nil"},
     }
 }
+
+
+
 
 local Tile = TileClass.new()
 
 local map = MapClass.new(mapGenerationTable, terrainTypesTable, Tile.GameObject)
-map:ElevateTerrain(CollectionService:GetTagged("Mountain"))
-
-local TerrainGenerationConfig = ReplicatedStorage.Configuration.TerrainGenerationConfig
-
+map:SetMapElevation()
+map:GeneratePropsOnTile(Tile, "Plain", "Grass") 
+map:GeneratePropsAcrossTile(Tile, "Forest", "Tree")
 
 --//TODO Use a map class method to get certain tiles
 
