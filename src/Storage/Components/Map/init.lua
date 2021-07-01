@@ -10,52 +10,60 @@ local Map = {}
 
 Map.__index = Map
 
-function Map.new(mapGenConfigTable, theTerrainTypesMap: table, aTile: BasePart)    
+function Map.new(theMapGenerationTable, theTerrainTypesTable: table, aTile: BasePart)    
     assert(aTile, "Tile argument was missing, pass a Basepart!")
     local self = setmetatable({}, Map)
-    
-    -- Reads from config values and then sets the data to it’s mapped field
 
-    -- note: These only happen if map gen is "random" these are the best range of values I tested.
-    if mapGenConfigTable.DoRandomMapGeneration then
-        mapGenConfigTable.Seed = math.random(-64000, 64000)
-        mapGenConfigTable.Amplitude = math.random(24, 28)
-        mapGenConfigTable.Persistence = Random.new():NextNumber(.48, .52 )
-        mapGenConfigTable.Octaves = math.random(6, 9)
-        mapGenConfigTable.Scale = Random.new():NextNumber(.48, .53)
+    --[[ 
+        note: Values are not fully random, they are selected from a range that keep the map 
+        as artifact free as possible from the filters and good looking
+    --]]
+    theMapGenerationTable.DoRandomMapGeneration =  theMapGenerationTable.DoRandomMapGeneration or false
+
+    if theMapGenerationTable.DoRandomMapGeneration then
+        theMapGenerationTable.Seed = math.random(-64000, 64000)
+        theMapGenerationTable.Amplitude = math.random(24, 28)
+        theMapGenerationTable.Persistence = Random.new():NextNumber(.48, .5 )
+        theMapGenerationTable.Octaves = math.random(7, 9)
+        theMapGenerationTable.Scale = Random.new():NextNumber(.48, .5)
         
 
-        mapGenConfigTable.FallOffOffset = math.random(9,11) 
-        mapGenConfigTable.FallOffSmoothness = math.random(9,11)
+        theMapGenerationTable.FallOffOffset = math.random(12,15) 
+        theMapGenerationTable.FallOffSmoothness = math.random(2,4)
     end
     
-    if mapGenConfigTable.Seed == 0 then
-        mapGenConfigTable.Seed = math.random(-100000, 100000)
+     -- Reads from table values and then sets the data to it’s mapped field
+    if theMapGenerationTable.Seed == 0 then
+        theMapGenerationTable.Seed = math.random(-100000, 100000)
     end
 
-    -- map config to variables
-    self.MapSize = math.clamp(mapGenConfigTable.MapSize, 4, 512)
-    self.TileSize = math.clamp(mapGenConfigTable.TileSize, 1, 100)
+    local seed = math.clamp(theMapGenerationTable.Seed, -100000, 100000)
+    local amplitude =  math.clamp(theMapGenerationTable.Amplitude, 1, 100)
+    local scale =  math.clamp(theMapGenerationTable.Scale, .1, 1)
+    local octaves =  math.clamp(theMapGenerationTable.Octaves, 1, 10)
+    local persistence =  math.clamp(theMapGenerationTable.Persistence, .1,  1)
 
-    local seed = math.clamp(mapGenConfigTable.Seed, -100000, 100000)
-    local amplitude =  math.clamp(mapGenConfigTable.Amplitude, 1, 100)
-    local scale =  math.clamp(mapGenConfigTable.Scale, .1, 1)
-    local octaves =  math.clamp(mapGenConfigTable.Octaves, 1, 10)
-    local persistence =  math.clamp(mapGenConfigTable.Persistence, .1, 1)
+    local fallOffOffset =  math.clamp(theMapGenerationTable.FallOffOffset, 1, 10)
+    local fallOffSmoothness =  math.clamp(theMapGenerationTable.FallOffSmoothness, 1, 20)
+    local filterType = math.clamp(theMapGenerationTable.FilterType, 0, 2)
 
-    local fallOffOffset =  math.clamp(mapGenConfigTable.FallOffOffset, 1, 15)
-    local fallOffSmoothness =  math.clamp(mapGenConfigTable.FallOffSmoothness, 1, 15)
-    local filterType = math.clamp(mapGenConfigTable.FilterType, 0, 2)
+    local DoGenerateColorMap = theMapGenerationTable.DoGenerateColorMap or true
 
-    local DoGenerateColorMap = mapGenConfigTable.DoGenerateColorMap
+    -- Class properties
+    self.MapSize = math.clamp(theMapGenerationTable.MapSize, 4, 512)
+    self.TileSize = math.clamp(theMapGenerationTable.TileSize, 1, 100)
+    self.Tiles = {}
+
+    print(scale, persistence, octaves)
     --Map generation    
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
-            -- Noise and fall off calculations
+            -- Noise calculation
             local noiseResult  = PerlinNoise.new({(i + seed) * scale, (j + seed) * scale}, amplitude, octaves, persistence)
+            
             local fallOff = nil
+            -- Check which filter if any and calculate accordingly
 
-            -- Check which filter to use
             if filterType == 1 then
                 fallOff = FallOffMap.GenerateSquareFallOff(i, j , self.MapSize)
             elseif filterType == 2 then
@@ -64,24 +72,36 @@ function Map.new(mapGenConfigTable, theTerrainTypesMap: table, aTile: BasePart)
                 fallOff = 0
             end
 
+            -- Finaly, transform fall off and substract it from the noise
             noiseResult  -= FallOffMap.Transform(fallOff, fallOffOffset, fallOffSmoothness)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
+            -- Create and set metadata based in final noise result
             local tile = aTile:Clone()
             tile.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
             tile.Position = Vector3.new(i * tile.Size.X, tile.Size.Y, j * tile.Size.Z)
             tile.Name = i..","..j
 
-            tile.Color = Color3.new(noiseResult , noiseResult , noiseResult )
-            TileMetadata.SetMetadata(noiseResult , tile, theTerrainTypesMap, DoGenerateColorMap)
-            
-    
+            tile.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
+            TileMetadata.SetMetadata(noiseResult , tile, theTerrainTypesTable, DoGenerateColorMap)
+
+            table.insert(self.Tiles, tile)
             tile.Parent = workspace 
         end
     end
     
     return self
 end
+
+
+function Map:ElevateTerrain()
+    wait()
+    for _, tile in ipairs(self.Tiles) do
+        tile.Position = tile.Position + Vector3.new(0, tile:GetAttribute("Elevation"), 0)
+    end
+    print("TerrainElevated")
+end
+
 
 
 return Map

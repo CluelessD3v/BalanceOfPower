@@ -31,27 +31,13 @@ function FeatureGenerator.GenerateForest(aTile, theForestTilesList: table)
 end
 
 
-function FeatureGenerator.GenerateMountains(aTile, theMountainsTileList)
+function FeatureGenerator.GenerateMountains(aTile, TheMountainTileList)
     wait(1)
     
-    local scale = .5
-    for i, tile in ipairs(theMountainsTileList) do
+    for _, tile in ipairs(TheMountainTileList) do
         aTile.Asset = tile
+        tile.Position = tile.Position + Vector3.new(0, 10, 0)
 
-        --//TODO check into using fractal browning motion, as depicted here https://thebookofshaders.com/13/ 
-        
-        local noiseResult = PerlinNoise.new({i  * scale,  i * scale, 0}, 10, 6, .4)
-        noiseResult = math.clamp(noiseResult + .5, 0, .5)
-        if noiseResult < .1 then
-            tile.Position = tile.Position + Vector3.new(0,2,0)
-        elseif noiseResult <=.2 then
-            tile.Position = tile.Position + Vector3.new(0, 4, 0)
-        elseif noiseResult <=.3 then
-            tile.Position = tile.Position + Vector3.new(0, 6, 0)
-        elseif noiseResult <=.4 then
-            tile.Position = tile.Position + Vector3.new(0, 8, 0)
-        end
-            
     end
     print("Mountains generated")
 end

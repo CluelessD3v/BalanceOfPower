@@ -9,69 +9,92 @@ local TileClass = require(game:GetService('ServerStorage').Components.Tile)
 
 -- Mapping MapGenerationConfig values to the map gen table
 local mapGenFolder = ReplicatedStorage.Configuration.MapGenerationConfig
-local mapGenConfigTable = {}
-mapGenConfigTable.MapSize = mapGenFolder.MapSize.Value
-mapGenConfigTable.TileSize = mapGenFolder.TileSize.Value
-mapGenConfigTable.DoRandomMapGeneration = mapGenFolder.DoRandomMapGeneration.Value
-mapGenConfigTable.DoGenerateColorMap = mapGenFolder.DoGenerateColorMap.Value
-mapGenConfigTable.Seed = mapGenFolder.Seed.Value
-mapGenConfigTable.Scale = mapGenFolder.Scale.Value
-mapGenConfigTable.Amplitude = mapGenFolder.Amplitude.Value
-mapGenConfigTable.Octaves = mapGenFolder.Octaves.Value
-mapGenConfigTable.Persistence = mapGenFolder.Persistence.Value
-mapGenConfigTable.FallOffOffset = mapGenFolder.FallOffOffset.Value
-mapGenConfigTable.FallOffSmoothness = mapGenFolder.FallOffSmoothness.Value
-mapGenConfigTable.FilterType = mapGenFolder.FilterType.Value
+local mapGenerationTable = {}
+mapGenerationTable.MapSize = mapGenFolder.MapSize.Value
+mapGenerationTable.TileSize = mapGenFolder.TileSize.Value
+mapGenerationTable.DoRandomMapGeneration = mapGenFolder.DoRandomMapGeneration.Value
+mapGenerationTable.DoGenerateColorMap = mapGenFolder.DoGenerateColorMap.Value
+mapGenerationTable.Seed = mapGenFolder.Seed.Value
+mapGenerationTable.Scale = mapGenFolder.Scale.Value
+mapGenerationTable.Amplitude = mapGenFolder.Amplitude.Value
+mapGenerationTable.Octaves = mapGenFolder.Octaves.Value
+mapGenerationTable.Persistence = mapGenFolder.Persistence.Value
+mapGenerationTable.FallOffOffset = mapGenFolder.FallOffOffset.Value
+mapGenerationTable.FallOffSmoothness = mapGenFolder.FallOffSmoothness.Value
+mapGenerationTable.FilterType = mapGenFolder.FilterType.Value
 
 
-local terrainTypes = {
+
+--[[
+    the mapping method to set tile metadata based on the given terrain type table WILL NOT REACH THE LAST VALUE, add a place holder one at the end, e.g:
+    tab = {1, 2, 3, 4, 5, nil} <- place holder value
+                       ^ penultimate value is the actual LAST!
+
+    --]]
+local terrainTypesTable = {
     {
-        HeightValue = 0,
+        TerrainThreshold = 0,
+        Elevation = 1,
+        TerrainColor = BrickColor.new("Bright blue"),
         TerrainTags = {"Ocean", "Water"},
-        BrickColor = BrickColor.new("Bright blue"),
+
     },
     {
-        HeightValue = .45,
+        TerrainThreshold = .35,
+        Elevation = 1,
+        TerrainColor = BrickColor.new("Cyan"),
         TerrainTags = {"Littoral", "Water"},
-        BrickColor = BrickColor.new("Cyan"),
     },
     {
-        HeightValue = .49,
+        TerrainThreshold = .465,
+        Elevation = 3,
+        TerrainColor = BrickColor.new("Daisy orange"),
         TerrainTags = {"Beach"},
-        BrickColor = BrickColor.new("Daisy orange"),
+
     },
 
     {
-        HeightValue = .55,
+        TerrainThreshold = .52,
+        Elevation = 3,
+        TerrainColor = BrickColor.new("Bright green"),
         TerrainTags = {"Plain"},
-        BrickColor = BrickColor.new("Bright green")
+    },
+
+    
+    {
+        
+        TerrainThreshold = .7,
+        Elevation = 3,
+        TerrainColor = BrickColor.new("Forest green"),
+        TerrainTags = {"Forest"},
+        
     },
 
     {
-        HeightValue = .78,
-        TerrainTags = {"Forest"},
-        BrickColor = BrickColor.new("Forest green"),
-    },
-    {
-        HeightValue = .99,
+        TerrainThreshold = .99,
+        Elevation = 10,
+        TerrainColor = BrickColor.new("Dark stone grey"),
         TerrainTags = {"Mountain"},
-        BrickColor = BrickColor.new("Dark stone grey")
+
     },
     {
-        HeightValue = 1,
+        TerrainThreshold = 1,
+        TerrainColor = BrickColor.new("Really black"),
         TerrainTags = {"nil"},
-        BrickColor = BrickColor.new("Really black")
     }
 }
 
 local Tile = TileClass.new()
 
-MapClass.new(mapGenConfigTable, terrainTypes, Tile.Asset)
+local map = MapClass.new(mapGenerationTable, terrainTypesTable, Tile.GameObject)
+map:ElevateTerrain(CollectionService:GetTagged("Mountain"))
 
 local TerrainGenerationConfig = ReplicatedStorage.Configuration.TerrainGenerationConfig
 
 
-if TerrainGenerationConfig.DoGenerateMountains.Value then
+--//TODO Use a map class method to get certain tiles
+
+--[[if TerrainGenerationConfig.DoGenerateMountains.Value then
     FeatureGenerator.GenerateGrass(Tile, CollectionService:GetTagged("Plain"))
 end
 
@@ -84,5 +107,5 @@ if TerrainGenerationConfig.DoGenerateGrass.Value then
     FeatureGenerator.GenerateForest(Tile, CollectionService:GetTagged("Forest"))
 end
 
-
+--]]
 

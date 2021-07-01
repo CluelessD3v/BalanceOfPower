@@ -7,7 +7,7 @@ Tile.__index = Tile
 
 function Tile.new()
     local self = setmetatable({}, Tile)
-    self.Asset  = CustomInstance.new("Part", {
+    self.GameObject  = CustomInstance.new("Part", {
         Properties = {
             Anchored = true,
             Material = Enum.Material.SmoothPlastic,
