@@ -54,7 +54,6 @@ function Map.new(theMapGenerationTable, theTerrainTypesTable: table, aTile: Base
     self.TileSize = math.clamp(theMapGenerationTable.TileSize, 1, 100)
     self.Tiles = {}
 
-    --print(scale, persistence, octaves)
     --Map generation    
     for i = 1, self.MapSize do
         for j = 1, self.MapSize do
@@ -94,6 +93,8 @@ function Map.new(theMapGenerationTable, theTerrainTypesTable: table, aTile: Base
 end
 
 
+
+-- Sets elevation based in the ElevationOffset Attribute found in the tile (Given by the TerrainTypesTable)
 function Map:SetMapElevation()
     wait(1)
     for _, tile in ipairs(self.Tiles) do
@@ -108,6 +109,10 @@ function Map:GenerateResources()
 end
 
 
+
+--//TODO Handle chances EXTERNALY! 
+
+-- THis function takes advantage of tile PlaceOnTop method
 function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: string)
     wait(1)
     local taggedpropList = CollectionService:GetTagged(taggedProps)
@@ -116,8 +121,7 @@ function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: st
         aTile.GameObject = tile
 
         local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
-        prop.Name = "Grass"
-        prop.Size = Vector3.new(tile.Size.X-1, .5, tile.Size.Z-1)
+        prop.Size = Vector3.new(tile.Size.X-1, .5, tile.Size.Z-1) --//TODO ELIMINATE THIS NONESENSE LINE! what if it’s a tree or something jesus...
         
         local chance = Random.new():NextNumber(0, 1)
         if chance >= .65 then
@@ -128,12 +132,14 @@ function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: st
 end
 
 
+
+-- THis function takes advantage of tile PlaceAcross method
 function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps: string)
     wait(1)
     local taggedpropList = CollectionService:GetTagged(taggedProps)
 
     for _, tile in ipairs(CollectionService:GetTagged(taggedTilesList)) do
-        aTile.Asset = tile
+        aTile.Asset = tile -- the game object does not has access to the tile class! So we make this
 
         for i = 1, tile.Size.X do
             for j = 1, tile.Size.Z do
@@ -151,7 +157,7 @@ function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps
     print("Forest Generated")
 end
 
-
+--//TODO ADD TRANSFORM METHODS TO ADD AND REMOVE TAGS
 
 
 return Map

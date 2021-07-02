@@ -4,7 +4,6 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 
 -- Classes
 local MapClass = require(game:GetService('ServerStorage').Components.Map)
-local FeatureGenerator = require(game:GetService('ServerStorage').Components.FeatureGenerator)
 local TileClass = require(game:GetService('ServerStorage').Components.Tile)
 
 -- Mapping MapGenerationConfig values to the map gen table
@@ -107,7 +106,7 @@ local terrainTypesTable = {
 
     },
     {
-        TerrainThreshold = 1,
+        TerrainThreshold = 1, --placeholder value
     }
 }
 
@@ -121,20 +120,5 @@ map:SetMapElevation()
 map:GeneratePropsOnTile(Tile, "Plain", "Grass") 
 map:GeneratePropsAcrossTile(Tile, "Forest", "Tree")
 
---//TODO Use a map class method to get certain tiles
 
---[[if TerrainGenerationConfig.DoGenerateMountains.Value then
-    FeatureGenerator.GenerateGrass(Tile, CollectionService:GetTagged("Plain"))
-end
-
-if TerrainGenerationConfig.DoGenerateForest.Value then
-    FeatureGenerator.GenerateMountains(Tile, CollectionService:GetTagged("Mountain"))
-end
-
---//TODO TEMPORAL, FOREST STORE LUMBER RESOURCE!
-if TerrainGenerationConfig.DoGenerateGrass.Value then
-    FeatureGenerator.GenerateForest(Tile, CollectionService:GetTagged("Forest"))
-end
-
---]]
 
