@@ -113,7 +113,7 @@ end
 --//TODO Handle chances EXTERNALY! 
 
 -- THis function takes advantage of tile PlaceOnTop method
-function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: string)
+function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: string, hasRandomOrientation: boolean)
     wait(1)
     local taggedpropList = CollectionService:GetTagged(taggedProps)
     
@@ -121,11 +121,10 @@ function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: st
         aTile.GameObject = tile
 
         local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
-        prop.Size = Vector3.new(tile.Size.X-1, .5, tile.Size.Z-1) --//TODO ELIMINATE THIS NONESENSE LINE! what if it’s a tree or something jesus...
         
         local chance = Random.new():NextNumber(0, 1)
-        if chance >= .65 then
-            aTile:PlaceOnTop(prop, true)    
+        if chance >= 0 then
+            aTile:PlaceOnTop(prop, hasRandomOrientation)    
         end
     end
     print("Grass Generated")
@@ -134,7 +133,7 @@ end
 
 
 -- THis function takes advantage of tile PlaceAcross method
-function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps: string)
+function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps: string, hasRandomOrientation)
     wait(1)
     local taggedpropList = CollectionService:GetTagged(taggedProps)
 
@@ -147,7 +146,7 @@ function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps
 
                 if chance >= .96 then
                     local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
-                    aTile:PlaceWithin(prop, i, j, true)
+                    aTile:PlaceWithin(prop, i, j, hasRandomOrientation)
                 end
             end
         end

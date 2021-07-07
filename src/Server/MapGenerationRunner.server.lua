@@ -47,14 +47,14 @@ local terrainTypesTable = {
 
     },
     {
-        TerrainThreshold = .35,
+        TerrainThreshold = .45,
         ElevationOffset = 2,
         ElevationTag = "None",
         TerrainColor = BrickColor.new("Cyan"),
         TerrainTags = {"Littoral", "WaterBody"},
     },
     {
-        TerrainThreshold = .465,
+        TerrainThreshold = .575,
         ElevationOffset = 4,
         ElevationTag = "Flat",
         TerrainColor = BrickColor.new("Daisy orange"),
@@ -63,7 +63,7 @@ local terrainTypesTable = {
     },
 
     {
-        TerrainThreshold = .52,
+        TerrainThreshold = .62,
         ElevationOffset = 4,
         ElevationTag = "Flat",
         TerrainColor = BrickColor.new("Bright green"),
@@ -75,31 +75,30 @@ local terrainTypesTable = {
         ElevationOffset = 6,
         ElevationTag = "Mound",
         TerrainColor = BrickColor.new("Sea green"),
-        TerrainTags = {"Green", "Plain", "Forest"},
+        TerrainTags = {"Green"},
     },
 
     
     {
         TerrainThreshold = .8,
         ElevationOffset = 8,
-        ElevationTag = "Hilly",
+        ElevationTag = "Mound",
         TerrainColor = BrickColor.new("Dark green"),
-        TerrainTags = {"Green"},
+        TerrainTags = {"Forest"},
     },
 
+    
     {
         TerrainThreshold = .9,
         ElevationOffset = 10,
-        ElevationTag = "Mountainous",
+        ElevationTag = "Mound",
         TerrainColor = BrickColor.new("Slime green"),
-        TerrainTags = {"Green"},
-        PropsTags = {"Pebles", "Branches", "Grass"}
+        TerrainTags = {"Forest"},
     },
-
 
     {
         TerrainThreshold = .99,
-        ElevationOffset = 16,
+        ElevationOffset = 10,
         ElevationTag = "ExtremelyMountainous",
         TerrainColor = BrickColor.new("Dark stone grey"),
         TerrainTags = {"Impassable"},
@@ -117,8 +116,8 @@ local Tile = TileClass.new()
 
 local map = MapClass.new(mapGenerationTable, terrainTypesTable, Tile.GameObject)
 map:SetMapElevation()
-map:GeneratePropsOnTile(Tile, "Plain", "Grass") 
-map:GeneratePropsAcrossTile(Tile, "Forest", "Tree")
-
+map:GeneratePropsOnTile(Tile, "Impassable", "Mountain", false)
+map:GeneratePropsOnTile(Tile, "Plain", "Grass", false) 
+map:GeneratePropsAcrossTile(Tile, "Forest", "Tree", true)
 
 
