@@ -85,7 +85,7 @@ function Map.new(theMapGenerationTable, theTerrainTypesTable: table, aTile: Base
             TileMetadata.SetMetadata(noiseResult , tile, theTerrainTypesTable, DoGenerateColorMap)
 
             table.insert(self.Tiles, tile)
-            tile.Parent = workspace 
+            tile.Parent = workspace
         end
     end
     print("Map generated")
@@ -113,17 +113,19 @@ end
 --//TODO Handle chances EXTERNALY! 
 
 -- THis function takes advantage of tile PlaceOnTop method
-function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: string, hasRandomOrientation: boolean)
+function Map:GeneratePropsOnTile(aTile, taggedTilesList: string, taggedProps: string, aChance: integer, hasRandomOrientation: boolean)
     wait(1)
     local taggedpropList = CollectionService:GetTagged(taggedProps)
     
     for i, tile in ipairs(CollectionService:GetTagged(taggedTilesList)) do
-        aTile.GameObject = tile
-
-        local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
         
+        aTile.GameObject = tile
         local chance = Random.new():NextNumber(0, 1)
-        if chance >= 0 then
+
+        if chance <= aChance then
+            local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
+            prop.Size = Vector3.new(aTile.GameObject.Size.X, prop.Size.Y, aTile.GameObject.Size.Z)
+            
             aTile:PlaceOnTop(prop, hasRandomOrientation)    
         end
     end
@@ -133,19 +135,21 @@ end
 
 
 -- THis function takes advantage of tile PlaceAcross method
-function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps: string, hasRandomOrientation)
+function Map:GeneratePropsAcrossTile(aTile, taggedTilesList: string, taggedProps: string, aChance: integer, hasRandomOrientation)
     wait(1)
     local taggedpropList = CollectionService:GetTagged(taggedProps)
 
     for _, tile in ipairs(CollectionService:GetTagged(taggedTilesList)) do
         aTile.Asset = tile -- the game object does not has access to the tile class! So we make this
+        --//TODO pass the Instance itself of the tile, not create it here
 
         for i = 1, tile.Size.X do
             for j = 1, tile.Size.Z do
                 local chance = Random.new():NextNumber(0, 1)
 
-                if chance >= .96 then
+                if chance <= aChance then
                     local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
+                    prop.Size = Vector3.new(aTile.GameObject.Size.X * .1, aTile.GameObject.Size.Y * .2 , aTile.GameObject.Size.Z * .1 )
                     aTile:PlaceWithin(prop, i, j, hasRandomOrientation)
                 end
             end

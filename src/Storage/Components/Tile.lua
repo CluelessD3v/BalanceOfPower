@@ -62,8 +62,8 @@ function Tile:PlaceWithin(aGameObject, xOffsetFactor, zOffsetFactor, hasRandomOr
     end
 
     
-    local xOffset = xOffsetFactor * aGameObject.Size.X/aGameObject.Size.X - tile.Size.X/2
-    local zOffset = zOffsetFactor * aGameObject.Size.Z/aGameObject.Size.Z  - tile.Size.Z/2
+    local xOffset = xOffsetFactor * aGameObject.Size.X - tile.Size.X/2
+    local zOffset = zOffsetFactor * aGameObject.Size.Z  - tile.Size.Z/2
     local yOffset =  tile.Size.Y/2 + aGameObject.Size.Y/2
 
     aGameObject.Position = tile.Position + Vector3.new(xOffset, yOffset, zOffset)

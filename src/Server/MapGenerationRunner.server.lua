@@ -6,7 +6,7 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local MapClass = require(game:GetService('ServerStorage').Components.Map)
 local TileClass = require(game:GetService('ServerStorage').Components.Tile)
 
--- Mapping MapGenerationConfig values to the map gen table
+-- Mapping MapGenerationConfig values to the map gen tbable
 local mapGenFolder = ReplicatedStorage.Configuration.MapGenerationConfig
 local mapGenerationTable = {}
 mapGenerationTable.MapSize = mapGenFolder.MapSize.Value
@@ -47,14 +47,14 @@ local terrainTypesTable = {
 
     },
     {
-        TerrainThreshold = .45,
+        TerrainThreshold = .40,
         ElevationOffset = 2,
         ElevationTag = "None",
         TerrainColor = BrickColor.new("Cyan"),
         TerrainTags = {"Littoral", "WaterBody"},
     },
     {
-        TerrainThreshold = .575,
+        TerrainThreshold = .545,
         ElevationOffset = 4,
         ElevationTag = "Flat",
         TerrainColor = BrickColor.new("Daisy orange"),
@@ -63,7 +63,7 @@ local terrainTypesTable = {
     },
 
     {
-        TerrainThreshold = .62,
+        TerrainThreshold = .60,
         ElevationOffset = 4,
         ElevationTag = "Flat",
         TerrainColor = BrickColor.new("Bright green"),
@@ -75,7 +75,7 @@ local terrainTypesTable = {
         ElevationOffset = 6,
         ElevationTag = "Mound",
         TerrainColor = BrickColor.new("Sea green"),
-        TerrainTags = {"Green"},
+        TerrainTags = {"Green", "Plain"},
     },
 
     
@@ -97,7 +97,7 @@ local terrainTypesTable = {
     },
 
     {
-        TerrainThreshold = .99,
+        TerrainThreshold = .999,
         ElevationOffset = 10,
         ElevationTag = "ExtremelyMountainous",
         TerrainColor = BrickColor.new("Dark stone grey"),
@@ -105,7 +105,9 @@ local terrainTypesTable = {
 
     },
     {
-        TerrainThreshold = 1, --placeholder value
+        TerrainThreshold = 1.1,
+        TerrainColor = BrickColor.new("Really black"),
+        TerrainTags = {"nil"}, --placeholder value
     }
 }
 
@@ -115,9 +117,10 @@ local terrainTypesTable = {
 local Tile = TileClass.new()
 
 local map = MapClass.new(mapGenerationTable, terrainTypesTable, Tile.GameObject)
+
 map:SetMapElevation()
-map:GeneratePropsOnTile(Tile, "Impassable", "Mountain", false)
-map:GeneratePropsOnTile(Tile, "Plain", "Grass", false) 
-map:GeneratePropsAcrossTile(Tile, "Forest", "Tree", true)
+map:GeneratePropsOnTile(Tile, "Impassable", "Mountain", 1, false)
+map:GeneratePropsOnTile(Tile, "Plain", "Grass", .5,  false) 
+map:GeneratePropsAcrossTile(Tile, "Forest", "Tree",.15, true)
 
 
