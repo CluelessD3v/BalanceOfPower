@@ -45,24 +45,20 @@ function Map.new(theMapGenerationTable: table)
 
     self.MapSize = math.clamp(theMapGenerationTable.MapSize, 1, 512)
     self.TileSize = math.clamp(theMapGenerationTable.TileSize, 1, 50)
-    self.Tiles = {
-        Lenght = {},
-        Width = {}
-    }
+
+    self.Seed = theMapGenerationTable.Seed
+    self.Scale = theMapGenerationTable.Scale 
+    self.Amplitude = theMapGenerationTable.Amplitude
+    self.Octaves = theMapGenerationTable.Octaves
+    self.Persistence = theMapGenerationTable.Persistence
+
+    self.FallOffOffset = theMapGenerationTable.FallOffOffset
+    self.FallOffSmoothness = theMapGenerationTable.FallOffSmoothness
+    self.FilterType = theMapGenerationTable.FilterType
 
 
-    self.seed = theMapGenerationTable.Seed
-    self.scale = theMapGenerationTable.Scale 
-    self.amplitude = theMapGenerationTable.Amplitude
-    self.octaves = theMapGenerationTable.Octaves
-    self.persistence = theMapGenerationTable.Persistence
+    self.Tiles = table.create(self.MapSize)
 
-    self.fallOffOffset = theMapGenerationTable.FallOffOffset
-    self.fallOffSmoothness = theMapGenerationTable.FallOffSmoothness
-    self.filterType = theMapGenerationTable.FilterType
-
-   
-    print(theMapGenerationTable)
     print("Map settings set")
     return self
 end
@@ -75,24 +71,28 @@ function Map:GenerateMap(aTile: BasePart, theTerrainTypesTable: table)
         error("Tile must be a BasePart!")
     end
 
+
+
     for x = 1, self.MapSize do
+        self.Tiles[x] = table.create(self.MapSize)
+
         for z = 1, self.MapSize do
             -- Noise calculation
-            local noiseResult  = PerlinNoise.new({(x + self.seed) * self.scale, (z + self.seed) * self.scale}, self.amplitude, self.octaves, self.persistence)
+            local noiseResult  = PerlinNoise.new({(x + self.Seed) * self.Scale, ( z + self.Seed) * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             
             local fallOff = nil
             -- Check which filter if any and calculate accordingly
 
-            if self.filterType == 1 then
+            if self.FilterType == 1 then
                 fallOff = FallOffMap.GenerateSquareFallOff(x, z , self.MapSize)
-            elseif self.filterType == 2 then
+            elseif self.FilterType == 2 then
                 fallOff = FallOffMap.GenerateRadialFallOff(z, x , self.MapSize)
             else
                 fallOff = 0
             end
 
             -- Finaly, transform fall off and substract it from the noise
-            noiseResult  -= FallOffMap.Transform(fallOff, self.fallOffOffset, self.fallOffSmoothness)
+            noiseResult  -= FallOffMap.Transform(fallOff, self.FallOffOffset, self.FallOffSmoothness)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             -- Create and set metadata based in final noise  result
@@ -104,8 +104,10 @@ function Map:GenerateMap(aTile: BasePart, theTerrainTypesTable: table)
             tile.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
             TileMetadata.SetMetadata(noiseResult , tile, theTerrainTypesTable)
 
-            table.insert(self.Tiles, tile)
-            tile.Parent = workspace
+            self.Tiles[x][z] = tile
+
+
+            tile.Parent = workspace 
         end
     end
     print("Map generated")
@@ -114,16 +116,22 @@ end
 
 -- Sets terrain Terrain color attribute from the tile
 function Map:SetTerrainColor()
-    for _, tile in ipairs(self.Tiles) do
-        tile.BrickColor = tile:GetAttribute("TerrainColor")
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+           local tile = self.Tiles[x][z]
+           tile.BrickColor = tile:GetAttribute("TerrainColor")
+        end
     end
 end
 
 
 -- Sets elevation based in the ElevationOffset Attribute found in the tile (Given by the TerrainTypesTable)
 function Map:SetTerrainElevation()
-    for _, tile in ipairs(self.Tiles) do
-        tile.Position = tile.Position + Vector3.new(0, tile:GetAttribute("ElevationOffset"), 0)
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+           local tile = self.Tiles[x][z]
+           tile.Position = tile.Position + Vector3.new(0, tile:GetAttribute("ElevationOffset"), 0)
+        end
     end
     print("TerrainElevated")
 end
@@ -144,28 +152,25 @@ function Map:SetPropAcrossTile(aTaggedTilesList: string, aTaggedProp: string, aC
     GenerateProps.InstanceAcrossTile(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
 end
 
+
 function Map:TransformTilesFromTag(aTaggedTilesList: string, terrainTypeTable: table)
-    local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
-    
-    --[[for i, tile in ipairs(taggedTilesList) do
-        
-        --local noiseResult  = PerlinNoise.new({(i + self.seed) * self.scale, (i + self.seed) * self.scale }, self.amplitude, self.octaves, self.persistence)
-        local noiseResult  = PerlinNoise.new({(i + self.seed) * self.scale, (i + self.seed) * self.scale }, self.amplitude, self.octaves, self.persistence)
-        
-        noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
-        if noiseResult <= terrainTypeTable.TerrainThreshold then
-            tile.BrickColor = terrainTypeTable.TerrainColor
-            tile.Position = tile.Position + Vector3.new(0, terrainTypeTable.ElevationOffset, 0)        
+    local seed = math.random(-100000, 100000)
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+            local tile = self.Tiles[x][z]
+            local noiseResult  = PerlinNoise.new({(x + seed) * self.Scale, ( z + seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
+            noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
+            
+            if CollectionService:HasTag(tile, aTaggedTilesList) then    
+                if noiseResult <= terrainTypeTable.TerrainThreshold then
+                    tile.BrickColor = terrainTypeTable.TerrainColor
+                    tile.Position = tile.Position + Vector3.new(0, terrainTypeTable.ElevationOffset)
+                end    
+            end
         end
-
-    end--]]
-
-
-
-
-
-    
+    end
 end
+
 
 
 

@@ -44,18 +44,27 @@ local terrainTypesTable = {
     },
 
     {
-        TerrainThreshold = .4,
+        TerrainThreshold = .25,
         ElevationOffset = 2,
-        TerrainColor = BrickColor.new("Cyan"),
+        TerrainColor = BrickColor.new("Electric blue"),
         TerrainTag = "Littoral",
         FeatureTag = "",
         ResourceTags = {},
     },
 
     {
-        TerrainThreshold = .55,
+        TerrainThreshold = .45,
+        ElevationOffset = 2,
+        TerrainColor = BrickColor.new("Cyan"),
+        TerrainTag = "Coast",
+        FeatureTag = "",
+        ResourceTags = {},
+    },
+
+    {
+        TerrainThreshold = .545,
         ElevationOffset = 4,
-        TerrainColor = BrickColor.new("Bright yellow"),
+        TerrainColor = BrickColor.new("Daisy orange"),
         TerrainTag = "Beach",
         FeatureTag = "",
         ResourceTags = {},
@@ -64,7 +73,7 @@ local terrainTypesTable = {
     {
         TerrainThreshold = .6,
         ElevationOffset = 4,
-        TerrainColor = BrickColor.new("Bright green"),
+        TerrainColor = BrickColor.new("Moss"),
         TerrainTag = "Lowland",
         FeatureTag = "",
         ResourceTags = {},
@@ -73,8 +82,39 @@ local terrainTypesTable = {
     {
         TerrainThreshold = .7,
         ElevationOffset = 6,
+        TerrainColor = BrickColor.new("Bright green"),
+        TerrainTag = "Upland",
+        FeatureTag = "",
+        ResourceTags = {},
+    },
+
+
+    {
+        TerrainThreshold = .8,
+        ElevationOffset = 8,
+        TerrainColor = BrickColor.new("Sea green"),
+        TerrainTag = "HighLand",
+        FeatureTag = "",
+        ResourceTags = {},
+    },
+
+
+
+
+    {
+        TerrainThreshold = .9,
+        ElevationOffset = 10,
         TerrainColor = BrickColor.new("Dark green"),
-        TerrainTag = "Highland",
+        TerrainTag = "Steepland",
+        FeatureTag = "",
+        ResourceTags = {},
+    },
+
+    {
+        TerrainThreshold = .99,
+        ElevationOffset = 12,
+        TerrainColor = BrickColor.new("Slime green"),
+        TerrainTag = "Mountainous",
         FeatureTag = "",
         ResourceTags = {},
     },
@@ -90,15 +130,11 @@ local Tile = TileClass.new()
 Map:GenerateMap(Tile.GameObject, terrainTypesTable)
 Map:SetTerrainColor()
 Map:SetTerrainElevation()
+wait()
+Map:TransformTilesFromTag("Mountainous", {
+    TerrainThreshold = .1,
+    ElevationOffset = 2,
+    TerrainColor = BrickColor.new("Medium stone grey"),
+    TerrainTag = "Impassable",
+})
 
-wait(3)
-
-
-Map:TransformTilesFromTag("Highland", 
-{
-    TerrainThreshold = .3,
-    ElevationOffset = 3,
-    TerrainColor = BrickColor.new("Black"),
-}
-
-)
