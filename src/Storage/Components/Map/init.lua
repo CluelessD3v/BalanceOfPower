@@ -3,7 +3,7 @@ local CollectionService = game:GetService('CollectionService')
 
 local PerlinNoise = require(script.Parent.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
-local TileMetadata = require(script.TileMetadata)
+local Tile = require(script.Tile)
 local GenerateProps = require(script.GenerateProps)
 
 local Map = {} 
@@ -66,15 +66,12 @@ end
 
 -- Generates a tile map with a noise map colored on top
 function Map:GenerateMap(aTile: BasePart, theTerrainTypesTable: table)
-
     if not aTile:IsA("BasePart")  then
         error("Tile must be a BasePart!")
     end
 
-
-
     for x = 1, self.MapSize do
-        self.Tiles[x] = table.create(self.MapSize)
+        self.Tiles[x] = table.create(self.MapSize) -- Reserving space in memmory beforehand
 
         for z = 1, self.MapSize do
             -- Noise calculation
@@ -95,19 +92,20 @@ function Map:GenerateMap(aTile: BasePart, theTerrainTypesTable: table)
             noiseResult  -= FallOffMap.Transform(fallOff, self.FallOffOffset, self.FallOffSmoothness)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
-            -- Create and set metadata based in final noise  result
-            local tile = aTile:Clone()
-            tile.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
-            tile.Position = Vector3.new(x * tile.Size.X, tile.Size.Y, z * tile.Size.Z)
-            tile.Name = x..","..z
+            -- Creating tile object and setting metadata via internal tile class
+            local tile = Tile.new()
+            local tileInstance = tile.GameObject
+            tileInstance.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
+            tileInstance.Position = Vector3.new(x * tileInstance.Size.X, tileInstance.Size.Y, z * tileInstance.Size.Z)
+            tileInstance.Name = x..","..z
 
-            tile.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
-            TileMetadata.SetMetadata(noiseResult , tile, theTerrainTypesTable)
+            tileInstance.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
+            tile:SetMetadata(noiseResult, theTerrainTypesTable)
 
-            self.Tiles[x][z] = tile
+            self.Tiles[x][z] = tileInstance -- table.create reserved the space in table, now tiles ordered 2D-mentionally
 
 
-            tile.Parent = workspace 
+            tileInstance.Parent = workspace 
         end
     end
     print("Map generated")

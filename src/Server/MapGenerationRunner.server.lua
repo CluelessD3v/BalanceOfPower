@@ -4,7 +4,6 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 
 -- Classes
 local MapClass = require(game:GetService('ServerStorage').Components.Map)
-local TileClass = require(game:GetService('ServerStorage').Components.Tile)
 
 -- Mapping MapGenerationConfig values to the map gen tbable
 local mapGenFolder = ReplicatedStorage.Configuration.MapGenerationConfig
@@ -125,14 +124,15 @@ local terrainTypesTable = {
 
 }   
 
-local Tile = TileClass.new()
+local tile = Instance.new("Part")
 
-Map:GenerateMap(Tile.GameObject, terrainTypesTable)
+
+Map:GenerateMap(tile, terrainTypesTable)
 Map:SetTerrainColor()
 Map:SetTerrainElevation()
 wait()
 Map:TransformTilesFromTag("Mountainous", {
-    TerrainThreshold = .1,
+    TerrainThreshold = .2   ,
     ElevationOffset = 2,
     TerrainColor = BrickColor.new("Medium stone grey"),
     TerrainTag = "Impassable",
