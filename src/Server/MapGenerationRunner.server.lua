@@ -130,11 +130,6 @@ local terrainTypesTable = {
 Map:GenerateMap(terrainTypesTable)
 
 
-Map:SetTerrainColor()
-
-
-Map:SetTerrainElevation()
-
 Map:TransformTilesFromTag("Mountainous", {
     TerrainThreshold = .45   ,
     ElevationOffset = 14,

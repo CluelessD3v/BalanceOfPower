@@ -106,29 +106,6 @@ function Map:GenerateMap(theTerrainTypesTable: table)
 end
 
 
--- Sets terrain Terrain color attribute from the tile
-function Map:SetTerrainColor()
-    for x = 1, self.MapSize do
-        for z = 1, self.MapSize do
-           local tile = self.Tiles[x][z]
-           tile.BrickColor = tile:GetAttribute("TerrainColor")
-        end
-    end
-end
-
-
--- Sets elevation based in the ElevationOffset Attribute found in the tile (Given by the TerrainTypesTable)
-function Map:SetTerrainElevation()
-    for x = 1, self.MapSize do
-        for z = 1, self.MapSize do
-           local tile = self.Tiles[x][z]
-           tile.Position =  Vector3.new(tile.Position.X, tile:GetAttribute("ElevationOffset"),tile.Position.Z)
-        end
-    end
-    print("TerrainElevated")
-end
-
--- This function sets props on top of the tile origin
 function Map:SetPropOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
     local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
     local taggedpropList = CollectionService:GetTagged(aTaggedProp)
