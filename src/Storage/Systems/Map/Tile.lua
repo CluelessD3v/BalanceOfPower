@@ -14,7 +14,8 @@ function Tile.new()
     self.GameObject:SetAttribute("TerrainColor", BrickColor.new("Black"))
     self.GameObject:SetAttribute("ElevationOffset", 1)
     self.GameObject:SetAttribute("ResourceAmmount", 0)
-    
+    self.GameObject:SetAttribute("HasResource", false)
+
     CollectionService:AddTag(self.GameObject, "Tile")
         
     -- Attribute change listeners, automatically uptades tile pertinent tile properties on Attribute changed
@@ -32,6 +33,8 @@ function Tile.new()
 end
     
 
+
+-- Public Methods
 
 function Tile:SetMetadata(theNoiseResult: number, theTerrainTypesTable: table)
     
@@ -53,7 +56,9 @@ function Tile:SetMetadata(theNoiseResult: number, theTerrainTypesTable: table)
             self.GameObject:SetAttribute("TerrainThreshold", this.TerrainThreshold)
         end
     end
-
 end
+
+
+
 
 return Tile

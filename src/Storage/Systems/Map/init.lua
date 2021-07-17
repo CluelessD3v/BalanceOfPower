@@ -122,7 +122,7 @@ function Map:SetPropAcrossTile(aTaggedTilesList: string, aTaggedProp: string, aC
 end
 
 -- Transfor tile metadata, to new one of a given table
---//TODO Force table values
+
 function Map:TransformTilesFromTag(aTaggedTilesList: string, terrainTypeTable: table)
     local seed = math.random(-100000, 100000)
     
