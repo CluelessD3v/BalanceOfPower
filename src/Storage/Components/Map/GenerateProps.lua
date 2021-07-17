@@ -1,6 +1,8 @@
 local GenerateProps = {}
 
 
+--//TODO put all of this with the tile class in the future
+
 --[[
     this places N number of assets allong the tile
     
@@ -11,7 +13,6 @@ local GenerateProps = {}
 
     NOTE: this function will respect the boundaries of the tile INDEPENDENTLY of the asset size.
 ]]--
-
 
 
 function GenerateProps.InstanceAcrossTile(taggedTilesList: table, taggedpropList: table, aChance: integer, hasRandomOrientation: boolean)

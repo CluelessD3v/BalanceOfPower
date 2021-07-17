@@ -11,8 +11,23 @@ function Tile.new()
     self.GameObject = Instance.new("Part")
     self.GameObject.Anchored = true
     
-
+    self.GameObject:SetAttribute("TerrainColor", BrickColor.new("Black"))
+    self.GameObject:SetAttribute("ElevationOffset", 1)
+    self.GameObject:SetAttribute("ResourceAmmount", 0)
+    
     CollectionService:AddTag(self.GameObject, "Tile")
+        
+    -- Attribute change listeners, automatically uptades tile pertinent tile properties on Attribute changed
+    
+    local tile: BasePart = self.GameObject
+    tile:GetAttributeChangedSignal("TerrainColor"):Connect(function()
+        tile.BrickColor = tile:GetAttribute("TerrainColor")
+    end)
+
+    tile:GetAttributeChangedSignal("ElevationOffset"):Connect(function()
+        tile.Position = Vector3.new(tile.Position.X, tile:GetAttribute("ElevationOffset"),tile.Position.Z) -- overwrite tile pos
+    end)
+
     return self
 end
     
@@ -36,8 +51,6 @@ function Tile:SetMetadata(theNoiseResult: number, theTerrainTypesTable: table)
             self.GameObject:SetAttribute("TerrainColor", this.TerrainColor)
             self.GameObject:SetAttribute("ElevationOffset", this.ElevationOffset)
             self.GameObject:SetAttribute("TerrainThreshold", this.TerrainThreshold)
-            
-
         end
     end
 

@@ -1,7 +1,6 @@
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local CollectionService = game:GetService('CollectionService')
 
-local PerlinNoise = require(script.Parent.PerlinNoise)
+local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
 local Tile = require(script.Tile)
 local GenerateProps = require(script.GenerateProps)
@@ -21,7 +20,6 @@ function Map.new(theMapGenerationTable: table)
         note: Values are not fully random, they are selected from a range that keep the map 
         as artifact free as possible from the filters and good looking
     --]]
-
 
     theMapGenerationTable.MapSize = theMapGenerationTable.MapSize or 100
     theMapGenerationTable.TileSize = theMapGenerationTable.TileSize or 10
@@ -65,11 +63,7 @@ end
 
 
 -- Generates a tile map with a noise map colored on top
-function Map:GenerateMap(aTile: BasePart, theTerrainTypesTable: table)
-    if not aTile:IsA("BasePart")  then
-        error("Tile must be a BasePart!")
-    end
-
+function Map:GenerateMap(theTerrainTypesTable: table)
     for x = 1, self.MapSize do
         self.Tiles[x] = table.create(self.MapSize) -- Reserving space in memmory beforehand
 
@@ -128,7 +122,7 @@ function Map:SetTerrainElevation()
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
            local tile = self.Tiles[x][z]
-           tile.Position = tile.Position + Vector3.new(0, tile:GetAttribute("ElevationOffset"), 0)
+           tile.Position =  Vector3.new(tile.Position.X, tile:GetAttribute("ElevationOffset"),tile.Position.Z)
         end
     end
     print("TerrainElevated")
@@ -150,9 +144,11 @@ function Map:SetPropAcrossTile(aTaggedTilesList: string, aTaggedProp: string, aC
     GenerateProps.InstanceAcrossTile(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
 end
 
-
+-- Transfor tile metadata, to new one of a given table
+--//TODO Force table values
 function Map:TransformTilesFromTag(aTaggedTilesList: string, terrainTypeTable: table)
     local seed = math.random(-100000, 100000)
+    
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.Tiles[x][z]
@@ -161,8 +157,8 @@ function Map:TransformTilesFromTag(aTaggedTilesList: string, terrainTypeTable: t
             
             if CollectionService:HasTag(tile, aTaggedTilesList) then    
                 if noiseResult <= terrainTypeTable.TerrainThreshold then
-                    tile.BrickColor = terrainTypeTable.TerrainColor
-                    tile.Position = tile.Position + Vector3.new(0, terrainTypeTable.ElevationOffset)
+                    tile:SetAttribute("TerrainColor", terrainTypeTable.TerrainColor)
+                    tile:SetAttribute("ElevationOffset", terrainTypeTable.ElevationOffset)
                 end    
             end
         end

@@ -110,7 +110,7 @@ local terrainTypesTable = {
     },
 
     {
-        TerrainThreshold = .99,
+        TerrainThreshold = .999,
         ElevationOffset = 12,
         TerrainColor = BrickColor.new("Slime green"),
         TerrainTag = "Mountainous",
@@ -124,17 +124,56 @@ local terrainTypesTable = {
 
 }   
 
-local tile = Instance.new("Part")
 
 
-Map:GenerateMap(tile, terrainTypesTable)
+
+Map:GenerateMap(terrainTypesTable)
+
+
 Map:SetTerrainColor()
+
+
 Map:SetTerrainElevation()
-wait()
+
 Map:TransformTilesFromTag("Mountainous", {
-    TerrainThreshold = .2   ,
-    ElevationOffset = 2,
+    TerrainThreshold = .45   ,
+    ElevationOffset = 14,
     TerrainColor = BrickColor.new("Medium stone grey"),
     TerrainTag = "Impassable",
 })
 
+
+Map:TransformTilesFromTag("Lowland", {
+    TerrainThreshold = .1   ,
+    ElevationOffset = 4,
+    TerrainColor = BrickColor.new("Artichoke"),
+    TerrainTag = "Lowland",
+})
+
+Map:TransformTilesFromTag("HighLand", {
+    TerrainThreshold = .2   ,
+    ElevationOffset = 8,
+    TerrainColor = BrickColor.new("Forest green"),
+    TerrainTag = "Highland",
+})
+
+Map:TransformTilesFromTag("Upland", {
+    TerrainThreshold = .1   ,
+    ElevationOffset = 6,
+    TerrainColor = BrickColor.new("Forest green"),
+    TerrainTag = "Upland",
+})
+
+Map:TransformTilesFromTag("Lowland", {
+    TerrainThreshold = .3   ,
+    ElevationOffset = 4,
+    TerrainColor = BrickColor.new("Forest green"),
+    TerrainTag = "Lowland",
+})
+
+
+wait()
+
+Map:SetPropOnTile("lowLand", "Grass", .3, true)
+Map:SetPropOnTile("Impassable", "Mountain", 1, true)
+Map:SetPropAcrossTile("Highland", "Tree", .25, true)
