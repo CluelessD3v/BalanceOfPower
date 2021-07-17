@@ -17,7 +17,7 @@ function Map.new(theMapGenerationTable: table)
     local self = setmetatable({}, Map)
 
     --[[ 
-        note: Values are not fully random, they are selected from a range that keep the map 
+        note: These Values are not random, they were selected so as to keep the map 
         as artifact free as possible from the filters and good looking
     --]]
 
@@ -60,7 +60,6 @@ function Map.new(theMapGenerationTable: table)
     print("Map settings set")
     return self
 end
-
 
 -- Generates a tile map with a noise map colored on top
 function Map:GenerateMap(theTerrainTypesTable: table)
@@ -106,6 +105,7 @@ function Map:GenerateMap(theTerrainTypesTable: table)
 end
 
 
+-- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
 function Map:SetPropOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
     local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
     local taggedpropList = CollectionService:GetTagged(aTaggedProp)

@@ -6,92 +6,74 @@
     --]]
 return {
     {
-        TerrainThreshold = 0,
-        ElevationOffset = 2,
-        TerrainColor = BrickColor.new("Bright blue"),
-        TerrainTag = "Ocean",
-        FeatureTag = "",
-        ResourceTags = {},
+        Attributes = {
+            TerrainThreshold = 0,
+            ElevationOffset = 2,
+            TerrainColor = BrickColor.new("Bright blue"),
+            HasResource = false,
+            ResourceAmmount = 0,
+
+        },
+
+        Tags = {
+            TerrainType = "Ocean",
+            Resource = "None",
+            Feature = "None",            
+        },
+
+        Descriptors = {
+            "WaterBody",
+        }
     },
 
     {
-        TerrainThreshold = .25,
-        ElevationOffset = 2,
-        TerrainColor = BrickColor.new("Electric blue"),
-        TerrainTag = "Littoral",
-        FeatureTag = "",
-        ResourceTags = {},
+        Attributes = {
+            TerrainThreshold = .25,
+            ElevationOffset = 2,
+            TerrainColor = BrickColor.new("Electric blue"),
+            HasResource = false,
+            ResourceAmmount = 0,
+
+        },
+
+        Tags = {
+            TerrainType = "Littoral",
+            Resource = "None",
+            Feature = "None",            
+        },
+
+        Descriptors = {
+            "WaterBody",
+        }
     },
 
     {
-        TerrainThreshold = .45,
-        ElevationOffset = 2,
-        TerrainColor = BrickColor.new("Cyan"),
-        TerrainTag = "Coast",
-        FeatureTag = "",
-        ResourceTags = {},
+        Attributes = {
+            TerrainThreshold = .4,
+            ElevationOffset = 2,
+            TerrainColor = BrickColor.new("Cyan"),
+            HasResource = false,
+            ResourceAmmount = 0,
+
+        },
+
+        Tags = {
+            TerrainType = "Coastal",
+            Resource = "None",
+            Feature = "None",            
+        },
+
+        Descriptors = {
+            "WaterBody",
+        }
     },
 
+    
     {
-        TerrainThreshold = .545,
-        ElevationOffset = 4,
-        TerrainColor = BrickColor.new("Daisy orange"),
-        TerrainTag = "Beach",
-        FeatureTag = "",
-        ResourceTag = "",
-    },
-
-    {
-        TerrainThreshold = .6,
-        ElevationOffset = 4,
-        TerrainColor = BrickColor.new("Moss"),
-        TerrainTag = "Lowland",
-        FeatureTag = "",
-        ResourceTag = "",
-    },
-
-    {
-        TerrainThreshold = .7,
-        ElevationOffset = 6,
-        TerrainColor = BrickColor.new("Bright green"),
-        TerrainTag = "Upland",
-        FeatureTag = "",
-        ResourceTag = "",
-    },
-
-
-    {
-        TerrainThreshold = .8,
-        ElevationOffset = 8,
-        TerrainColor = BrickColor.new("Sea green"),
-        TerrainTag = "HighLand",
-        FeatureTag = "",
-        ResourceTag = "",
-    },
-
-
-
-
-    {
-        TerrainThreshold = .9,
-        ElevationOffset = 10,
-        TerrainColor = BrickColor.new("Dark green"),
-        TerrainTag = "Steepland",
-        FeatureTag = "",
-        ResourceTag = "",
-    },
-
-    {
-        TerrainThreshold = .999,
-        ElevationOffset = 12,
-        TerrainColor = BrickColor.new("Slime green"),
-        TerrainTag = "Mountainous",
-        FeatureTag = "",
-        ResourceTag ="",
-    },
-
-    {
-        TerrainThreshold = 1
+        Attributes = { --place holder val
+            TerrainThreshold = 1
+        },
     }
 
-}   
+
+}
