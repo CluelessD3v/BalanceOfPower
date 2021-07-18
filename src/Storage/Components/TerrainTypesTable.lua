@@ -34,7 +34,7 @@ return {
         },
 
         Attributes = {
-            TerrainThreshold = .25,
+            TerrainThreshold = .2,
             ElevationOffset = 2,
             HasResource = false,
             ResourceAmmount = 0,
@@ -58,7 +58,7 @@ return {
         },
 
         Attributes = {
-            TerrainThreshold = .4,
+            TerrainThreshold = .45,
             ElevationOffset = 2,
             HasResource = false,
             ResourceAmmount = 0,

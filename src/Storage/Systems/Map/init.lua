@@ -108,7 +108,7 @@ end
 
 
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
-function Map:SetPropOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
+function Map:SetInstanceOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
     local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
     local taggedpropList = CollectionService:GetTagged(aTaggedProp)
 
@@ -116,15 +116,14 @@ function Map:SetPropOnTile(aTaggedTilesList: string, aTaggedProp: string, aChanc
 end
 
 -- THis function sets props across the tile, THIS IS TILE SIZE DEPENDANT, BIGGER TILES = MORE PROPS!
-function Map:SetPropAcrossTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
+function Map:SetInstanceAcrossTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
     local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
     local taggedpropList = CollectionService:GetTagged(aTaggedProp)
     
     GenerateProps.InstanceAcrossTile(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
 end
 
--- Transfor tile metadata, to new one of a given table
-
+-- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
 function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table)
     local seed = math.random(-100000, 100000)
     
@@ -148,11 +147,12 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table)
 end
 
 
+-- Returns LIST of tiles with a given TAG
 function Map:GetTilesByTag(aTag: stringg)
     return CollectionService:GetTagged(aTag)
 end
 
-
+-- Returns LIST of tiles with a given attribute
 function Map:GetTilesByAttribute(anAttribute)
     local tileTable = {}
     
@@ -172,7 +172,7 @@ function Map:GetTilesByAttribute(anAttribute)
 end
 
 
-
+-- Returns LIST of tiles with a given attribute VALUE!
 function Map:GetTilesByAttributeValue(anAttribute: string, aValue: any)
     local tileTable = {}
     
@@ -190,6 +190,7 @@ function Map:GetTilesByAttributeValue(anAttribute: string, aValue: any)
 
     return tileTable
 end
+
 return Map
 
 
