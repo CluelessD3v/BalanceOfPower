@@ -1,5 +1,4 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local CustomInstance = require(ReplicatedStorage.Utilities.CustomInstance)
 local CollectionService = game:GetService('CollectionService')
 
 
@@ -17,6 +16,20 @@ function Tile.new()
     return self
 end
     
+
+-- private functions
+local function RemoveMetadata(self)
+    local oldTags = CollectionService:GetTags(self.GameObject)
+    local oldAttributes = self.GameObject:GetAttributes()
+
+    for attribute, _ in pairs(oldAttributes) do
+        self.GameObject:SetAttribute(attribute, nil)
+    end
+
+    for _, tag in ipairs (oldTags) do
+        CollectionService:RemoveTag(self.GameObject, tag)
+    end
+end
 
 
 -- Public Methods
@@ -39,11 +52,11 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
                 self.GameObject:SetAttribute(attribute, value)
             end
 
-            for key, tag in pairs (this.Tags) do
+            for _, tag in pairs (this.Tags) do
                 CollectionService:AddTag(self.GameObject, tag)
             end
 
-            for index, tag in ipairs (this.Descriptors) do
+            for _, tag in ipairs (this.Descriptors) do
                 CollectionService:AddTag(self.GameObject, tag)
             end  
         end
@@ -53,12 +66,29 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
 end
 
 --  OverWrites existing data!
-function Tile:SetMetadata()
-    local oldTags = CollectionService:GetTags(self.GameObject)
-    -- removing old tags
-    for _, tag in ipairs (oldTags) do
-        CollectionService:RemoveTag(self.GameObject, tag)
+function Tile:SetMetadata(newTerrainDataTable)
+
+    RemoveMetadata(self)
+    
+    -- reseting tile tag
+    CollectionService:AddTag(self.GameObject, "Tile")
+
+    for property, value in pairs(newTerrainDataTable.Properties) do
+        self.GameObject[property] = value
     end
+
+    for attribute, value in pairs(newTerrainDataTable.Attributes) do
+        self.GameObject:SetAttribute(attribute, value)
+    end
+
+    for _, tag in pairs (newTerrainDataTable.Tags) do
+        CollectionService:AddTag(self.GameObject, tag)
+    end
+
+    for _, tag in ipairs (newTerrainDataTable.Descriptors) do
+        CollectionService:AddTag(self.GameObject, tag)
+    end  
+
 end
 
 return Tile

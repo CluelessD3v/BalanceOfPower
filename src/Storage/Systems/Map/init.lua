@@ -130,26 +130,66 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tileInstance = self.Tiles[x][z].GameObject
-
+            local tile = self.Tiles[x][z]
+            local tileInstance = tile.GameObject
             
             local noiseResult  = PerlinNoise.new({(x + seed) * self.Scale, ( z + seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
             if CollectionService:HasTag(tileInstance, aTag) then    
                 if noiseResult <= aTerrainTable.Attributes.TerrainThreshold then
-                    tileInstance:SetMetadata()
+                    tile:SetMetadata(aTerrainTable)
                 end
             end
         end
     end
+
+    print("Tiles transformed")
+end
+
+
+function Map:GetTilesByTag(aTag: stringg)
+    return CollectionService:GetTagged(aTag)
+end
+
+
+function Map:GetTilesByAttribute(anAttribute)
+    local tileTable = {}
+    
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+            local tile = self.Tiles[x][z]
+            local tileInstance:BasePart = tile.GameObject
+
+            if tileInstance:GetAttribute(anAttribute) then 
+                table.insert(tileTable, tileInstance)
+            end
+
+        end
+    end
+
+    return tileTable
 end
 
 
 
+function Map:GetTilesByAttributeValue(anAttribute: string, aValue: any)
+    local tileTable = {}
+    
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+            local tile = self.Tiles[x][z]
+            local tileInstance:BasePart = tile.GameObject
 
+            if tileInstance:GetAttribute(anAttribute) and tileInstance:GetAttribute(anAttribute) == aValue then 
+                table.insert(tileTable, tileInstance)
+            end
 
+        end
+    end
 
+    return tileTable
+end
 return Map
 
 

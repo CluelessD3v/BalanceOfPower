@@ -25,12 +25,6 @@ Map:GenerateMap(terrainTypesTable)
 
 wait()
 
-Map:TransformTilesFromTag("Lowland", {
-    Attributes = {
-        TerrainThreshold = 1
-    }
-})
-
 
 
 
