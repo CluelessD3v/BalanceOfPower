@@ -23,22 +23,14 @@ local Map = MapClass.new(mapGenerationTable)
 local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
 
-
-Map:TransformTilesFromTag("Mountainous", {
-    TerrainThreshold = .45   ,
-    ElevationOffset = 14,
-    TerrainColor = BrickColor.new("Medium stone grey"),
-    TerrainTag = "Impassable",
-})
-
+wait()
 
 Map:TransformTilesFromTag("Lowland", {
-    TerrainThreshold = .1   ,
-    ElevationOffset = 4,
-    TerrainColor = BrickColor.new("Artichoke"),
-    TerrainTag = "Lowland",
+    Attributes = {
+        TerrainThreshold = 1
+    }
 })
 
 
-wait()
+
 

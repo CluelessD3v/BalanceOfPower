@@ -61,6 +61,8 @@ function Map.new(theMapGenerationTable: table)
     return self
 end
 
+-- Public Methods
+
 -- Generates a tile map with a noise map colored on top
 function Map:GenerateMap(theTerrainTypesTable: table)
     for x = 1, self.MapSize do
@@ -86,17 +88,17 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             -- Creating tile object and setting metadata via internal tile class
-            local tile = Tile.new()
-            local tileInstance = tile.GameObject
+            local newTile = Tile.new()
+            local tileInstance = newTile.GameObject
+            
             tileInstance.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
             tileInstance.Position = Vector3.new(x * tileInstance.Size.X, tileInstance.Size.Y, z * tileInstance.Size.Z)
             tileInstance.Name = x..","..z
 
             tileInstance.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
-            tile:SetMetadata(noiseResult, theTerrainTypesTable)
+            newTile:InitMetadata(noiseResult, theTerrainTypesTable)
 
-            self.Tiles[x][z] = tileInstance -- table.create reserved the space in table, now tiles ordered 2D-mentionally
-
+            self.Tiles[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
 
             tileInstance.Parent = workspace 
         end
@@ -123,20 +125,21 @@ end
 
 -- Transfor tile metadata, to new one of a given table
 
-function Map:TransformTilesFromTag(aTaggedTilesList: string, terrainTypeTable: table)
+function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table)
     local seed = math.random(-100000, 100000)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.Tiles[x][z]
+            local tileInstance = self.Tiles[x][z].GameObject
+
+            
             local noiseResult  = PerlinNoise.new({(x + seed) * self.Scale, ( z + seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
-            if CollectionService:HasTag(tile, aTaggedTilesList) then    
-                if noiseResult <= terrainTypeTable.TerrainThreshold then
-                    tile:SetAttribute("TerrainColor", terrainTypeTable.TerrainColor)
-                    tile:SetAttribute("ElevationOffset", terrainTypeTable.ElevationOffset)
-                end    
+            if CollectionService:HasTag(tileInstance, aTag) then    
+                if noiseResult <= aTerrainTable.Attributes.TerrainThreshold then
+                    tileInstance:SetMetadata()
+                end
             end
         end
     end
