@@ -55,7 +55,7 @@ function Map.new(theMapGenerationTable: table)
     self.FilterType = theMapGenerationTable.FilterType
 
 
-    self.Tiles = table.create(self.MapSize)
+    self.TileMap = table.create(self.MapSize)
 
     print("Map settings set")
     return self
@@ -66,7 +66,7 @@ end
 -- Generates a tile map with a noise map colored on top
 function Map:GenerateMap(theTerrainTypesTable: table)
     for x = 1, self.MapSize do
-        self.Tiles[x] = table.create(self.MapSize) -- Reserving space in memmory beforehand
+        self.TileMap[x] = table.create(self.MapSize) -- Reserving space in memmory beforehand
 
         for z = 1, self.MapSize do
             -- Noise calculation
@@ -98,7 +98,7 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             tileInstance.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
             newTile:InitMetadata(noiseResult, theTerrainTypesTable)
 
-            self.Tiles[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
+            self.TileMap[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
 
             tileInstance.Parent = workspace 
         end
@@ -129,7 +129,7 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.Tiles[x][z]
+            local tile = self.TileMap[x][z]
             local tileInstance = tile.GameObject
             
             local noiseResult  = PerlinNoise.new({(x + seed) * self.Scale, ( z + seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
@@ -158,7 +158,7 @@ function Map:GetTilesByAttribute(anAttribute)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.Tiles[x][z]
+            local tile = self.TileMap[x][z]
             local tileInstance:BasePart = tile.GameObject
 
             if tileInstance:GetAttribute(anAttribute) then 
@@ -178,7 +178,7 @@ function Map:GetTilesByAttributeValue(anAttribute: string, aValue: any)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.Tiles[x][z]
+            local tile = self.TileMap[x][z]
             local tileInstance:BasePart = tile.GameObject
 
             if tileInstance:GetAttribute(anAttribute) and tileInstance:GetAttribute(anAttribute) == aValue then 
@@ -191,6 +191,10 @@ function Map:GetTilesByAttributeValue(anAttribute: string, aValue: any)
     return tileTable
 end
 
+-- Returns TileMap
+function Map:GetTileMap()
+    return self.TileMap
+end
 return Map
 
 
