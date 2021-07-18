@@ -20,9 +20,9 @@ function GenerateProps.InstanceAcrossTile(taggedTilesList: table, taggedpropList
 
         for x = 1, tile.Size.X do
             for z = 1, tile.Size.Z do
-                local chance = Random.new():NextNumber(0, 1)
-
+                local chance = Random.new():NextNumber(1, 100)
                 if chance <= aChance then
+
                     local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
                     prop.Size = Vector3.new(tile.Size.X * .1, tile.Size.Y * .2 , tile.Size.Z * .1 )
 
