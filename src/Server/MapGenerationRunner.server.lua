@@ -14,7 +14,7 @@ local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
 
 
-local IronTile = {
+local LowlandIronTile = {
     Properties = {
         BrickColor = BrickColor.new("Moss"),
     },
@@ -22,9 +22,7 @@ local IronTile = {
     Attributes = {
         TerrainThreshold = .1,
         ElevationOffset = 4,
-        HasResource = false,
         ResourceAmmount = 0,
-
     },
 
     Tags = {
@@ -37,6 +35,31 @@ local IronTile = {
         "HasResource"
     }
 }
+
+
+local UplandIronTile = {
+    Properties = {
+        BrickColor = BrickColor.new("Bright green"),
+    },
+
+    Attributes = {
+        TerrainThreshold = .3,
+        ElevationOffset = 4,
+        ResourceAmmount = 0,
+    },
+
+    Tags = {
+        TerrainType = "Upland",
+        Resource = "Iron",
+        Feature = "None",            
+    },
+
+    Descriptors = {
+        "HasResource"
+    }
+}
+
+
 wait()
 
 for x = 1, Map.MapSize do
@@ -51,7 +74,23 @@ for x = 1, Map.MapSize do
     end
 end
 
-Map:TransformTilesFromTag("Lowland", IronTile)
+Map:TransformTilesFromTag("Lowland", LowlandIronTile)
+Map:TransformTilesFromTag("Upland", UplandIronTile)
 
-Map:SetInstanceAcrossTile("Iron", "IronProp", 7, false)
+for _, taggedTile in ipairs (CollectionService:GetTagged("Lowland")) do
+    if CollectionService:HasTag(taggedTile, "Iron") then
+        Map:SetInstanceAcrossTile(taggedTile, "IronProp", 1, true)
 
+    end
+end
+
+for _, taggedTile in ipairs (CollectionService:GetTagged("Upland")) do
+    if CollectionService:HasTag(taggedTile, "Iron") then
+        Map:SetInstanceAcrossTile(taggedTile, "IronProp", 2, true)
+
+    end
+end
+
+wait()
+
+Map.Debug.tileFilterType.Whitelist(Map, {"Lowland"})

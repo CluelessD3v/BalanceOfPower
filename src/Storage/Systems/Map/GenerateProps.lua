@@ -15,33 +15,31 @@ local GenerateProps = {}
 ]]--
 
 
-function GenerateProps.InstanceAcrossTile(taggedTilesList: table, taggedpropList: table, aChance: integer, hasRandomOrientation: boolean)
-    for _, tile in ipairs(taggedTilesList) do
+function GenerateProps.InstanceAcrossTile(aTile: BasePart, taggedpropList: table, aChance: integer, hasRandomOrientation: boolean)
+    for x = 1, aTile.Size.X do
+        for z = 1, aTile.Size.Z do
+            local chance = math.floor(Random.new():NextNumber(1, 100))
+            if chance <= aChance then
 
-        for x = 1, tile.Size.X do
-            for z = 1, tile.Size.Z do
-                local chance = Random.new():NextNumber(1, 100)
-                if chance <= aChance then
 
-                    local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
-                    prop.Size = Vector3.new(tile.Size.X * .1, tile.Size.Y * .2 , tile.Size.Z * .1 )
+                local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
+                prop.Size = Vector3.new(aTile.Size.X * .1, aTile.Size.Y * .2 , aTile.Size.Z * .1 )
 
-                    if hasRandomOrientation then
-                        prop.Orientation = Vector3.new(0, math.random(0, 360),0)
-                    end
+                if hasRandomOrientation then
+                    prop.Orientation = Vector3.new(0, math.random(0, 360),0)
+                end
                 
                     
-                    local xOffset = x * prop.Size.X - tile.Size.X/2
-                    local zOffset =  z * prop.Size.Z  - tile.Size.Z/2
-                    local yOffset =  tile.Size.Y/2 + prop.Size.Y/2
+                local xOffset = x * prop.Size.X - aTile.Size.X/2
+                local zOffset =  z * prop.Size.Z  - aTile.Size.Z/2
+                local yOffset =  aTile.Size.Y/2 + prop.Size.Y/2
                 
-                    prop.Position = tile.Position + Vector3.new(xOffset, yOffset, zOffset)
-                    prop.Parent = tile
-                end
-            end
-        end
+                prop.Position = aTile.Position + Vector3.new(xOffset, yOffset, zOffset)
+                prop.Parent = aTile
+             end
+         end
+     end
 
-    end
 
 end
 

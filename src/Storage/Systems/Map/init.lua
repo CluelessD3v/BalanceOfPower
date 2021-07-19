@@ -4,6 +4,7 @@ local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
 local Tile = require(script.Tile)
 local GenerateProps = require(script.GenerateProps)
+local Debug = require(script.Debug)
 
 local Map = {} 
 Map.__index = Map
@@ -57,6 +58,12 @@ function Map.new(theMapGenerationTable: table)
 
     self.TileMap = table.create(self.MapSize)
 
+    self.Debug = {
+        tileFilterType = {
+            Blacklist = Debug.FilterTilesFromBlackList,
+            Whitelist = Debug.FilterTilesFromWhitelist,
+        }
+    }
     print("Map settings set")
     return self
 end
@@ -116,11 +123,10 @@ function Map:SetInstanceOnTile(aTaggedTilesList: string, aTaggedProp: string, aC
 end
 
 -- THis function sets props across the tile, THIS IS TILE SIZE DEPENDANT, BIGGER TILES = MORE PROPS!
-function Map:SetInstanceAcrossTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
-    local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
+function Map:SetInstanceAcrossTile(aTile: BasePart, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
     local taggedpropList = CollectionService:GetTagged(aTaggedProp)
     
-    GenerateProps.InstanceAcrossTile(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
+    GenerateProps.InstanceAcrossTile(aTile, taggedpropList, aChance, hasRandomOrientation)
 end
 
 -- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
@@ -195,14 +201,11 @@ end
 function Map:GetTileMap()
     return self.TileMap
 end
+
+
+
+
 return Map
-
-
-
-
-
-
-
 
 
 
