@@ -135,8 +135,7 @@ end
 
 -- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
 function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
-    aSeed = aSeed or math.random(-100000, 100000)
-    
+    aSeed = aSeed or math.random(-100_000, 100_000)
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.TileMap[x][z]
