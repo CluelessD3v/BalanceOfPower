@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ServerStorage = game:GetService('ServerStorage')
 
 -- Modules
-local MapClass = require(ServerStorage.Systems.Map)
+local MapClass = require(ServerStorage.Systems.MapEntity)
 local MapGenHelperLib = require(ServerStorage.Systems.MapGenHelperLib)
 
 -- Mapping MapGenerationConfig values to the map gen tbable
