@@ -134,15 +134,15 @@ function Map:SetInstanceAcrossTile(aTile: BasePart, aTaggedProp: string, aChance
 end
 
 -- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
-function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table)
-    local seed = math.random(-100000, 100000)
+function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
+    aSeed = aSeed or math.random(-100000, 100000)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.TileMap[x][z]
             local tileInstance = tile.GameObject
             
-            local noiseResult  = PerlinNoise.new({(x + seed) * self.Scale, ( z + seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
+            local noiseResult  = PerlinNoise.new({(x + aSeed) * self.Scale, ( z + aSeed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
             if CollectionService:HasTag(tileInstance, aTag) then    

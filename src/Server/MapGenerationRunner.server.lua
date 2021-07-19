@@ -17,3 +17,4 @@ local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
 MapGenHelperLib.SetTerrainElevation(Map)
 
+    
