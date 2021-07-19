@@ -103,7 +103,11 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             tileInstance.Name = x..","..z
 
             tileInstance.Color = Color3.new(noiseResult , noiseResult , noiseResult ) -- Draws noise in black and white gradient (also fallback if there is no color data)
+            tileInstance.Anchored = true
+            tileInstance.Material = Enum.Material.SmoothPlastic
+            
             newTile:InitMetadata(noiseResult, theTerrainTypesTable)
+
 
             self.TileMap[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
 

@@ -20,45 +20,20 @@ local LowlandIronTile = {
     },
 
     Attributes = {
-        TerrainThreshold = .1,
+        TerrainThreshold = .025,
         ElevationOffset = 4,
         ResourceAmmount = 0,
     },
 
-    Tags = {
-        TerrainType = "Lowland",
-        Resource = "Iron",
-        Feature = "None",            
-    },
-
-    Descriptors = {
-        "HasResource"
-    }
+    Tags = {},
 }
 
 
-local UplandIronTile = {
-    Properties = {
-        BrickColor = BrickColor.new("Bright green"),
-    },
 
-    Attributes = {
-        TerrainThreshold = .3,
-        ElevationOffset = 4,
-        ResourceAmmount = 0,
-    },
+wait()
 
-    Tags = {
-        TerrainType = "Upland",
-        Resource = "Iron",
-        Feature = "None",            
-    },
 
-    Descriptors = {
-        "HasResource"
-    }
-}
-
+Map:TransformTilesFromTag("Lowland", LowlandIronTile)
 
 wait()
 
@@ -74,23 +49,10 @@ for x = 1, Map.MapSize do
     end
 end
 
-Map:TransformTilesFromTag("Lowland", LowlandIronTile)
-Map:TransformTilesFromTag("Upland", UplandIronTile)
 
 for _, taggedTile in ipairs (CollectionService:GetTagged("Lowland")) do
     if CollectionService:HasTag(taggedTile, "Iron") then
-        Map:SetInstanceAcrossTile(taggedTile, "IronProp", 1, true)
+        Map:SetInstanceAcrossTile(taggedTile, "IronProp", 3, true)
 
     end
 end
-
-for _, taggedTile in ipairs (CollectionService:GetTagged("Upland")) do
-    if CollectionService:HasTag(taggedTile, "Iron") then
-        Map:SetInstanceAcrossTile(taggedTile, "IronProp", 2, true)
-
-    end
-end
-
-wait()
-
-Map.Debug.tileFilterType.Whitelist(Map, {"Lowland"})

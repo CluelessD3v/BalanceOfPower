@@ -8,7 +8,7 @@ Tile.__index = Tile
 function Tile.new()
     local self = setmetatable({}, Tile)
     self.GameObject = Instance.new("Part")
-    self.GameObject.Anchored = true
+    
     
     CollectionService:AddTag(self.GameObject, "Tile")
 
@@ -52,13 +52,9 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
                 self.GameObject:SetAttribute(attribute, value)
             end
 
-            for _, tag in pairs (this.Tags) do
+            for _, tag in ipairs (this.Tags) do
                 CollectionService:AddTag(self.GameObject, tag)
-            end
-
-            for _, tag in ipairs (this.Descriptors) do
-                CollectionService:AddTag(self.GameObject, tag)
-            end  
+            end 
         end
     end
 
@@ -81,14 +77,9 @@ function Tile:SetMetadata(newTerrainDataTable)
         self.GameObject:SetAttribute(attribute, value)
     end
 
-    for _, tag in pairs (newTerrainDataTable.Tags) do
+    for _, tag in ipairs (newTerrainDataTable.Tags) do
         CollectionService:AddTag(self.GameObject, tag)
     end
-
-    for _, tag in ipairs (newTerrainDataTable.Descriptors) do
-        CollectionService:AddTag(self.GameObject, tag)
-    end  
-
 end
 
 return Tile
