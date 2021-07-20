@@ -47,31 +47,10 @@ local Iron = {
     },
 }
 
-local sum = 0
-for _, entry in pairs(Iron) do
-    sum = sum + entry.Weight
-end
-
-
-
-local resource = nil
-
-
-local function getResource()
-    local randI = math.random(sum)
-    for _, entry in pairs(Iron) do
-        if randI <= entry.Weight then
-            return entry.Ammount     
-        else
-            randI = randI - entry.Weight   
-        end
-    end
-end
 
 
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
     local ammount = GetWeightedDrop(Iron)
-    print(ammount)
     tile:SetAttribute("ResourceAmmount", ammount)
 end
 
