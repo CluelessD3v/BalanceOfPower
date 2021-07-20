@@ -10,7 +10,7 @@ return {
             BrickColor = BrickColor.new("Bright blue")
         },
         Attributes = {
-            TerrainThreshold = 0,
+            Threshold = 0,
             ElevationOffset = 3,
 
         },  
@@ -22,7 +22,7 @@ return {
         BrickColor = BrickColor.new("Electric blue")
     },
     Attributes = {
-        TerrainThreshold = .3,
+        Threshold = .3,
         ElevationOffset = 3,
 
     },  
@@ -34,7 +34,7 @@ return {
         BrickColor = BrickColor.new("Cyan")
     },
     Attributes = {
-        TerrainThreshold = .4,
+        Threshold = .4,
         ElevationOffset = 3,
 
     },  
@@ -47,7 +47,7 @@ return {
         BrickColor = BrickColor.new("Daisy orange")
     },
     Attributes = {
-        TerrainThreshold = .545,
+        Threshold = .545,
         ElevationOffset = 4,
 
     },  
@@ -59,7 +59,7 @@ return {
         BrickColor = BrickColor.new("Moss")
     },
     Attributes = {
-        TerrainThreshold = .6,
+        Threshold = .6,
         ElevationOffset = 4,
 
     },  
@@ -71,7 +71,7 @@ return {
         BrickColor = BrickColor.new("Bright green")
     },
     Attributes = {
-        TerrainThreshold = .7,
+        Threshold = .7,
         ElevationOffset = 5,
 
     },  
@@ -83,7 +83,7 @@ return {
         BrickColor = BrickColor.new("Sea green")
     },
     Attributes = {
-        TerrainThreshold = .8,
+        Threshold = .8,
         ElevationOffset = 6,
 
     },  
@@ -95,7 +95,7 @@ return {
         BrickColor = BrickColor.new("Dark green")
     },
     Attributes = {
-        TerrainThreshold = .9,
+        Threshold = .9,
         ElevationOffset = 7,
 
     },  
@@ -108,7 +108,7 @@ return {
         BrickColor = BrickColor.new("Slime green")
     },
     Attributes = {
-        TerrainThreshold = .99,
+        Threshold = .99,
         ElevationOffset = 8,
 
     },  
@@ -122,7 +122,7 @@ return {
 
         Properties = {},
         Attributes = { --place holder val
-            TerrainThreshold = 1
+            Threshold = 1
         },
         Tags = {},
     },

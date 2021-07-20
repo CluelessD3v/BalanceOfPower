@@ -15,4 +15,15 @@ local Map = MapClass.new(mapGenerationTable)
 
 local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
+wait()
+Map:UpdateTilesFromTag("Lowland",
+{
+    Properties = {},
+    Tags = {"Iron"},
+    Attributes = {
+        Threshold = .3
+    },
+})
+
 MapGenHelperLib.SetTerrainElevation(Map)
+Map.Debug.FilterTiles.Whitelist(Map, {"Iron"})

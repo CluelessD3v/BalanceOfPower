@@ -42,7 +42,7 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
         local next = theTerrainTypesTable[i + 1]   -- next value in the list
         
         -- this is an If statement to check if we are in rangeBTW
-        if theNoiseResult >= this.Attributes.TerrainThreshold and theNoiseResult <= next.Attributes.TerrainThreshold then
+        if theNoiseResult >= this.Attributes.Threshold and theNoiseResult <= next.Attributes.Threshold then
             
             for property, value in pairs(this.Properties) do
                 self.GameObject[property] = value
@@ -81,5 +81,24 @@ function Tile:SetMetadata(newTerrainDataTable)
         CollectionService:AddTag(self.GameObject, tag)
     end
 end
+
+-- Updates existing data w/o removing existing data
+function Tile:UpdateMetaData(newTerrainDataTable)
+    -- Updating Data tile tag
+    CollectionService:AddTag(self.GameObject, "Tile")
+
+    for property, value in pairs(newTerrainDataTable.Properties) do
+        self.GameObject[property] = value
+    end
+
+    for attribute, value in pairs(newTerrainDataTable.Attributes) do
+        self.GameObject:SetAttribute(attribute, value)
+    end
+
+    for _, tag in ipairs (newTerrainDataTable.Tags) do
+        CollectionService:AddTag(self.GameObject, tag)
+    end
+end
+
 
 return Tile

@@ -2,7 +2,7 @@ local CollectionService = game:GetService('CollectionService')
 
 local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
-local Tile = require(script.Tile)
+local Tile = require(script.TileEntity)
 local GenerateProps = require(script.GenerateProps)
 local Debug = require(script.Debug)
 
@@ -59,7 +59,7 @@ function Map.new(theMapGenerationTable: table)
     self.TileMap = table.create(self.MapSize)
 
     self.Debug = {
-        tileFilterType = {
+        FilterTiles = {
             Blacklist = Debug.FilterTilesFromBlackList,
             Whitelist = Debug.FilterTilesFromWhitelist,
         }
@@ -145,7 +145,7 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: in
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
             if CollectionService:HasTag(tileInstance, aTag) then    
-                if noiseResult <= aTerrainTable.Attributes.TerrainThreshold then
+                if noiseResult <= aTerrainTable.Attributes.Threshold then
                     tile:SetMetadata(aTerrainTable)
                 end
             end
@@ -155,6 +155,27 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: in
     print("Tiles transformed")
 end
 
+function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
+    aSeed = aSeed or math.random(-100_000, 100_000)
+    
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+            local tile = self.TileMap[x][z]
+            local tileInstance = tile.GameObject
+            
+            local noiseResult  = PerlinNoise.new({(x + aSeed) * self.Scale, ( z + aSeed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
+            noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
+            
+            if CollectionService:HasTag(tileInstance, aTag) then    
+                if noiseResult <= aTerrainTable.Attributes.Threshold then
+                    tile:UpdateMetaData(aTerrainTable)
+                end
+            end
+        end
+    end
+
+    print("Tiles transformed")
+end
 
 -- Returns LIST of tiles with a given TAG
 function Map:GetTilesByTag(aTag: stringg)
