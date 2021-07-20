@@ -21,12 +21,11 @@ local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
 wait()
 Map:UpdateTilesFromTag("Lowland",
-{
-    Tags = {"Iron"},
-    Attributes = {
-        Threshold = .1
-    },
-})
+    {
+        Threshold = .1, 
+        Tags = {"Iron"},
+    }
+)
 
 
 local Iron = {
