@@ -5,127 +5,121 @@
 
     --]]
 return {
-[1] = {
+    [1] = {
+        Threshold = 0,
+
         Properties = {
             BrickColor = BrickColor.new("Bright blue")
         },
         Attributes = {
-            Threshold = 0,
-            ElevationOffset = 3,
+        ElevationOffset = 3,
 
         },  
         Tags = {"Ocean"},
-},
-
-[2] = {
-    Properties = {
-        BrickColor = BrickColor.new("Electric blue")
     },
-    Attributes = {
+
+    [2] = {
         Threshold = .3,
-        ElevationOffset = 3,
-
-    },  
-    Tags = {"Littoral"},
-},
-
-[3] = {
-    Properties = {
-        BrickColor = BrickColor.new("Cyan")
-    },
-    Attributes = {
-        Threshold = .4,
-        ElevationOffset = 3,
-
-    },  
-    Tags = {"Coastal"},
-},
-
-
-[4] = {
-    Properties = {
-        BrickColor = BrickColor.new("Daisy orange")
-    },
-    Attributes = {
-        Threshold = .545,
-        ElevationOffset = 4,
-
-    },  
-    Tags = {"Beach"},
-},
-
-[5] = {
-    Properties = {
-        BrickColor = BrickColor.new("Moss")
-    },
-    Attributes = {
-        Threshold = .6,
-        ElevationOffset = 4,
-
-    },  
-    Tags = {"Lowland"},
-},
-
-[6] = {
-    Properties = {
-        BrickColor = BrickColor.new("Bright green")
-    },
-    Attributes = {
-        Threshold = .7,
-        ElevationOffset = 5,
-
-    },  
-    Tags = {"Upland"},
-},
-
-[7] = {
-    Properties = {
-        BrickColor = BrickColor.new("Sea green")
-    },
-    Attributes = {
-        Threshold = .8,
-        ElevationOffset = 6,
-
-    },  
-    Tags = {"Highland"},
-},
-
-[8] = {
-    Properties = {
-        BrickColor = BrickColor.new("Dark green")
-    },
-    Attributes = {
-        Threshold = .9,
-        ElevationOffset = 7,
-
-    },  
-    Tags = {"Steepland"},
-},
-
-
-[9] = {
-    Properties = {
-        BrickColor = BrickColor.new("Slime green")
-    },
-    Attributes = {
-        Threshold = .99,
-        ElevationOffset = 8,
-
-    },  
-    Tags = {"Mountainous"},
-},
-
-
-    
-
-[10] = {
-
-        Properties = {},
-        Attributes = { --place holder val
-            Threshold = 1
+        Properties = {
+            BrickColor = BrickColor.new("Electric blue")
         },
-        Tags = {},
+        Attributes = {
+            ElevationOffset = 3,
+
+        },  
+        Tags = {"Littoral"},
+    },
+
+    [3] = {
+        Threshold = .4,
+        Properties = {
+            BrickColor = BrickColor.new("Cyan")
+        },
+        Attributes = {
+            ElevationOffset = 3,
+
+        },  
+        Tags = {"Coastal"},
     },
 
 
+    [4] = {
+        Threshold = .545,
+        Properties = {
+            BrickColor = BrickColor.new("Daisy orange")
+        },
+        Attributes = {
+            ElevationOffset = 4,
+
+        },  
+        Tags = {"Beach"},
+    },
+
+    [5] = {
+        Threshold = .6,
+        Properties = {
+            BrickColor = BrickColor.new("Moss")
+        },
+        Attributes = {
+            ElevationOffset = 4,
+
+        },  
+        Tags = {"Lowland"},
+    },
+
+    [6] = {
+        Threshold = .7,
+        Properties = {
+            BrickColor = BrickColor.new("Bright green")
+        },
+        Attributes = {
+            ElevationOffset = 5,
+
+        },  
+        Tags = {"Upland"},
+    },
+
+    [7] = {
+        Threshold = .8,
+        Properties = {
+            BrickColor = BrickColor.new("Sea green")
+        },
+        Attributes = {
+            ElevationOffset = 6,
+
+        },  
+        Tags = {"Highland"},
+    },
+
+    [8] = {
+        Threshold = .9,
+        Properties = {
+            BrickColor = BrickColor.new("Dark green")
+        },
+        Attributes = {
+            ElevationOffset = 7,
+
+        },  
+        Tags = {"Steepland"},
+    },
+
+
+    [9] = {
+        Threshold = .99,
+        Properties = {
+            BrickColor = BrickColor.new("Slime green")
+        },
+        Attributes = {
+            ElevationOffset = 8,
+
+        },  
+        Tags = {"Mountainous"},
+    },
+
+
+
+    [10] = {
+        Threshold = 1 -- placeholder val
+
+    }
 }

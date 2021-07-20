@@ -22,7 +22,6 @@ Map:GenerateMap(terrainTypesTable)
 wait()
 Map:UpdateTilesFromTag("Lowland",
 {
-    Properties = {},
     Tags = {"Iron"},
     Attributes = {
         Threshold = .1

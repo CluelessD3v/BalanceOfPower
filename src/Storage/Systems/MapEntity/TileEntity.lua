@@ -37,13 +37,16 @@ end
 
 -- Automatically sets metadata to tile from the terrain types table
 function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
+
     for i = 1, #theTerrainTypesTable -1 do
         local this = theTerrainTypesTable[i] -- current value in the list
         local next = theTerrainTypesTable[i + 1]   -- next value in the list
         
         -- this is an If statement to check if we are in rangeBTW
-        if theNoiseResult >= this.Attributes.Threshold and theNoiseResult <= next.Attributes.Threshold then
-            
+        if theNoiseResult >= this.Threshold and theNoiseResult <= next.Threshold then
+            this.Properties = this.Properties or {}
+            this.Tags = this.Tags or {} 
+            this.Attributes = this.Attributes or {}
             for property, value in pairs(this.Properties) do
                 self.GameObject[property] = value
             end
@@ -63,7 +66,10 @@ end
 
 --  OverWrites existing data!
 function Tile:SetMetadata(newTerrainDataTable)
-
+    newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
+    newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
+    newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
+    
     RemoveMetadata(self)
     
     -- reseting tile tag
@@ -84,6 +90,10 @@ end
 
 -- Updates existing data w/o removing existing data
 function Tile:UpdateMetaData(newTerrainDataTable)
+    newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
+    newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
+    newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
+
     -- Updating Data tile tag
     CollectionService:AddTag(self.GameObject, "Tile")
 

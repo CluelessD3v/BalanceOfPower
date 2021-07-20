@@ -145,7 +145,7 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: in
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
             if CollectionService:HasTag(tileInstance, aTag) then    
-                if noiseResult <= aTerrainTable.Attributes.Threshold then
+                if noiseResult <= aTerrainTable.Threshold then
                     tile:SetMetadata(aTerrainTable)
                 end
             end
@@ -167,7 +167,7 @@ function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integ
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
             if CollectionService:HasTag(tileInstance, aTag) then    
-                if noiseResult <= aTerrainTable.Attributes.Threshold then
+                if noiseResult <= aTerrainTable.Threshold then
                     tile:UpdateMetaData(aTerrainTable)
                 end
             end
