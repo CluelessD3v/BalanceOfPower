@@ -5,6 +5,6 @@
 
 return{
     GetWeightedDrop = require(script.GetWeightedDrop),
-    GetNormalizedValue = require(script.NormalizeValue),
+    GetNormalizedValue = require(script.GetNormalizedValue),
     CustomInstance = require(script.CustomInstance)
 }

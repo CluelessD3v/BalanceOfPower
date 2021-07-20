@@ -16,7 +16,7 @@ return function(aWeightedTable)
     
     for _, entry in pairs(aWeightedTable) do
         if randI <= entry.Weight then
-            return entry.Ammount     
+            return entry -- returns the Key so you can do whatever with the values     
         else
             randI = randI - entry.Weight   
         end

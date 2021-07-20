@@ -6,53 +6,38 @@ local ServerStorage = game:GetService('ServerStorage')
 
 local Utilities = ReplicatedStorage.Utilities
 
--- Modules
+-------------------- Modules --------------------
 local MapClass = require(ServerStorage.Systems.MapEntity)
 local MapGenHelperLib = require(ServerStorage.Systems.MapGenHelperLib)
 local GetWeightedDrop = require(Utilities.GetWeightedDrop)
 
--- Mapping MapGenerationConfig values to the map gen tbable
 
--- Map generation
+-------------------- Tables --------------------
 local mapGenerationTable = require(ServerStorage.Components.MapGenerationTable)
+local resourcesTable = require(ServerStorage.Components.ResourcesTable)
+
+
+-------------------- Map Generation --------------------
+-- Mapping MapGenerationConfig values to the map gen tbable
 local Map = MapClass.new(mapGenerationTable)
 
 local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
+
+
 wait()
 Map:UpdateTilesFromTag("Lowland",
     {
-        Threshold = .1, 
+        Threshold = .5, 
         Tags = {"Iron"},
     }
 )
 
-
-local Iron = {
-    {
-        Ammount = "Small",
-        Weight = 30
-    },
-
-    {
-        Ammount = "Medium",
-        Weight = 50
-    },
-    
-    {
-        Ammount = "Big",
-        Weight = 5
-    },
-}
-
-
-
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
-    local ammount = GetWeightedDrop(Iron)
-    tile:SetAttribute("ResourceAmmount", ammount)
+    local ResourceData = GetWeightedDrop(resourcesTable.Iron) -- returns the Key 
+    local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
+    tile:SetAttribute("ResourceAmmount", depositSize)
 end
 
---MapGenHelperLib.SetTerrainElevation(Map)
+MapGenHelperLib.SetTerrainElevation(Map)
 
-
-Map.Debug.FilterTiles.Whitelist(Map, {"Iron"})
