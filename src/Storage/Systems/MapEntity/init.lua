@@ -6,6 +6,7 @@ local Tile = require(script.TileEntity)
 local GenerateProps = require(script.GenerateProps)
 local Debug = require(script.Debug)
 
+-------------------- Constructor --------------------
 local Map = {} 
 Map.__index = Map
 
@@ -68,8 +69,8 @@ function Map.new(theMapGenerationTable: table)
     return self
 end
 
--- Public Methods
 
+-------------------- Public Routines --------------------
 -- Generates a tile map with a noise map colored on top
 function Map:GenerateMap(theTerrainTypesTable: table)
     for x = 1, self.MapSize do
@@ -117,22 +118,6 @@ function Map:GenerateMap(theTerrainTypesTable: table)
     print("Map generated")
 end
 
-
--- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
-function Map:SetInstanceOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
-    local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
-    local taggedpropList = CollectionService:GetTagged(aTaggedProp)
-
-    GenerateProps.InstanceToOrigin(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
-end
-
--- THis function sets props across the tile, THIS IS TILE SIZE DEPENDANT, BIGGER TILES = MORE PROPS!
-function Map:SetInstanceAcrossTile(aTile: BasePart, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
-    local taggedpropList = CollectionService:GetTagged(aTaggedProp)
-    
-    GenerateProps.InstanceAcrossTile(aTile, taggedpropList, aChance, hasRandomOrientation)
-end
-
 -- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
 function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
     aSeed = aSeed or math.random(-100_000, 100_000)
@@ -177,6 +162,25 @@ function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integ
     print("Tiles transformed")
 end
 
+
+-------------------- Setters --------------------
+-- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
+function Map:SetInstanceOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
+    local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
+    local taggedpropList = CollectionService:GetTagged(aTaggedProp)
+
+    GenerateProps.InstanceToOrigin(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
+end
+
+-- THis function sets props across the tile, THIS IS TILE SIZE DEPENDANT, BIGGER TILES = MORE PROPS!
+function Map:SetInstanceAcrossTile(aTile: BasePart, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
+    local taggedpropList = CollectionService:GetTagged(aTaggedProp)
+    
+    GenerateProps.InstanceAcrossTile(aTile, taggedpropList, aChance, hasRandomOrientation)
+end
+
+
+-------------------- Getters --------------------
 -- Returns LIST of tiles with a given TAG
 function Map:GetTilesByTag(aTag: stringg)
     return CollectionService:GetTagged(aTag)

@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local CollectionService = game:GetService('CollectionService')
 
+-------------------- Constructor --------------------
 
 local Tile = {} 
 Tile.__index = Tile
@@ -32,8 +33,7 @@ local function RemoveMetadata(self)
 end
 
 
--- Public Methods
---//TODO Check about Listenning for attribute changes
+-------------------- Public Routines --------------------
 
 -- Automatically sets metadata to tile from the terrain types table
 function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
