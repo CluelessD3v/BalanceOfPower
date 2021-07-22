@@ -119,8 +119,8 @@ function Map:GenerateMap(theTerrainTypesTable: table)
     print("Map generated")
 end
 
--- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
-function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
+-- Transform tile metadata with perlin, to new one of a given table, OVERWRITES PREVIOUS DATA!
+function Map:TransformFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
     aSeed = aSeed or math.random(-100_000, 100_000)
     local count = 0
 
@@ -132,18 +132,19 @@ function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: in
             local noiseResult  = PerlinNoise.new({(x + aSeed) * self.Scale, ( z + aSeed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
             
-            if CollectionService:HasTag(tileInstance, aTag) then    
+            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then    
                 if noiseResult <= aTerrainTable.Threshold then
+                    count += 1
                     tile:SetMetadata(aTerrainTable)
                 end
             end
         end
     end
 
-    print("Tiles transformed")
+    print(count,"tiles transformed")
 end
 
-function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
+function Map:UpdateFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
     aSeed = aSeed or math.random(-100_000, 100_000)
     aTerrainTable.Limit = aTerrainTable.Limit or self.MapSize^2
     local count = 0
@@ -161,15 +162,15 @@ function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integ
             if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
                 if noiseResult <= aTerrainTable.Threshold then
                     count += 1
+                    print(noiseResult)
                     tile:UpdateMetaData(aTerrainTable)
                 end
             end
         end
     end
 
-    print("Tiles transformed")
+    print(count, "Tiles Updated")
 end
-
 
 -------------------- Setters --------------------
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
