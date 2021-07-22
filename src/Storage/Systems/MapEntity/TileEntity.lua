@@ -38,6 +38,7 @@ end
 -- Automatically sets metadata to tile from the terrain types table
 function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
 
+
     for i = 1, #theTerrainTypesTable -1 do
         local this = theTerrainTypesTable[i] -- current value in the list
         local next = theTerrainTypesTable[i + 1]   -- next value in the list
@@ -47,6 +48,8 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
             this.Properties = this.Properties or {}
             this.Tags = this.Tags or {} 
             this.Attributes = this.Attributes or {}
+            this.Limit = this.Limit or 2e9
+
             for property, value in pairs(this.Properties) do
                 self.GameObject[property] = value
             end
@@ -69,7 +72,8 @@ function Tile:SetMetadata(newTerrainDataTable)
     newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
     newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
     newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
-    
+    newTerrainDataTable.Limit = newTerrainDataTable.Limit or 2e9
+    newTerrainDataTable.Threshold = newTerrainDataTable.Threshold or .5 
     RemoveMetadata(self)
     
     -- reseting tile tag
@@ -93,7 +97,8 @@ function Tile:UpdateMetaData(newTerrainDataTable)
     newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
     newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
     newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
-
+    newTerrainDataTable.Threshold = newTerrainDataTable.Threshold or .5
+    newTerrainDataTable.Limit = newTerrainDataTable.Limit or 2e9 
     -- Updating Data tile tag
     CollectionService:AddTag(self.GameObject, "Tile")
 

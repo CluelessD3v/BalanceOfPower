@@ -31,6 +31,7 @@ function Debug.FilterTilesFromWhitelist(self, theFilteredTags: table, filteredCo
             local tile = self.TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             
+            -- Check if it has any of the filtered tags
             for _, tag in ipairs(theFilteredTags) do
                 if not CollectionService:HasTag(tileInstance, tag) then
                    tileInstance.BrickColor = filteredColor
@@ -42,7 +43,7 @@ function Debug.FilterTilesFromWhitelist(self, theFilteredTags: table, filteredCo
 end
 
 
-function Debug.filterByColorAndGradient (self, theFilteredTags: table, attribute, min, max)
+function Debug.filterByColorAndGradient (self, theFilteredTags: table, attribute: string, min: number, max: number)
     local filteredColor = BrickColor.new("White")
 
 
@@ -52,9 +53,12 @@ function Debug.filterByColorAndGradient (self, theFilteredTags: table, attribute
             local tile = self.TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             
+            -- Check if it has any of the filtered tags
             for _, tag in ipairs(theFilteredTags) do
                 if CollectionService:HasTag(tileInstance, tag) then
-                    local normalizedVal = Utilities.GetNormalizedValue(tileInstance:GetAttribute(attribute), min, max)
+
+                    -- Had to invert the normalization values because R1, G1, B1 == white, kinda gives me aids but oh well...
+                    local normalizedVal = Utilities.GetNormalizedValue(tileInstance:GetAttribute(attribute), max, min) 
                     tileInstance.Color = Color3.new(normalizedVal, normalizedVal, normalizedVal)
                 else
                     tileInstance.BrickColor = filteredColor

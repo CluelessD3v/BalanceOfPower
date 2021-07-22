@@ -7,7 +7,7 @@
 return {
     [1] = {
         Threshold = 0,
-
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Bright blue")
         },
@@ -20,6 +20,7 @@ return {
 
     [2] = {
         Threshold = .3,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Electric blue")
         },
@@ -32,6 +33,7 @@ return {
 
     [3] = {
         Threshold = .4,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Cyan")
         },
@@ -45,6 +47,7 @@ return {
 
     [4] = {
         Threshold = .545,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Daisy orange")
         },
@@ -57,6 +60,7 @@ return {
 
     [5] = {
         Threshold = .6,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Moss")
         },
@@ -69,6 +73,7 @@ return {
 
     [6] = {
         Threshold = .7,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Bright green")
         },
@@ -81,6 +86,7 @@ return {
 
     [7] = {
         Threshold = .8,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Sea green")
         },
@@ -93,6 +99,7 @@ return {
 
     [8] = {
         Threshold = .9,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Dark green")
         },
@@ -106,6 +113,7 @@ return {
 
     [9] = {
         Threshold = .99,
+        Limit  = -1,
         Properties = {
             BrickColor = BrickColor.new("Slime green")
         },
@@ -119,7 +127,8 @@ return {
 
 
     [10] = {
-        Threshold = 1 -- placeholder val
+        Threshold = 1, -- placeholder val
+        Limit  = -1,
 
     }
 }

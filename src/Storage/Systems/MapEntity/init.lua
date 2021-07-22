@@ -122,6 +122,8 @@ end
 -- Transform tile metadata, to new one of a given table, OVERWRITES PREVIOUS DATA!
 function Map:TransformTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
     aSeed = aSeed or math.random(-100_000, 100_000)
+    local count = 0
+
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.TileMap[x][z]
@@ -143,7 +145,9 @@ end
 
 function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integer)
     aSeed = aSeed or math.random(-100_000, 100_000)
-    
+    aTerrainTable.Limit = aTerrainTable.Limit or self.MapSize^2
+    local count = 0
+
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.TileMap[x][z]
@@ -151,9 +155,12 @@ function Map:UpdateTilesFromTag(aTag: string, aTerrainTable: table, aSeed: integ
             
             local noiseResult  = PerlinNoise.new({(x + aSeed) * self.Scale, ( z + aSeed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
+            tileInstance:SetAttribute("Noise", noiseResult)
+
             
-            if CollectionService:HasTag(tileInstance, aTag) then    
+            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
                 if noiseResult <= aTerrainTable.Threshold then
+                    count += 1
                     tile:UpdateMetaData(aTerrainTable)
                 end
             end

@@ -14,8 +14,8 @@ local GetWeightedDrop = require(Utilities.GetWeightedDrop)
 
 -------------------- Tables --------------------
 local mapGenerationTable = require(ServerStorage.Components.MapGenerationTable)
-local resourcesTable = require(ServerStorage.Components.ResourcesTable)
-
+local ResourceWeightedDropTable = require(ServerStorage.Components.ResourceWeightedDropTable)
+local resourceDistributionTable = require(ServerStorage.Components.ResourceDistributionTable)
 
 -------------------- Map Generation --------------------
 -- Mapping MapGenerationConfig values to the map gen tbable
@@ -26,18 +26,30 @@ Map:GenerateMap(terrainTypesTable)
 
 
 wait()
-Map:UpdateTilesFromTag("Lowland",
-    {
-        Threshold = .5, 
-        Tags = {"Iron"},
-    }
-)
 
+-------------------- Resource Generation --------------------
+-- Updating Tiles with their respective resource
+Map:UpdateTilesFromTag("Lowland", resourceDistributionTable.Iron.LowlandIron)
+Map:UpdateTilesFromTag("Upland", resourceDistributionTable.Iron.UplandIron)
+Map:UpdateTilesFromTag("Highland", resourceDistributionTable.Iron.HighlandIron)
+Map:UpdateTilesFromTag("Steepland", resourceDistributionTable.Iron.SteeplandIron)
+Map:UpdateTilesFromTag("Mountainous", resourceDistributionTable.Iron.MountainousIron)
+
+
+print(#CollectionService:GetTagged("Iron"))
+
+--//TODO look into moving this somewere else
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
-    local ResourceData = GetWeightedDrop(resourcesTable.Iron) -- returns the Key 
+    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Iron) -- returns the Key of the resource
     local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
     tile:SetAttribute("ResourceAmmount", depositSize)
 end
 
+wait()
 MapGenHelperLib.SetTerrainElevation(Map)
+
+wait(3)
+Map.Debug.FilterTiles.filterByColorAndGradient(Map, {"Iron"}, "ResourceAmmount", 0, 1000)
+
+
 
