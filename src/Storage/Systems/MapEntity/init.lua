@@ -206,26 +206,34 @@ function Map:TransformFromTagRandomly(aTag: string, aTerrainTable: table)
 end
 
 -- Updates tile metadata based on a generated random noise value, Previous data IS NOT OVERWRITTEN/DELETED!
-function Map:UpdateFromTagRandomly(aTag: string, aTerrainTable: table)
+function Map:UpdateFromTagRandomly(aTag: string, aTerrainTable: table, filteredTags: table)
+    filteredTags = filteredTags or {}
     aTerrainTable.Limit = aTerrainTable.Limit or self.MapSize^2
+    
     local count = 0
 
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.TileMap[x][z]
             local tileInstance = tile.GameObject
-            
             local chance = Random.new():NextNumber()
+            local hasFilteredTag = false
 
             if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
                 if chance <= aTerrainTable.Threshold then
-                    count += 1
-                    tile:UpdateMetaData(aTerrainTable)
+                    for _, tag in pairs(filteredTags) do
+                        if CollectionService:HasTag(tileInstance, tag) then  
+                            hasFilteredTag = true
+                        end
+                    end
+                    if not hasFilteredTag then
+                        count += 1
+                        tile:UpdateMetaData(aTerrainTable)
+                    end
                 end
             end
         end
     end
-
     print(count, "Tiles Updated")
 end
 

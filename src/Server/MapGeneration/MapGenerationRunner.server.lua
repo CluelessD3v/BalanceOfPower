@@ -29,14 +29,19 @@ wait()
 
 -------------------- Resource Generation --------------------
 -- Updating Tiles with their respective resource
+
 Map:UpdateFromTagRandomly("Lowland", resourceDistributionTable.Iron.LowlandIron)
-Map:UpdateFromTagRandomly("Upland", resourceDistributionTable.Iron.UplandIron)
-Map:UpdateFromTagRandomly("Highland", resourceDistributionTable.Iron.HighlandIron)
-Map:UpdateFromTagRandomly("Steepland", resourceDistributionTable.Iron.SteeplandIron)
-Map:UpdateFromTagRandomly("Mountainous", resourceDistributionTable.Iron.MountainousIron)
+--[[Map:UpdateFromTagRandomly("Upland", resourceDistributionTable.Iron.UplandIron, function()end)
+Map:UpdateFromTagRandomly("Highland", resourceDistributionTable.Iron.HighlandIron, function()end)
+Map:UpdateFromTagRandomly("Steepland", resourceDistributionTable.Iron.SteeplandIron, function()end)
+Map:UpdateFromTagRandomly("Mountainous", resourceDistributionTable.Iron.MountainousIron, function()end)
+--]]
+wait()
 
+Map:UpdateFromTagRandomly("Lowland", resourceDistributionTable.Timber.LowlandTimber, {"HasResource"})
 
-print(#CollectionService:GetTagged("Iron"))
+print(#CollectionService:GetTagged("Iron"), "Are Iron")
+print(#CollectionService:GetTagged("Timber"), "Are timber")
 
 --//TODO look into moving this somewere else
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
@@ -45,11 +50,17 @@ for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
     tile:SetAttribute("ResourceAmmount", depositSize)
 end
 
+for _, tile in ipairs(CollectionService:GetTagged("Timber")) do
+    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Iron) -- returns the Key of the resource
+    local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
+    tile:SetAttribute("ResourceAmmount", depositSize)
+end
+
+
 wait()
 MapGenHelperLib.SetTerrainElevation(Map)
 
-wait(3)
-Map.Debug.FilterTiles.filterByColorAndGradient(Map, {"Iron"}, "ResourceAmmount", 0, 1000)
 
+Map.Debug.FilterTiles.Blacklist(Map, {"Iron", "Timber"})
 
 
