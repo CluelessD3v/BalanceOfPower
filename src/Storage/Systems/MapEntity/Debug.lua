@@ -13,7 +13,7 @@ function Debug.BlacklistTiles(self, theBlacklistedTags: table)
             
             for key, entry in pairs(theBlacklistedTags) do
                 if CollectionService:HasTag(tileInstance, entry.Tag) then
-                   tileInstance.BrickColor = entry.Color
+                    tileInstance.Color = entry.Color
                 end
             end 
 
@@ -32,7 +32,7 @@ function Debug.WhitelistTiles(self, theWhitelistedTags: table)
             -- Check if it has any of the filtered tags
             for key, entry in pairs(theWhitelistedTags) do
                 if CollectionService:HasTag(tileInstance, entry.Tag) then
-                   tileInstance.BrickColor = entry.Color
+                   tileInstance.Color = entry.Color
                 end
 
             end 
@@ -41,7 +41,7 @@ function Debug.WhitelistTiles(self, theWhitelistedTags: table)
 end
 
 
-function Debug.filterByColorAndGradient (self, attribute: string, theFilteredTags: table)
+function Debug.WhitelistAndGradient(self, attribute: string, theFilteredTags: table)
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             

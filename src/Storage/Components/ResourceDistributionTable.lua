@@ -46,23 +46,23 @@ return {
         
         LowlandTimber = {
             Limit  = 300,
-            Threshold = 1,
+            Threshold = 0.05,
             Tags = {"Timber", "HasResource"}
         },
     
         UplandTimber = {
             Limit  = 250,
-            Threshold = 0.03,
+            Threshold = 0.05,
             Tags = {"Timber", "HasResource"}
         },
         HighlandTimber = {
             Limit  = 200,
-            Threshold = 0.01,
+            Threshold = 0.03,
             Tags = {"Timber", "HasResource"}
         },
         SteeplandTimber = {
             Limit  = 200,
-            Threshold = 0.01,
+            Threshold = 0.03,
             Tags = {"Timber", "HasResource"}
         },
         MountainousTimber = {

@@ -58,8 +58,6 @@ end
 
 
 wait()
-MapGenHelperLib.SetTerrainElevation(Map)
-
 
 Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
     {
