@@ -21,7 +21,6 @@ function GenerateProps.InstanceAcrossTile(aTile: BasePart, taggedpropList: table
             local chance = math.floor(Random.new():NextNumber(1, 100))
             if chance <= aChance then
 
-
                 local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
                 prop.Size = Vector3.new(aTile.Size.X * .1, aTile.Size.Y * .2 , aTile.Size.Z * .1 )
 

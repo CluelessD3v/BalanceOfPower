@@ -29,11 +29,11 @@ wait()
 
 -------------------- Resource Generation --------------------
 -- Updating Tiles with their respective resource
-Map:UpdateFromTag("Lowland", resourceDistributionTable.Iron.LowlandIron)
-Map:UpdateFromTag("Upland", resourceDistributionTable.Iron.UplandIron)
-Map:UpdateFromTag("Highland", resourceDistributionTable.Iron.HighlandIron)
-Map:UpdateFromTag("Steepland", resourceDistributionTable.Iron.SteeplandIron)
-Map:UpdateFromTag("Mountainous", resourceDistributionTable.Iron.MountainousIron)
+Map:UpdateFromTagRandomly("Lowland", resourceDistributionTable.Iron.LowlandIron)
+Map:UpdateFromTagRandomly("Upland", resourceDistributionTable.Iron.UplandIron)
+Map:UpdateFromTagRandomly("Highland", resourceDistributionTable.Iron.HighlandIron)
+Map:UpdateFromTagRandomly("Steepland", resourceDistributionTable.Iron.SteeplandIron)
+Map:UpdateFromTagRandomly("Mountainous", resourceDistributionTable.Iron.MountainousIron)
 
 
 print(#CollectionService:GetTagged("Iron"))
