@@ -4,17 +4,16 @@ local Utilities = require(ReplicatedStorage.Utilities)
 
 local Debug = {}
 
-function Debug.FilterTilesFromBlackList(self,theFilteredTags: table, filteredColor: BrickColor)
-    filteredColor = filteredColor or BrickColor.new("White")
+function Debug.BlacklistTiles(self, theBlacklistedTags: table)
+    
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            
             local tile = self.TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             
-            for _, tag in ipairs(theFilteredTags) do
-                if CollectionService:HasTag(tileInstance, tag) then
-                   tileInstance.BrickColor = filteredColor
+            for key, entry in pairs(theBlacklistedTags) do
+                if CollectionService:HasTag(tileInstance, entry.Tag) then
+                   tileInstance.BrickColor = entry.Color
                 end
             end 
 
@@ -23,46 +22,45 @@ function Debug.FilterTilesFromBlackList(self,theFilteredTags: table, filteredCol
 end
 
 
-function Debug.FilterTilesFromWhitelist(self, theFilteredTags: table, filteredColor: BrickColor)
-    filteredColor = filteredColor or BrickColor.new("White")
+function Debug.WhitelistTiles(self, theWhitelistedTags: table)
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             
             local tile = self.TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
-            
+            tileInstance.BrickColor = BrickColor.new("White")
             -- Check if it has any of the filtered tags
-            for _, tag in ipairs(theFilteredTags) do
-                if not CollectionService:HasTag(tileInstance, tag) then
-                   tileInstance.BrickColor = filteredColor
+            for key, entry in pairs(theWhitelistedTags) do
+                if CollectionService:HasTag(tileInstance, entry.Tag) then
+                   tileInstance.BrickColor = entry.Color
                 end
-            end 
 
+            end 
         end
     end
 end
 
 
-function Debug.filterByColorAndGradient (self, theFilteredTags: table, attribute: string, min: number, max: number)
-    local filteredColor = BrickColor.new("White")
-
-
+function Debug.filterByColorAndGradient (self, attribute: string, theFilteredTags: table)
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             
             local tile = self.TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             
+            tileInstance.BrickColor = BrickColor.new("White")
             -- Check if it has any of the filtered tags
-            for _, tag in ipairs(theFilteredTags) do
-                if CollectionService:HasTag(tileInstance, tag) then
+            for key, entry in pairs(theFilteredTags) do
+                if CollectionService:HasTag(tileInstance, entry.Tag) then
+                   tileInstance.Color = entry.Color
+                   local normalizedVal = Utilities.GetNormalizedValue(tileInstance:GetAttribute(attribute), entry.Max, entry.Min)
 
-                    -- Had to invert the normalization values because R1, G1, B1 == white, kinda gives me aids but oh well...
-                    local normalizedVal = Utilities.GetNormalizedValue(tileInstance:GetAttribute(attribute), max, min) 
-                    tileInstance.Color = Color3.new(normalizedVal, normalizedVal, normalizedVal)
-                else
-                    tileInstance.BrickColor = filteredColor
+                   local r =  math.clamp((entry.Color.R * normalizedVal)+.5, 0, 1)
+                   local g =  math.clamp((entry.Color.G * normalizedVal)+.5, 0, 1)
+                   local b =  math.clamp((entry.Color.B * normalizedVal)+.5, 0, 1) 
+                   tileInstance.Color = Color3.new(r,g,b)
                 end
+
             end 
 
         end

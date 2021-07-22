@@ -15,8 +15,8 @@ return {
     Iron = {
         
         LowlandIron = {
-            Limit  = 100,
-            Threshold = 1,
+            Limit  = 20,
+            Threshold = 0.01,
             Tags = {"Iron", "HasResource"}
         },
     
@@ -52,7 +52,7 @@ return {
     
         UplandTimber = {
             Limit  = 250,
-            Threshold = 0.02,
+            Threshold = 0.03,
             Tags = {"Timber", "HasResource"}
         },
         HighlandTimber = {

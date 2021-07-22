@@ -61,9 +61,9 @@ function Map.new(theMapGenerationTable: table)
 
     self.Debug = {
         FilterTiles = {
-            Blacklist = Debug.FilterTilesFromBlackList,
-            Whitelist = Debug.FilterTilesFromWhitelist,
-            filterByColorAndGradient = Debug.filterByColorAndGradient,
+            Blacklist = Debug.BlacklistTiles,
+            Whitelist = Debug.WhitelistTiles,
+            WhitelistAndGradient = Debug.WhitelistAndGradient,
         }
     }
     print("Map settings set")

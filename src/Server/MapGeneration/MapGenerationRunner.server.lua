@@ -31,14 +31,14 @@ wait()
 -- Updating Tiles with their respective resource
 
 Map:UpdateFromTagRandomly("Lowland", resourceDistributionTable.Iron.LowlandIron)
---[[Map:UpdateFromTagRandomly("Upland", resourceDistributionTable.Iron.UplandIron, function()end)
-Map:UpdateFromTagRandomly("Highland", resourceDistributionTable.Iron.HighlandIron, function()end)
-Map:UpdateFromTagRandomly("Steepland", resourceDistributionTable.Iron.SteeplandIron, function()end)
-Map:UpdateFromTagRandomly("Mountainous", resourceDistributionTable.Iron.MountainousIron, function()end)
---]]
+Map:UpdateFromTagRandomly("Upland", resourceDistributionTable.Iron.UplandIron)
+Map:UpdateFromTagRandomly("Highland", resourceDistributionTable.Iron.HighlandIron)
+Map:UpdateFromTagRandomly("Steepland", resourceDistributionTable.Iron.SteeplandIron)
+Map:UpdateFromTagRandomly("Mountainous", resourceDistributionTable.Iron.MountainousIron)
+
 wait()
 
-Map:UpdateFromTagRandomly("Lowland", resourceDistributionTable.Timber.LowlandTimber, {"HasResource"})
+Map:UpdateFromTag("Lowland", resourceDistributionTable.Timber.LowlandTimber)
 
 print(#CollectionService:GetTagged("Iron"), "Are Iron")
 print(#CollectionService:GetTagged("Timber"), "Are timber")
@@ -61,6 +61,20 @@ wait()
 MapGenHelperLib.SetTerrainElevation(Map)
 
 
-Map.Debug.FilterTiles.Blacklist(Map, {"Iron", "Timber"})
+Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+    {
+        Tag = "Timber",
+        Color = Color3.fromRGB(0, 255, 68),
+        Min = 0,
+        Max = 1000
+    },
+
+    {
+        Tag = "Iron",
+        Color = Color3.fromRGB(178, 111, 183),
+        Min = 0,
+        Max = 1000
+    }
+})
 
 
