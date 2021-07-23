@@ -22,24 +22,14 @@ local RawResourcesTypesTable = require(ServerStorage.Components.RawResourcesType
 local Map = MapClass.new(mapGenerationTable)
 
 local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
-Map:GenerateMap(terrainTypesTable)
-MapGenHelperLib.SetTerrainElevation(Map)
+Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
 --//TODO Add the different transformed terrain to the terrain types table
 
-Map:TransformFromTag("Mountainous", {
-    
-        Threshold = 0,
-        Properties = {
-            BrickColor = BrickColor.new("Medium stone grey")
-        },
-        Attributes = {
-        ElevationOffset = 10,
+Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
+Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
 
-        },  
-        Tags = {"Impassable"},
-})
-
+MapGenHelperLib.SetTerrainElevation(Map)
 wait()
 -------------------- Resource Generation --------------------
 -- Updating Tiles with their respective resource
@@ -69,9 +59,10 @@ for _, tile in ipairs(CollectionService:GetTagged("Clay")) do
     tile:SetAttribute("ResourceAmmount", depositSize)
 end
 
+--[[
 Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
     RawResourcesTypesTable.Timber.Debug,
     RawResourcesTypesTable.Clay.Debug,
     RawResourcesTypesTable.Iron.Debug,
-})
+})--]]

@@ -131,7 +131,7 @@ end
 
 -- Transform tile metadata based on a generated perlin noise value, OVERWRITES PREVIOUS DATA!
 function Map:TransformFromTag(aTag: string, aTerrainTable: table, filteredTags: table)
-    local seed = math.random(-100_000, 100_000)
+    aTerrainTable.Seed = aTerrainTable.Seed or math.random(-100_000, 100_000)
     aTerrainTable.Limit = aTerrainTable.Limit or 2e9 
     filteredTags = filteredTags or {}
     
@@ -143,7 +143,7 @@ function Map:TransformFromTag(aTag: string, aTerrainTable: table, filteredTags: 
             local tile = self.TileMap[x][z]
             local tileInstance = tile.GameObject
             
-            local noiseResult  = PerlinNoise.new({(x + seed) * self.Scale, ( z + seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
+            local noiseResult  = PerlinNoise.new({(x + aTerrainTable.Seed) * self.Scale, ( z + aTerrainTable.Seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             local hasFilteredTag = false
