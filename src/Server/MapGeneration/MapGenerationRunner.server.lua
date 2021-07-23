@@ -15,7 +15,7 @@ local GetWeightedDrop = require(Utilities.GetWeightedDrop)
 -------------------- Tables --------------------
 local mapGenerationTable = require(ServerStorage.Components.MapGenerationTable)
 local ResourceWeightedDropTable = require(ServerStorage.Components.ResourceWeightedDropTable)
-local resourceDistributionTable = require(ServerStorage.Components.ResourceDistributionTable)
+local RawResourcesTypesTable = require(ServerStorage.Components.RawResourcesTypesTable)
 
 -------------------- Map Generation --------------------
 -- Mapping MapGenerationConfig values to the map gen tbable
@@ -23,25 +23,48 @@ local Map = MapClass.new(mapGenerationTable)
 
 local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
+MapGenHelperLib.SetTerrainElevation(Map)
+Map:TransformFromTag("Mountainous", {
+    
+        Threshold = 1,
+        Properties = {
+            BrickColor = BrickColor.new("Medium stone grey")
+        },
+        Attributes = {
+        ElevationOffset = 10,
 
-
-wait()
+        },  
+        Tags = {"Impassable"},
+})
+print(#CollectionService:GetTagged("Impassable"))
+wait(10)
 
 -------------------- Resource Generation --------------------
 -- Updating Tiles with their respective resource
 
-Map:UpdateFromTagRandomly("Lowland", resourceDistributionTable.Iron.LowlandIron)
-Map:UpdateFromTagRandomly("Upland", resourceDistributionTable.Iron.UplandIron)
-Map:UpdateFromTagRandomly("Highland", resourceDistributionTable.Iron.HighlandIron)
-Map:UpdateFromTagRandomly("Steepland", resourceDistributionTable.Iron.SteeplandIron)
-Map:UpdateFromTagRandomly("Mountainous", resourceDistributionTable.Iron.MountainousIron)
+Map:UpdateFromTagRandomly("Lowland", RawResourcesTypesTable.Iron.LowlandIron, {"Impassable", "HasResource"})
+Map:UpdateFromTagRandomly("Upland", RawResourcesTypesTable.Iron.UplandIron, {"Impassable", "HasResource"})
+Map:UpdateFromTagRandomly("Highland", RawResourcesTypesTable.Iron.HighlandIron, {"Impassable", "HasResource"})
+Map:UpdateFromTagRandomly("Steepland", RawResourcesTypesTable.Iron.SteeplandIron, {"Impassable", "HasResource"})
+Map:UpdateFromTagRandomly("Mountainous", RawResourcesTypesTable.Iron.MountainousIron, {"Impassable", "HasResource"})
 
 wait()
 
-Map:UpdateFromTag("Lowland", resourceDistributionTable.Timber.LowlandTimber)
+Map:UpdateFromTag("Lowland", RawResourcesTypesTable.Timber.LowlandTimber, {"Impassable", "HasResource"})
+Map:UpdateFromTag("Upland", RawResourcesTypesTable.Timber.UplandTimber, {"Impassable", "HasResource"})
+Map:UpdateFromTag("Highland", RawResourcesTypesTable.Timber.HighlandTimber, {"Impassable", "HasResource"})
+Map:UpdateFromTag("Steepland", RawResourcesTypesTable.Timber.SteeplandTimber, {"Impassable", "HasResource"})
+Map:UpdateFromTag("Mountainous", RawResourcesTypesTable.Timber.MountainousTimber, {"Impassable", "HasResource"})
+
+wait()
+Map:UpdateFromTagRandomly("Lowland", RawResourcesTypesTable.Clay.LowlandClaw, {"Impassable", "HasResource"})
+Map:UpdateFromTagRandomly("Upland", RawResourcesTypesTable.Clay.UplandClay, {"Impassable", "HasResource"})
+Map:UpdateFromTagRandomly("Highland", RawResourcesTypesTable.Clay.HighlandClay, {"Impassable", "HasResource"})
 
 print(#CollectionService:GetTagged("Iron"), "Are Iron")
 print(#CollectionService:GetTagged("Timber"), "Are timber")
+print(#CollectionService:GetTagged("Clay"), "Are Clay")
+
 
 --//TODO look into moving this somewere else
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
@@ -51,28 +74,26 @@ for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
 end
 
 for _, tile in ipairs(CollectionService:GetTagged("Timber")) do
-    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Iron) -- returns the Key of the resource
+    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Timber) -- returns the Key of the resource
     local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
     tile:SetAttribute("ResourceAmmount", depositSize)
 end
 
+for _, tile in ipairs(CollectionService:GetTagged("Clay")) do
+    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Clay) -- returns the Key of the resource
+    local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
+    tile:SetAttribute("ResourceAmmount", depositSize)
+end
 
 wait()
 
-Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
-    {
-        Tag = "Timber",
-        Color = Color3.fromRGB(0, 255, 68),
-        Min = 0,
-        Max = 1000
-    },
+Map.Debug.FilterTiles.Blacklist(Map,{
+    
+    RawResourcesTypesTable.Timber.Debug,
+    RawResourcesTypesTable.Iron.Debug,
+    RawResourcesTypesTable.Clay.Debug
+    
 
-    {
-        Tag = "Iron",
-        Color = Color3.fromRGB(178, 111, 183),
-        Min = 0,
-        Max = 1000
-    }
 })
 
 

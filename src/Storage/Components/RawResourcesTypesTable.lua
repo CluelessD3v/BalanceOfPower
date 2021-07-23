@@ -13,62 +13,101 @@
 
 return {
     Iron = {
+        Debug = {
+            Tag = "Iron",
+            Color = Color3.fromRGB(89, 34, 89),
+            Min = 0,
+            Max = 1000
+        },
         
         LowlandIron = {
-            Limit  = 20,
+            Limit  = 5,
             Threshold = 0.01,
             Tags = {"Iron", "HasResource"}
         },
     
         UplandIron = {
-            Limit  = 20,
-            Threshold = 0.03,
+            Limit  = 5,
+            Threshold = 0.01,
             Tags = {"Iron", "HasResource"}
         },
         HighlandIron = {
-            Limit  = 30,
-            Threshold = 0.06,
+            Limit  = 5,
+            Threshold = 0.01,
             Tags = {"Iron", "HasResource"}
         },
         SteeplandIron = {
-            Limit  = 40,
-            Threshold = 0.09,
+            Limit  = 5,
+            Threshold = 0.2,
             Tags = {"Iron", "HasResource"}
         },
         MountainousIron = {
-            Limit  = 50,
-            Threshold = 0.11,
+            Limit  = 10,
+            Threshold = 0.03,
             Tags = {"Iron", "HasResource"}
         },
     },
 
     Timber = {
+
+        Debug = {
+            Tag = "Timber",
+            Color = Color3.fromRGB(0, 255, 0),
+            Min = 0,
+            Max = 1000
+        },
         
         LowlandTimber = {
-            Limit  = 300,
-            Threshold = 0.05,
+            Limit  = 1000,
+            Threshold = 0.3,
             Tags = {"Timber", "HasResource"}
         },
     
         UplandTimber = {
-            Limit  = 250,
-            Threshold = 0.05,
+            Limit  = 1000,
+            Threshold = 0.3,
             Tags = {"Timber", "HasResource"}
         },
         HighlandTimber = {
-            Limit  = 200,
-            Threshold = 0.03,
+            Limit  = 500,
+            Threshold = 0.2,
             Tags = {"Timber", "HasResource"}
         },
         SteeplandTimber = {
-            Limit  = 200,
-            Threshold = 0.03,
+            Limit  = 500,
+            Threshold = 0.1,
             Tags = {"Timber", "HasResource"}
         },
         MountainousTimber = {
-            Limit  = 100,
-            Threshold = 0.01,
+            Limit  = 500,
+            Threshold = 0.1,
             Tags = {"Timber", "HasResource"}
+        },
+    },
+
+    Clay = {
+        Debug = {
+            Tag = "Clay",
+            Color = Color3.fromRGB(255, 89, 89),
+            Min = 0,
+            Max = 1000
+        },
+        
+        LowlandClaw = {
+            Limit  = 20,
+            Threshold = 0.01,
+            Tags = {"Clay", "HasResource"}
+        },
+    
+        UplandClay = {
+            Limit  = 15,
+            Threshold = 0.020,
+            Tags = {"Clay", "HasResource"}
+        },
+        HighlandClay = {
+            Limit  = 10,
+            Threshold = 0.01,
+            Tags = {"Clay", "HasResource"}
         },
     },
 

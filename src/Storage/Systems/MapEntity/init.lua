@@ -148,15 +148,18 @@ function Map:TransformFromTag(aTag: string, aTerrainTable: table, filteredTags: 
 
             local hasFilteredTag = false
             
-            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then    
-                for _, tag in pairs(filteredTags) do
-                    if CollectionService:HasTag(tileInstance, tag) then  
-                        hasFilteredTag = true
+           
+            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
+                if noiseResult <= aTerrainTable.Threshold then
+                    for _, tag in pairs(filteredTags) do
+                        if CollectionService:HasTag(tileInstance, tag) then  
+                            hasFilteredTag = true
+                        end
                     end
-                end
-                if not hasFilteredTag then
-                    count += 1
-                    tile:SetMetadata(aTerrainTable)
+                    if not hasFilteredTag then
+                        count += 1
+                        tile:SetMetadata(aTerrainTable)
+                    end
                 end
             end
         end
