@@ -15,7 +15,7 @@ return {
         ElevationOffset = 3,
 
         },  
-        Tags = {"Ocean"},
+        Tags = {"Ocean", "WaterBody"},
     },
 
     [2] = {
@@ -28,7 +28,7 @@ return {
             ElevationOffset = 3,
 
         },  
-        Tags = {"Littoral"},
+        Tags = {"Littoral", "WaterBody"},
     },
 
     [3] = {
@@ -41,7 +41,7 @@ return {
             ElevationOffset = 3,
 
         },  
-        Tags = {"Coastal"},
+        Tags = {"Coastal", "WaterBody"},
     },
 
 

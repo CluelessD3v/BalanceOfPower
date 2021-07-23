@@ -24,9 +24,12 @@ local Map = MapClass.new(mapGenerationTable)
 local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
 Map:GenerateMap(terrainTypesTable)
 MapGenHelperLib.SetTerrainElevation(Map)
+
+--//TODO Add the different transformed terrain to the terrain types table
+
 Map:TransformFromTag("Mountainous", {
     
-        Threshold = 1,
+        Threshold = 0,
         Properties = {
             BrickColor = BrickColor.new("Medium stone grey")
         },
@@ -36,14 +39,14 @@ Map:TransformFromTag("Mountainous", {
         },  
         Tags = {"Impassable"},
 })
-print(#CollectionService:GetTagged("Impassable"))
-wait(10)
+
 
 -------------------- Resource Generation --------------------
 -- Updating Tiles with their respective resource
+--//TODO, ADD THE FILTERED TAGS TO THE Resource types table
+Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron.LowlandIron, {"Impassable", "HasResource", "WaterBody", "Beach"})
 
-Map:UpdateFromTagRandomly("Lowland", RawResourcesTypesTable.Iron.LowlandIron, {"Impassable", "HasResource"})
-Map:UpdateFromTagRandomly("Upland", RawResourcesTypesTable.Iron.UplandIron, {"Impassable", "HasResource"})
+--[[Map:UpdateFromTagRandomly("Upland", RawResourcesTypesTable.Iron.UplandIron, {"Impassable", "HasResource"})
 Map:UpdateFromTagRandomly("Highland", RawResourcesTypesTable.Iron.HighlandIron, {"Impassable", "HasResource"})
 Map:UpdateFromTagRandomly("Steepland", RawResourcesTypesTable.Iron.SteeplandIron, {"Impassable", "HasResource"})
 Map:UpdateFromTagRandomly("Mountainous", RawResourcesTypesTable.Iron.MountainousIron, {"Impassable", "HasResource"})
@@ -65,6 +68,7 @@ print(#CollectionService:GetTagged("Iron"), "Are Iron")
 print(#CollectionService:GetTagged("Timber"), "Are timber")
 print(#CollectionService:GetTagged("Clay"), "Are Clay")
 
+--]]
 
 --//TODO look into moving this somewere else
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do

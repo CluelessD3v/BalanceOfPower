@@ -21,29 +21,7 @@ return {
         },
         
         LowlandIron = {
-            Limit  = 5,
-            Threshold = 0.01,
-            Tags = {"Iron", "HasResource"}
-        },
-    
-        UplandIron = {
-            Limit  = 5,
-            Threshold = 0.01,
-            Tags = {"Iron", "HasResource"}
-        },
-        HighlandIron = {
-            Limit  = 5,
-            Threshold = 0.01,
-            Tags = {"Iron", "HasResource"}
-        },
-        SteeplandIron = {
-            Limit  = 5,
-            Threshold = 0.2,
-            Tags = {"Iron", "HasResource"}
-        },
-        MountainousIron = {
-            Limit  = 10,
-            Threshold = 0.03,
+            Threshold = 0.002,
             Tags = {"Iron", "HasResource"}
         },
     },
