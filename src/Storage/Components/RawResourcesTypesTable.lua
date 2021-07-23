@@ -13,21 +13,24 @@
 
 return {
     Iron = {
+
+        Threshold = 0.003,
+        Tags = {"Iron", "HasResource"},
+        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},
         Debug = {
             Tag = "Iron",
             Color = Color3.fromRGB(89, 34, 89),
             Min = 0,
             Max = 1000
         },
-        
-        LowlandIron = {
-            Threshold = 0.002,
-            Tags = {"Iron", "HasResource"}
-        },
+
     },
 
     Timber = {
-
+        Threshold = 0.25,
+        Limit = 3000,
+        Tags = {"Timber", "HasResource"},
+        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach"},
         Debug = {
             Tag = "Timber",
             Color = Color3.fromRGB(0, 255, 0),
@@ -35,57 +38,17 @@ return {
             Max = 1000
         },
         
-        LowlandTimber = {
-            Limit  = 1000,
-            Threshold = 0.3,
-            Tags = {"Timber", "HasResource"}
-        },
-    
-        UplandTimber = {
-            Limit  = 1000,
-            Threshold = 0.3,
-            Tags = {"Timber", "HasResource"}
-        },
-        HighlandTimber = {
-            Limit  = 500,
-            Threshold = 0.2,
-            Tags = {"Timber", "HasResource"}
-        },
-        SteeplandTimber = {
-            Limit  = 500,
-            Threshold = 0.1,
-            Tags = {"Timber", "HasResource"}
-        },
-        MountainousTimber = {
-            Limit  = 500,
-            Threshold = 0.1,
-            Tags = {"Timber", "HasResource"}
-        },
     },
 
     Clay = {
+        Threshold = 0.006,
+        Tags = {"Clay", "HasResource"},
+        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
         Debug = {
             Tag = "Clay",
             Color = Color3.fromRGB(255, 89, 89),
             Min = 0,
             Max = 1000
-        },
-        
-        LowlandClaw = {
-            Limit  = 20,
-            Threshold = 0.01,
-            Tags = {"Clay", "HasResource"}
-        },
-    
-        UplandClay = {
-            Limit  = 15,
-            Threshold = 0.020,
-            Tags = {"Clay", "HasResource"}
-        },
-        HighlandClay = {
-            Limit  = 10,
-            Threshold = 0.01,
-            Tags = {"Clay", "HasResource"}
         },
     },
 

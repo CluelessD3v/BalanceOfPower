@@ -40,36 +40,16 @@ Map:TransformFromTag("Mountainous", {
         Tags = {"Impassable"},
 })
 
-
+wait()
 -------------------- Resource Generation --------------------
 -- Updating Tiles with their respective resource
 --//TODO, ADD THE FILTERED TAGS TO THE Resource types table
-Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron.LowlandIron, {"Impassable", "HasResource", "WaterBody", "Beach"})
+Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
+Map:UpdateFromTag("Tile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
+Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
 
---[[Map:UpdateFromTagRandomly("Upland", RawResourcesTypesTable.Iron.UplandIron, {"Impassable", "HasResource"})
-Map:UpdateFromTagRandomly("Highland", RawResourcesTypesTable.Iron.HighlandIron, {"Impassable", "HasResource"})
-Map:UpdateFromTagRandomly("Steepland", RawResourcesTypesTable.Iron.SteeplandIron, {"Impassable", "HasResource"})
-Map:UpdateFromTagRandomly("Mountainous", RawResourcesTypesTable.Iron.MountainousIron, {"Impassable", "HasResource"})
 
-wait()
-
-Map:UpdateFromTag("Lowland", RawResourcesTypesTable.Timber.LowlandTimber, {"Impassable", "HasResource"})
-Map:UpdateFromTag("Upland", RawResourcesTypesTable.Timber.UplandTimber, {"Impassable", "HasResource"})
-Map:UpdateFromTag("Highland", RawResourcesTypesTable.Timber.HighlandTimber, {"Impassable", "HasResource"})
-Map:UpdateFromTag("Steepland", RawResourcesTypesTable.Timber.SteeplandTimber, {"Impassable", "HasResource"})
-Map:UpdateFromTag("Mountainous", RawResourcesTypesTable.Timber.MountainousTimber, {"Impassable", "HasResource"})
-
-wait()
-Map:UpdateFromTagRandomly("Lowland", RawResourcesTypesTable.Clay.LowlandClaw, {"Impassable", "HasResource"})
-Map:UpdateFromTagRandomly("Upland", RawResourcesTypesTable.Clay.UplandClay, {"Impassable", "HasResource"})
-Map:UpdateFromTagRandomly("Highland", RawResourcesTypesTable.Clay.HighlandClay, {"Impassable", "HasResource"})
-
-print(#CollectionService:GetTagged("Iron"), "Are Iron")
-print(#CollectionService:GetTagged("Timber"), "Are timber")
-print(#CollectionService:GetTagged("Clay"), "Are Clay")
-
---]]
-
+-------------------- setting resource deposit sizes --------------------
 --//TODO look into moving this somewere else
 for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
     local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Iron) -- returns the Key of the resource
@@ -89,15 +69,9 @@ for _, tile in ipairs(CollectionService:GetTagged("Clay")) do
     tile:SetAttribute("ResourceAmmount", depositSize)
 end
 
-wait()
+Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
-Map.Debug.FilterTiles.Blacklist(Map,{
-    
     RawResourcesTypesTable.Timber.Debug,
+    RawResourcesTypesTable.Clay.Debug,
     RawResourcesTypesTable.Iron.Debug,
-    RawResourcesTypesTable.Clay.Debug
-    
-
 })
-
-
