@@ -66,3 +66,9 @@ Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
     RawResourcesTypesTable.Clay.Debug,
     RawResourcesTypesTable.Iron.Debug,
 })--]]
+wait()
+Map.Debug.FilterTiles.Blacklist(Map, {
+    RawResourcesTypesTable.Timber.Debug,
+    RawResourcesTypesTable.Clay.Debug,
+    RawResourcesTypesTable.Iron.Debug,
+})

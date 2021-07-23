@@ -27,8 +27,8 @@ return {
     },
 
     Timber = {
-        Threshold = 0.25,
-        Limit = 3000,
+        Threshold = 0.38,
+        Limit = 8000,
         Tags = {"Timber", "HasResource"},
         FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach"},
         Debug = {
