@@ -60,13 +60,19 @@ for _, tile in ipairs(CollectionService:GetTagged("Clay")) do
 end
 
 --[[
+    This executes after the map loads, comment out to not view
+    --//TODO MAKE INTERFACE FOR THIS TO NOT DO THIS IN CODE!
+]]--
+-------------------- Debugging view --------------------
 Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
     RawResourcesTypesTable.Timber.Debug,
     RawResourcesTypesTable.Clay.Debug,
     RawResourcesTypesTable.Iron.Debug,
-})--]]
-wait()
+})
+
+wait(10)
+
 Map.Debug.FilterTiles.Blacklist(Map, {
     RawResourcesTypesTable.Timber.Debug,
     RawResourcesTypesTable.Clay.Debug,

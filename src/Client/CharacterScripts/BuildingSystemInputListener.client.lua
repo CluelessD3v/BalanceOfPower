@@ -2,7 +2,6 @@
 local UserInputService = game:GetService('UserInputService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Players = game:GetService('Players')
-local CollectionService = game:GetService('CollectionService')
 
 -- modules
 
