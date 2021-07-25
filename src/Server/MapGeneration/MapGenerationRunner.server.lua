@@ -64,7 +64,7 @@ end
     --//TODO MAKE INTERFACE FOR THIS TO NOT DO THIS IN CODE!
 ]]--
 -------------------- Debugging view --------------------
-Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+--[[Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
     RawResourcesTypesTable.Timber.Debug,
     RawResourcesTypesTable.Clay.Debug,
@@ -78,3 +78,4 @@ Map.Debug.FilterTiles.Blacklist(Map, {
     RawResourcesTypesTable.Clay.Debug,
     RawResourcesTypesTable.Iron.Debug,
 })
+--]]
