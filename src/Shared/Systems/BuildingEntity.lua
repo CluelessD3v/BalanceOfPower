@@ -32,10 +32,10 @@ function BuildingEntity:PreviewBuilding()
             if not CollectionService:HasTag(self.Mouse.Target, tag) then
                 return
             end
-            print(self.Mouse.Target)
-
-            self.Inst.Position = self.Mouse.Target.Position + Vector3.new(0,10,0) 
-        end 
+        end
+        print(self.Mouse.Target)
+        local yOffset =  self.Mouse.Target.Size.Y/2 + self.Inst.Size.Y/2
+        self.Inst.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
     end) 
     
 
