@@ -7,35 +7,38 @@ local RunService = game:GetService('RunService')
 local BuildingEntity = {} 
 BuildingEntity.__index = BuildingEntity
 
-function BuildingEntity.new(x, y, z, a)
+function BuildingEntity.new(anInstance: any, anEntityWhitelist: table, thePlayerMouse: Mouse, aParent: any)
     local self = setmetatable({}, BuildingEntity)
 
-    self.Inst = x:Clone()
-    self.Inst.CanCollide = false
-    self.Inst.Anchored = true
-    self.Inst.Parent = a or workspace
-        
-    self.Con = nil
+    self.SelectedObject = anInstance:Clone()
+    self.SelectedObject.CanCollide = false
+    self.SelectedObject.Anchored = true
+    self.SelectedObject.Parent = aParent or workspace
+    
 
-    self.List = y
-    self.Mouse = z
-    print(self.Mouse)
+    self.Whitelist = anEntityWhitelist
+    self.Mouse = thePlayerMouse
+    
+    self.Connection = nil
     return self
 end
     
 
 function BuildingEntity:PreviewBuilding()
     print(self.Mouse)
-    self.Con = RunService.Heartbeat:Connect(function()
+    self.Connection = RunService.Heartbeat:Connect(function()
+        
         if self.Mouse.Target == nil  then return end
-        for _, tag in ipairs(self.List) do
+
+        for _, tag in ipairs(self.Whitelist) do
             if not CollectionService:HasTag(self.Mouse.Target, tag) then
                 return
             end
         end
         print(self.Mouse.Target)
-        local yOffset =  self.Mouse.Target.Size.Y/2 + self.Inst.Size.Y/2
-        self.Inst.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+        
+        local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedObject.Size.Y/2
+        self.SelectedObject.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
     end) 
     
 
@@ -43,8 +46,8 @@ end
 
 
 function BuildingEntity:Dispose()
-    self.Inst:Destroy()
-    self.Con:Disconnect()    
+    self.SelectedObject:Destroy()
+    self.Connection:Disconnect()    
 end
 
 return BuildingEntity
