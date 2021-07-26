@@ -5,7 +5,7 @@ local FallOffMap = require(script.FallOffMap)
 local Tile = require(script.TileEntity)
 local GenerateProps = require(script.GenerateProps)
 local Debug = require(script.Debug)
-
+local MapEntityHelperLib = require(script.MapEntityHelperLib)
 -------------------- Constructor --------------------
 local Map = {} 
 Map.__index = Map
@@ -65,6 +65,11 @@ function Map.new(theMapGenerationTable: table)
             Whitelist = Debug.WhitelistTiles,
             WhitelistAndGradient = Debug.WhitelistAndGradient,
         }
+    }
+
+    self.HelperLib = {
+        SetTerrainElevation = MapEntityHelperLib.SetTerrainElevation,
+        SetResourceDepositSize = MapEntityHelperLib.SetResourceDepositSize
     }
     print("Map settings set")
     return self
