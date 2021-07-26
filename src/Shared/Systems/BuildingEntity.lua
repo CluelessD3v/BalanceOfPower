@@ -7,13 +7,13 @@ local RunService = game:GetService('RunService')
 local BuildingEntity = {} 
 BuildingEntity.__index = BuildingEntity
 
-function BuildingEntity.new(anInstance: any, anEntityWhitelist: table, thePlayerMouse: Mouse, aParent: any)
+function BuildingEntity.new(anInstance: any, anEntityWhitelist: table, thePlayerMouse: Mouse)
     local self = setmetatable({}, BuildingEntity)
 
     self.SelectedObject = anInstance:Clone()
     self.SelectedObject.CanCollide = false
     self.SelectedObject.Anchored = true
-    self.SelectedObject.Parent = aParent or workspace
+    self.SelectedObject.Parent = workspace
     
 
     self.Whitelist = anEntityWhitelist
@@ -45,9 +45,15 @@ function BuildingEntity:PreviewBuilding()
 end
 
 
-function BuildingEntity:Dispose()
+function BuildingEntity:Destroy()
+
     self.SelectedObject:Destroy()
-    self.Connection:Disconnect()    
+    self.Connection:Disconnect() 
+
+    -- Order matters here, first destroy, then nil!
+    self.SelectedObject = nil
+
+   
 end
 
 return BuildingEntity

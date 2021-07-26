@@ -13,16 +13,15 @@ local inBuildMode = dataFolder:WaitForChild("InBuildMode")
 local mouse = Players.LocalPlayer:GetMouse()
 
 local whiteListFilter = {"Tile", "UsableLand"}
-local connection = nil
 local part = workspace.TestingPart
 
 local newBuilding = nil
-inBuildMode.Changed:Connect(function(theValue)
-    if theValue then
+inBuildMode.Changed:Connect(function(InBuildMode)
+    if InBuildMode then
         newBuilding = Building.new(part, whiteListFilter, mouse)
         newBuilding:PreviewBuilding()
     else
 
-        newBuilding:Dispose()
+        newBuilding:Destroy()
     end
 end)
