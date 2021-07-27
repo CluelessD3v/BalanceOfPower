@@ -40,19 +40,20 @@ function BuildingEntity:PreviewBuilding()
         local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedObject.Size.Y/2
         self.SelectedObject.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
     end) 
+    
+
 end
 
 
 function BuildingEntity:Destroy()
-    print(self.SelectedObject, self.Whitelist)
+
     self.SelectedObject:Destroy()
     self.Connection:Disconnect() 
 
     -- Order matters here, first destroy, then nil!
     self.SelectedObject = nil
-    self.Whitelist = {}
 
-   print(self.SelectedObject, self.Whitelist)
+   
 end
 
 return BuildingEntity
