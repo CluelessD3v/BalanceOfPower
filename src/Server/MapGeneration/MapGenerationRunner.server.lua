@@ -34,7 +34,6 @@ Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypes
 
 -------------------- setting resource deposit sizes --------------------
 --//TODO look into moving this somewere else
-
 Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
 Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
 Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)

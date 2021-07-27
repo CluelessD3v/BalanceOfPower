@@ -4,15 +4,17 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Players = game:GetService('Players')
 
 -- modules
+local keybinds = require(ReplicatedStorage.Components.Keybinds)
 
 -- Data
 local localPlayer = Players.LocalPlayer
-local dataFolder = localPlayer:WaitForChild("Data")
+local Observables = localPlayer:WaitForChild("Observables")
 
 local SetStateValue = ReplicatedStorage.Events.SetStateValue
+local generalKeys = keybinds.GeneralKeys
 
 UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
-    if anInputObject.KeyCode == Enum.KeyCode.E and not isTyping then
+    if anInputObject.KeyCode == generalKeys.B and not isTyping then
         SetStateValue:FireServer()
     end
 end)

@@ -3,6 +3,6 @@ local SetStateValue = ReplicatedStorage.Events.SetStateValue
 
 
 SetStateValue.OnServerEvent:Connect(function(aPlayer)
-    local inBuildMode = aPlayer.Data.InBuildMode
+    local inBuildMode = aPlayer.Observables.InBuildMode
     inBuildMode.Value = not inBuildMode.Value
 end)
