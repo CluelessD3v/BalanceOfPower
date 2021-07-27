@@ -25,7 +25,7 @@
             "StarterCharacterScripts": {
                 "$className": "StarterCharacterScripts",
                 "$path": "src/Client/CharacterScripts",
-                "$ignoreUnknownInstances": true
+                "$ignoreUnknownInstances": false
             }
         },
 
@@ -37,6 +37,7 @@
 
         "Workspace": {
             "$className": "Workspace",
+            "$path": "src/Workspace",
             "$ignoreUnknownInstances": true,
             "$properties": {
                 "FilteringEnabled": true
