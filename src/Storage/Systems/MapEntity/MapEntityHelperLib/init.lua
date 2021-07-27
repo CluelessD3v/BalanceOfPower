@@ -12,15 +12,7 @@ local GetWeightedDrop = require(Utilities.GetWeightedDrop)
 
 local MapEntityHelperLib = {}
 
-function MapEntityHelperLib.SetResourceDepositSize(aResourceTag, aResourceDataTable)
-    for _, tile in ipairs(CollectionService:GetTagged(aResourceTag)) do
-        local WeightData = GetWeightedDrop(aResourceDataTable.WeightsData) -- returns the Key of the resource
 
-        -- Choosing a random value from  range of selected weight, e.g: Medium[400, 800] <-- num between those 
-        local depositSize = math.random(WeightData.Ammount.Min, WeightData.Ammount.Max) 
-        tile:SetAttribute("ResourceAmmount", depositSize) 
-    end
-end
 
 function MapEntityHelperLib.SetTerrainElevation(theMap)
     for x = 1, theMap.MapSize do

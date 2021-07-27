@@ -11,7 +11,7 @@ end
 
 Players.PlayerAdded:Connect(function(aPlayer)
     
-    local values = NewValue("Data", "Folder")
+    local values = NewValue("Observables", "Folder") -- Folder dedicated to save Observable objects by client
     
     local InBuildMode = NewValue("InBuildMode", "BoolValue")
     InBuildMode.Parent = values
