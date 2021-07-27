@@ -56,7 +56,7 @@ return {
                     ElevationOffset = 4,
         
                 },  
-                Tags = {"Beach"},
+                Tags = {"Beach", "UsableLand"},
             },
         
             [5] = {
@@ -69,7 +69,7 @@ return {
                     ElevationOffset = 4,
         
                 },  
-                Tags = {"Lowland"},
+                Tags = {"Lowland", "UsableLand"},
             },
         
             [6] = {
@@ -82,7 +82,7 @@ return {
                     ElevationOffset = 5,
         
                 },  
-                Tags = {"Upland"},
+                Tags = {"Upland", "UsableLand"},
             },
         
             [7] = {
@@ -95,7 +95,7 @@ return {
                     ElevationOffset = 6,
         
                 },  
-                Tags = {"Highland"},
+                Tags = {"Highland", "UsableLand"},
             },
         
             [8] = {
@@ -108,7 +108,7 @@ return {
                     ElevationOffset = 7,
         
                 },  
-                Tags = {"Steepland"},
+                Tags = {"Steepland", "UsableLand"},
             },
         
         
@@ -122,7 +122,7 @@ return {
                     ElevationOffset = 8,
         
                 },  
-                Tags = {"Mountainous"},
+                Tags = {"Mountainous", "UsableLand"},
             },
         
         
@@ -155,7 +155,7 @@ return {
                 ElevationOffset = 7,
     
             },  
-            Tags = {"Steepland"},
+            Tags = {"Steepland", "UsableLand"},
         },
 
     }
