@@ -1,3 +1,13 @@
+--[[
+    This script sends input signals to the server to flip observable states in the player data folder via remote functions.
+    It follows a personal flavour of the observer pattern.
+
+    | sends Input                     |Changes state of an 
+            &                          observable on invoked
+      Observes state                
+    Client ----------------------------- Server
+]]--
+
 -- Services
 local UserInputService = game:GetService('UserInputService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
@@ -21,7 +31,6 @@ local Building = require(ReplicatedStorage.Systems.BuildingEntity)
 
 
 local ContextActionService = game:GetService('ContextActionService')
-
 
 local mouse = Players.LocalPlayer:GetMouse()
 
