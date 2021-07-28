@@ -48,7 +48,6 @@ end
 
 
 
-
 UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
     if anInputObject.KeyCode == generalKeys.B and not isTyping then
         local inBuildMode = SetBuildMode:InvokeServer()
