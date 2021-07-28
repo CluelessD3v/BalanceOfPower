@@ -24,6 +24,12 @@
             }
         },
 
+        "StarterGui": {
+            "$className": "StarterGui",
+            "$ignoreUnknownInstances": true,
+            "$path": "src/Client/Gui"
+        },
+
         "ServerStorage": {
             "$className": "ServerStorage",
             "$path": "src/Storage",
