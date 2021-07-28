@@ -18,7 +18,6 @@ local keybinds = require(ReplicatedStorage.Components.Keybinds)
 
 -- Data
 local localPlayer = Players.LocalPlayer
-local Observables = localPlayer:WaitForChild("Observables")
 
 
 local generalKeys = keybinds.GeneralKeys
