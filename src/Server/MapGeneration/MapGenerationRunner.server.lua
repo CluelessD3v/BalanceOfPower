@@ -34,7 +34,6 @@ Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypes
 
 -------------------- setting resource deposit sizes --------------------
 --//TODO look into moving this somewere else
-
 Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
 Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
 Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
@@ -46,10 +45,10 @@ Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
     RawResourcesTypesTable.Iron.Debug,
 })
 
---[[
-    Map.Debug.FilterTiles.Blacklist(Map, {
+wait(10)
+
+Map.Debug.FilterTiles.Blacklist(Map, {
     RawResourcesTypesTable.Timber.Debug,
     RawResourcesTypesTable.Clay.Debug,
     RawResourcesTypesTable.Iron.Debug,
 })
-]]--

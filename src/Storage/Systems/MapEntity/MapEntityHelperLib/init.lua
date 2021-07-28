@@ -22,6 +22,7 @@ function MapEntityHelperLib.SetResourceDepositSize(aResourceTag, aResourceDataTa
     end
 end
 
+
 function MapEntityHelperLib.SetTerrainElevation(theMap)
     for x = 1, theMap.MapSize do
         for z = 1, theMap.MapSize do
