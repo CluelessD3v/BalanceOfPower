@@ -21,11 +21,6 @@
                 "$className": "StarterPlayerScripts",
                 "$path": "src/Client/PlayerScripts",
                 "$ignoreUnknownInstances": false
-            },
-            "StarterCharacterScripts": {
-                "$className": "StarterCharacterScripts",
-                "$path": "src/Client/CharacterScripts",
-                "$ignoreUnknownInstances": false
             }
         },
 
