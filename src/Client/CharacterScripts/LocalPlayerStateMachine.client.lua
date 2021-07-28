@@ -3,7 +3,7 @@ local RunService = game:GetService('RunService')
 local CollectionService = game:GetService('CollectionService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 
-
+--[[
 local Building = require(ReplicatedStorage.Systems.BuildingEntity)
 
 local localPlayer = Players.LocalPlayer
@@ -39,4 +39,4 @@ inBuildMode.Changed:Connect(function(InBuildMode)
         ContextActionService:UnbindAction("InBuildMode")
         newBuilding:Destroy()
     end
-end)
+end)--]]
