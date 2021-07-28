@@ -1,6 +1,4 @@
--- Services
-local CollectionService = game:GetService('CollectionService')
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
+
 local ServerStorage = game:GetService('ServerStorage')
 
 
@@ -9,12 +7,12 @@ local ServerStorage = game:GetService('ServerStorage')
 local MapClass = require(ServerStorage.Systems.MapEntity)
 
 -------------------- Map Generation --------------------
-local mapGenerationTable = require(ServerStorage.Components.MapGenerationTable)
+local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
 
 -- Mapping MapGenerationConfig values to the map gen tbable
 local Map = MapClass.new(mapGenerationTable)
 
-local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
+local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
 Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
 --//TODO Add the different transformed terrain to the terrain types table
@@ -24,7 +22,7 @@ Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression
 Map.HelperLib.SetTerrainElevation(Map)
 wait()
 -------------------- Resource Generation --------------------
-local RawResourcesTypesTable = require(ServerStorage.Components.RawResourcesTypesTable)
+local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
 
 -- Updating Tiles with their respective resource
 Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
