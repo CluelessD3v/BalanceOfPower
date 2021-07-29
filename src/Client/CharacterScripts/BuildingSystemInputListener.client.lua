@@ -20,7 +20,6 @@ local ConstructionSystem = require(ReplicatedStorage.Systems.ConstructionSystem.
 
 -- Data
 local generalKeys = keybinds.GeneralKeys
-local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
 
 local part = workspace.TestingPart
 local mouse = Players.LocalPlayer:GetMouse()
@@ -28,6 +27,22 @@ local whiteListFilter = {"Tile", "UsableLand"}
 
 local newConstructionSystem = nil
 
+
+local localPlayer = Players.LocalPlayer
+local Gui = localPlayer:WaitForChild("PlayerGui")
+local PanelsGui = Gui.PanelsGui
+local BuildingsPanel = PanelsGui.BuildingsPanel
+
+UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
+    if anInputObject.KeyCode == generalKeys.B and not isTyping then
+        BuildingsPanel.Visible = not BuildingsPanel.Visible
+    end
+end)
+
+
+
+
+--[[
 local function BindAction(actionName, inputState)
     if actionName == "InBuildMode" then
         if inputState == Enum.UserInputState.Begin then
@@ -35,6 +50,8 @@ local function BindAction(actionName, inputState)
         end
     end
 end
+
+local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
 
 UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
     if anInputObject.KeyCode == generalKeys.B and not isTyping then
@@ -53,7 +70,7 @@ UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         end
     end
 end)
-
+--]]
 
 
 
