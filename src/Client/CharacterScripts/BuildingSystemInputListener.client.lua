@@ -12,25 +12,15 @@
 local UserInputService = game:GetService('UserInputService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Players = game:GetService('Players')
+local ContextActionService = game:GetService('ContextActionService')
 
 -- modules
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
+local Building = require(ReplicatedStorage.Systems.BuildinSystem.BuldingSystemLibrary)
 
 -- Data
-local localPlayer = Players.LocalPlayer
-
-
 local generalKeys = keybinds.GeneralKeys
 local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
-
-
-
-local Building = require(ReplicatedStorage.Systems.BuildingEntity)
-
-
-
-local ContextActionService = game:GetService('ContextActionService')
-
 local mouse = Players.LocalPlayer:GetMouse()
 
 local whiteListFilter = {"Tile", "UsableLand"}
@@ -45,8 +35,6 @@ local function BindAction(actionName, inputState)
         end
     end
 end
-
-
 
 UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
     if anInputObject.KeyCode == generalKeys.B and not isTyping then
