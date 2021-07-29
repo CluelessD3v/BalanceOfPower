@@ -7,27 +7,52 @@
 local CollectionService = game:GetService('CollectionService')
 local RunService = game:GetService('RunService')
 
-local BuldingSystem = {
-    Connection = nil
-}
 
---//TODO change the prefab parameter to be a table of info
-function BuldingSystem:PreviewBuilding(aPrefab: BasePart, aMouse: Mouse, anEntityWhiteList: table)
+local ConstructionSystemEntity = {} 
+ConstructionSystemEntity.__index = ConstructionSystemEntity
+
+function ConstructionSystemEntity.new(theSelectedBuilding: any, thePlayerMouse: Mouse,  anEntityWhitelist: table)
+    local self = setmetatable({}, ConstructionSystemEntity)
+
+    self.SelectedBuilding = theSelectedBuilding:Clone()
+    self.SelectedBuilding.CanCollide = false
+    self.SelectedBuilding.Anchored = true
+    self.SelectedBuilding.Parent = workspace
+    
+
+    self.Whitelist = anEntityWhitelist
+    self.Mouse = thePlayerMouse
+    self.Connection = nil
+    return self
+end
+    
+function ConstructionSystemEntity:PreviewBuilding()
     self.Connection = RunService.Heartbeat:Connect(function()
-        
-        if aMouse.Target == nil  then return end
+        if self.Mouse.Target == nil  then return end
 
-        for _, tag in ipairs(anEntityWhiteList) do
-            if not CollectionService:HasTag(aMouse.Target, tag) then
+        for _, tag in ipairs(self.Whitelist) do
+            if not CollectionService:HasTag(self.Mouse.Target, tag) then
                 return
             end
         end
-        print(aMouse.Target)
+        print(self.Mouse.Target)
         
-        local yOffset =  aMouse.Target.Size.Y/2 + aPrefab.Size.Y/2
-        aPrefab.Position = aMouse.Target.Position + Vector3.new(0, yOffset, 0)
-    end)
+        local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedBuilding.Size.Y/2
+        self.SelectedBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+    end) 
+    
+
 end
 
+function ConstructionSystemEntity:Destroy()
 
-return BuldingSystem
+    self.SelectedBuilding:Destroy()
+    self.Connection:Disconnect() 
+
+    -- Order matters here, first destroy, then nil!
+    self.SelectedBuilding = nil
+
+   
+end
+
+return ConstructionSystemEntity

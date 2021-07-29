@@ -21,10 +21,10 @@ local ConstructionSystem = require(ReplicatedStorage.Systems.ConstructionSystem.
 -- Data
 local generalKeys = keybinds.GeneralKeys
 local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
-local mouse = Players.LocalPlayer:GetMouse()
 
-local whiteListFilter = {"Tile", "UsableLand"}
 local part = workspace.TestingPart
+local mouse = Players.LocalPlayer:GetMouse()
+local whiteListFilter = {"Tile", "UsableLand"}
 
 local newConstructionSystem = nil
 
@@ -43,7 +43,9 @@ UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if inBuildMode then
             print("True")
             ContextActionService:BindAction("InBuildMode", BindAction, false, Enum.UserInputType.MouseButton1)
-            newConstructionSystem = ConstructionSystem:PreviewBuilding(part, mouse,  whiteListFilter)            
+            
+            newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)
+            newConstructionSystem:PreviewBuilding()     
         elseif not inBuildMode then
             print("false")
             ContextActionService:UnbindAction("InBuildMode")
