@@ -27,9 +27,12 @@ function ConstructionSystemEntity.new(theSelectedBuilding: any, thePlayerMouse: 
 end
     
 function ConstructionSystemEntity:PreviewBuilding()
-    self.Connection = RunService.Heartbeat:Connect(function()
-        if self.Mouse.Target == nil  then return end
+    local previousTarget = nil
 
+    self.Connection = RunService.Heartbeat:Connect(function()
+        if self.Mouse.Target == nil then return end
+        if self.Mouse.Target == previousTarget then return end 
+        
         for _, tag in ipairs(self.Whitelist) do
             if not CollectionService:HasTag(self.Mouse.Target, tag) then
                 return
@@ -39,6 +42,7 @@ function ConstructionSystemEntity:PreviewBuilding()
         
         local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedBuilding.Size.Y/2
         self.SelectedBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+        previousTarget = self.Mouse.Target
     end) 
     
 
