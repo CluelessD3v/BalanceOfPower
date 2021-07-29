@@ -16,7 +16,7 @@ local ContextActionService = game:GetService('ContextActionService')
 
 -- modules
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
-local Building = require(ReplicatedStorage.Systems.BuildinSystem.BuldingSystemLibrary)
+local ConstructionSystem = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
 
 -- Data
 local generalKeys = keybinds.GeneralKeys
@@ -26,7 +26,7 @@ local mouse = Players.LocalPlayer:GetMouse()
 local whiteListFilter = {"Tile", "UsableLand"}
 local part = workspace.TestingPart
 
-local newBuilding = nil
+local newConstructionSystem = nil
 
 local function BindAction(actionName, inputState)
     if actionName == "InBuildMode" then
@@ -39,15 +39,15 @@ end
 UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
     if anInputObject.KeyCode == generalKeys.B and not isTyping then
         local inBuildMode = SetBuildMode:InvokeServer()
+        
         if inBuildMode then
             print("True")
             ContextActionService:BindAction("InBuildMode", BindAction, false, Enum.UserInputType.MouseButton1)
-            newBuilding = Building.new(part, whiteListFilter, mouse)
-            newBuilding:PreviewBuilding()
+            newConstructionSystem = ConstructionSystem:PreviewBuilding(part, mouse,  whiteListFilter)            
         elseif not inBuildMode then
             print("false")
             ContextActionService:UnbindAction("InBuildMode")
-            newBuilding:Destroy()
+            newConstructionSystem:Destroy()
         end
     end
 end)
