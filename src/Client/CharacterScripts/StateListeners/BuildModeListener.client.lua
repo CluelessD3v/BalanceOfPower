@@ -26,11 +26,6 @@ local whiteListFilter = {"Tile", "UsableLand"}
 local generalKeys = keybinds.GeneralKeys
 
 
-local function BindAction(actionName, inputState)
-    if inputState == Enum.UserInputState.Begin then
-        print("click")
-    end
-end
 
 function ExitBuildMode(anInputObject, isTyping)
     local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
@@ -47,8 +42,18 @@ local state = localPlayer.Data.States.InBuildMode
 
 state.Changed:Connect(function(inBuildMode)
     if inBuildMode then
-        ContextActionService:BindAction("InBuildMode", BindAction, false, generalKeys.LMB)
+
         newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)
+
+        local function BindAction(_, inputState, _)
+            if inputState == Enum.UserInputState.Begin then
+                newConstructionSystem:PlacePrefab()
+                
+            end
+        end
+        ContextActionService:BindAction("InBuildMode", BindAction, false, generalKeys.LMB)
+        
+        
         newConstructionSystem:PreviewBuilding()
         exitConnection = UserInputService.InputBegan:Connect(ExitBuildMode)
     else

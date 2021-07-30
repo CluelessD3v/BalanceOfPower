@@ -18,34 +18,38 @@ function ConstructionSystemEntity.new(theSelectedBuilding: any, thePlayerMouse: 
     self.SelectedBuilding.CanCollide = false
     self.SelectedBuilding.Anchored = true
     self.SelectedBuilding.Parent = workspace
-    
-
     self.Whitelist = anEntityWhitelist
     self.Mouse = thePlayerMouse
+
+    self.PreviousTarget = nil
     self.Connection = nil
     return self
 end
     
 function ConstructionSystemEntity:PreviewBuilding()
-    local previousTarget = nil
 
     self.Connection = RunService.Heartbeat:Connect(function()
         if self.Mouse.Target == nil then return end
-        if self.Mouse.Target == previousTarget then return end 
+        if self.Mouse.Target == self.PreviousTarget then return end
+        self.Mouse.TargetFilter = self.SelectedBuilding
         
         for _, tag in ipairs(self.Whitelist) do
             if not CollectionService:HasTag(self.Mouse.Target, tag) then
                 return
             end
         end
-        print(self.Mouse.Target)
         
         local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedBuilding.Size.Y/2
         self.SelectedBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
-        previousTarget = self.Mouse.Target
+        self.PreviousTarget = self.Mouse.Target
     end) 
     
 
+end
+
+function ConstructionSystemEntity:PlacePrefab()
+    
+    print(self.PreviousTarget)
 end
 
 function ConstructionSystemEntity:Destroy()
