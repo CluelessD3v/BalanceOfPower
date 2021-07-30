@@ -15,6 +15,7 @@ local ContextActionService = game:GetService('ContextActionService')
 
 -- modules
 local ConstructionSystem = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
+local keybinds = require(ReplicatedStorage.Components.Keybinds)
 
 -- Data
 local localPlayer = Players.LocalPlayer
@@ -22,19 +23,18 @@ local part = workspace.TestingPart
 local mouse = Players.LocalPlayer:GetMouse()
 local whiteListFilter = {"Tile", "UsableLand"}
 
+local generalKeys = keybinds.GeneralKeys
 
 
-
-
-local function BindAction(actionName, inputState, inputObject)
-    if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+local function BindAction(actionName, inputState)
+    if inputState == Enum.UserInputState.Begin then
         print("click")
     end
 end
 
 function ExitBuildMode(anInputObject, isTyping)
     local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
-    if anInputObject.KeyCode == Enum.KeyCode.X and not isTyping then
+    if anInputObject.KeyCode == generalKeys.X and not isTyping then
         print("Out")
         SetBuildMode:InvokeServer()
     end
@@ -47,7 +47,7 @@ local state = localPlayer.Data.States.InBuildMode
 
 state.Changed:Connect(function(inBuildMode)
     if inBuildMode then
-        ContextActionService:BindAction("InBuildMode", BindAction, false, Enum.UserInputType.MouseButton1)
+        ContextActionService:BindAction("InBuildMode", BindAction, false, generalKeys.LMB)
         newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)
         newConstructionSystem:PreviewBuilding()
         exitConnection = UserInputService.InputBegan:Connect(ExitBuildMode)
