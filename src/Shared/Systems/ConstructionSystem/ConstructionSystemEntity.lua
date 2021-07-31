@@ -6,6 +6,7 @@
 
 local CollectionService = game:GetService('CollectionService')
 local RunService = game:GetService('RunService')
+local UserInputService = game:GetService('UserInputService')
 
 
 local ConstructionSystemEntity = {} 
@@ -32,7 +33,7 @@ function ConstructionSystemEntity:PreviewBuilding()
         if self.Mouse.Target == nil then return end
         if self.Mouse.Target == self.PreviousTarget then return end
         self.Mouse.TargetFilter = self.SelectedBuilding
-        
+
         for _, tag in ipairs(self.Whitelist) do
             if not CollectionService:HasTag(self.Mouse.Target, tag) then
                 return
@@ -59,8 +60,16 @@ function ConstructionSystemEntity:Destroy()
 
     -- Order matters here, first destroy, then nil!
     self.SelectedBuilding = nil
+end
 
-   
+
+function ConstructionSystemEntity:ExitBuildMode(remoteFunction: RemoteFunction, key: Enum.KeyCode)
+    return UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
+        if anInputObject.KeyCode == key and not isTyping then
+            print("Out")
+            remoteFunction:InvokeServer()
+        end
+    end)
 end
 
 return ConstructionSystemEntity
