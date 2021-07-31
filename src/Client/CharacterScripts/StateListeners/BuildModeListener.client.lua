@@ -28,33 +28,29 @@ local generalKeys = keybinds.GeneralKeys
 
 
 local newConstructionSystem = nil
-local exitConnection = nil
 local state = localPlayer.Data.States.InBuildMode
 local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
 
 state.Changed:Connect(function(inBuildMode)
+    print("Build mode state is now", inBuildMode)
     if inBuildMode then
 
-        newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)
+        newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)        
+        newConstructionSystem:PreviewBuilding()
 
-        -- Since Lua has no variable hoisting, I am forced to do this ;-;
-
+        -- Since Lua has no variable hoisting, I am forced to do this ;-;        
         local function BindToBuildMode(_, inputState, _)
-            if inputState == Enum.UserInputState.Begin then
+            if inputState == Enum.UserInputState.Begin then                
                 newConstructionSystem:PlacePrefab()
+                SetBuildMode:InvokeServer()
             end
         end
 
         ContextActionService:BindAction("InBuildMode", BindToBuildMode, false, generalKeys.LMB)
-        
-        
-        newConstructionSystem:PreviewBuilding()
-        exitConnection = newConstructionSystem:ExitBuildMode(SetBuildMode, generalKeys.X)
+        newConstructionSystem:ExitBuildMode(SetBuildMode, generalKeys.X)
     else
         ContextActionService:UnbindAction("InBuildMode")
         newConstructionSystem:Destroy()
-
-        exitConnection:Disconnect()
     end
 end)
 
