@@ -1,5 +1,6 @@
-local placeHolder = {}
+local Players = game:GetService("Players")
 
-
-
-return placeHolder
+local song = game.ReplicatedStorage.HeboFratermanHavanaCity
+game.Players.PlayerAdded:Connect(function()
+    song:Play()
+end)

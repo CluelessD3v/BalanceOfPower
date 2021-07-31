@@ -35,6 +35,8 @@ Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypes
 Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
 Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
 Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
+
+
 --[[
 Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
