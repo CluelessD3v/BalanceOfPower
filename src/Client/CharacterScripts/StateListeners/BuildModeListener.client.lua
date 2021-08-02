@@ -28,12 +28,13 @@ local generalKeys = keybinds.GeneralKeys
 
 
 local newConstructionSystem = nil
-local state = localPlayer.Data.States.InBuildMode
-local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
+local inBuildModeObjVal: StringValue = localPlayer.Data.States.InBuildMode
+local SetBuildMode: RemoteEvent = ReplicatedStorage.Remotes.Events.SetStateToBuildModeEvent
 
-state.Changed:Connect(function(inBuildMode)
+inBuildModeObjVal.Changed:Connect(function(inBuildMode)
     print("Build mode state is now", inBuildMode)
     if inBuildMode then
+        print("true")
 
         newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)        
         newConstructionSystem:PreviewBuilding()
@@ -42,7 +43,7 @@ state.Changed:Connect(function(inBuildMode)
         local function BindToBuildMode(_, inputState, _)
             if inputState == Enum.UserInputState.Begin then                
                 newConstructionSystem:PlacePrefab()
-                SetBuildMode:InvokeServer()
+                SetBuildMode:FireServer()
             end
         end
 

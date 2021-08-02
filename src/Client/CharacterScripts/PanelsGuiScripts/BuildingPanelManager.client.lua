@@ -43,14 +43,10 @@ end)
 local testBuildingButton: ImageButton = BuildingsPanel.TestBuildingButton
 
 
-local inBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetBuildMode
+local SetBuildMode: RemoteEvent = ReplicatedStorage.Remotes.Events.SetStateToBuildModeEvent
 -- Change state to "InBuildMode" and hide the buildings panel for a non obstructed view
 testBuildingButton.MouseButton1Click:Connect(function()
-    if inBuildMode:InvokeServer() then
-        print("true")
-    else
-        print("False")
-    end
+    SetBuildMode:FireServer()
     BuildingsPanel.Visible = not BuildingsPanel.Visible
 end)
     
