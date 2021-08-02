@@ -11,14 +11,17 @@ end
 
 Players.PlayerAdded:Connect(function(aPlayer)
     
-    local values = NewValue("Data", "Folder") -- Folder dedicated to save Observable objects by client
+    local Data = NewValue("Data", "Folder") -- Folder dedicated to save Observable objects by client
     local states = NewValue("States", "Folder")
-    states.Parent = values
+    states.Parent = Data
     
     local InBuildMode = NewValue("InBuildMode", "BoolValue")
     InBuildMode.Parent = states
 
-    values.Parent = aPlayer
+    local selectedObject: ObjectValue = NewValue("SelectedObject", "ObjectValue")
+    selectedObject.Parent = Data
+    
+    Data.Parent = aPlayer
 
     
 end)

@@ -19,31 +19,33 @@ local keybinds = require(ReplicatedStorage.Components.Keybinds)
 
 -- Data
 local localPlayer = Players.LocalPlayer
-local part = workspace.Red
+
 local mouse = Players.LocalPlayer:GetMouse()
 local whiteListFilter = {"Tile", "UsableLand"}
 
 local generalKeys = keybinds.GeneralKeys
 
 
+--[[
+local inBuildModeObjVal: BoolValue = localPlayer.Data.States.InBuildMode
+local SetBuildMode: RemoteFunction = ReplicatedStorage.Remotes.Functions.SetStateToBuildModeEvent
 
 local newConstructionSystem = nil
-local inBuildModeObjVal: StringValue = localPlayer.Data.States.InBuildMode
-local SetBuildMode: RemoteEvent = ReplicatedStorage.Remotes.Events.SetStateToBuildModeEvent
 
 inBuildModeObjVal.Changed:Connect(function(inBuildMode)
     print("Build mode state is now", inBuildMode)
+
     if inBuildMode then
         print("true")
 
-        newConstructionSystem = ConstructionSystem.new(part, mouse, whiteListFilter)        
+        newConstructionSystem = ConstructionSystem.new(workspace.Red, mouse, whiteListFilter)        
         newConstructionSystem:PreviewBuilding()
 
         -- Since Lua has no variable hoisting, I am forced to do this ;-;        
         local function BindToBuildMode(_, inputState, _)
             if inputState == Enum.UserInputState.Begin then                
                 newConstructionSystem:PlacePrefab()
-                SetBuildMode:FireServer()
+                SetBuildMode:InvokeServer()
             end
         end
 
@@ -54,6 +56,8 @@ inBuildModeObjVal.Changed:Connect(function(inBuildMode)
         newConstructionSystem:Destroy()
     end
 end)
+
+--]]
 
 
 

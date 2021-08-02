@@ -55,11 +55,11 @@ function ConstructionSystemEntity:PreviewBuilding()
 
 end
 
-function ConstructionSystemEntity:ExitBuildMode(remoteEvent: RemoteEvent, key: Enum.KeyCode)
+function ConstructionSystemEntity:ExitBuildMode(remote, key: Enum.KeyCode)
     self.ExitBuildModeConnection = UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if anInputObject.KeyCode == key and not isTyping then
             print("Exited build mode")
-            remoteEvent:FireServer()
+            remote:FireServer()
         end
     end)    
 end
