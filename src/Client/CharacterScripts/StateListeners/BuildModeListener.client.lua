@@ -19,7 +19,7 @@ local keybinds = require(ReplicatedStorage.Components.Keybinds)
 
 -- Data
 local localPlayer = Players.LocalPlayer
-local part = workspace.TestingPart
+local part = workspace.Red
 local mouse = Players.LocalPlayer:GetMouse()
 local whiteListFilter = {"Tile", "UsableLand"}
 
