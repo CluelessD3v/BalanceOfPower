@@ -39,21 +39,13 @@ UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
 end)
 
 
--------------------- BuildMode state Setters --------------------
-local testBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
-
---local SettSelectedObject : RemoteEvent = ReplicatedStorage.Remotes.Events.SettSelectedObject
+--------------------------------------------------------------------------------------------------------------
+local RedBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 
 
 local selectedBuilding = nil
-
 local SetBuildMode: RemoteEvent = ReplicatedStorage.Remotes.Events.SetBuildMode
--- Change state to "InBuildMode" and hide the buildings panel for a non obstructed view
-testBuildingButton.MouseButton1Click:Connect(function()
-    selectedBuilding = workspace.Red
-    SetBuildMode:FireServer()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-end)
+
     
 local mouse = Players.LocalPlayer:GetMouse()
 local whiteListFilter = {"Tile", "UsableLand"}
@@ -62,13 +54,23 @@ local inBuildModeObjVal: BoolValue = localPlayer.Data.States.InBuildMode
 local newConstructionSystem = nil
 local ConstructionSystem = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
 
+
+
+RedBuildingButton.MouseButton1Click:Connect(function() --> functionnify this into the module
+    selectedBuilding = workspace.Red --> put this hardcoded buildings in a module 
+    SetBuildMode:FireServer()
+    BuildingsPanel.Visible = not BuildingsPanel.Visible
+end)
+
+
+
+
+
+
 inBuildModeObjVal.Changed:Connect(function(inBuildMode)
     print("Build mode state is now", inBuildMode)
 
     if inBuildMode then
-        
-        print("true")
-
         newConstructionSystem = ConstructionSystem.new(selectedBuilding, mouse, whiteListFilter)        
         newConstructionSystem:PreviewBuilding()
 

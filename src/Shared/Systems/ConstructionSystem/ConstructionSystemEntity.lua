@@ -21,9 +21,8 @@ function ConstructionSystemEntity.new(theSelectedBuilding: BasePart, thePlayerMo
     self.BuildingPreview.CanCollide = false
     self.BuildingPreview.Anchored = true
     self.BuildingPreview.Transparency = .5
-    
     self.BuildingPreview.Parent = workspace
-
+    self.Enabled = true
     self.ValidTilesList = aValidTilesList
     self.Mouse = thePlayerMouse
 
