@@ -18,8 +18,8 @@ Players.PlayerAdded:Connect(function(aPlayer)
     local InBuildMode = NewValue("InBuildMode", "BoolValue")
     InBuildMode.Parent = states
 
-    local selectedObject: ObjectValue = NewValue("SelectedObject", "ObjectValue")
-    selectedObject.Parent = Data
+    local hasBuildingSelected: ObjectValue = NewValue("HasBuildingSelected", "BoolValue")
+    hasBuildingSelected.Parent = Data
     
     Data.Parent = aPlayer
 
