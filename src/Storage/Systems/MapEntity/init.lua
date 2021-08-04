@@ -132,7 +132,6 @@ end
     Threshold <= of the generated value ( from randomnes or noise) it will transform the tile info
 ]]--
 
---//TODO, the addition  of the filtered tags param to these methods is fine, but the implementation is kinda trash imo...
 
 -- Transform tile metadata based on a generated perlin noise value, OVERWRITES PREVIOUS DATA!
 function Map:TransformFromTag(aTag: string, aTerrainTable: table, filteredTags: table)

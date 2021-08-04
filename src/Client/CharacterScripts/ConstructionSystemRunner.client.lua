@@ -12,7 +12,7 @@ local localPlayer = Players.LocalPlayer
 local Gui = localPlayer:WaitForChild("PlayerGui")
 
 local PanelsGui = Gui.PanelsGui
-local button: ImageButton = PanelsGui.ButtonsPanel.BuildingsPanelButton
+local buildingsPanelbutton: ImageButton = PanelsGui.ButtonsPanel.BuildingsPanelButton
 local BuildingsPanel = PanelsGui.BuildingsPanel
 
 
@@ -22,7 +22,7 @@ local BuildingsPanel = PanelsGui.BuildingsPanel
     Binding panel visibility to gui image button
 ]]--
 
-button.MouseButton1Click:Connect(function()
+buildingsPanelbutton.MouseButton1Click:Connect(function()
     BuildingsPanel.Visible = not BuildingsPanel.Visible
 end)
 
@@ -40,8 +40,32 @@ end)
 
 
 --------------------------------------------------------------------------------------------------------------
-local RedBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
+local mouse = Players.LocalPlayer:GetMouse()
+local whiteListFilter = {"Tile", "UsableLand"}
+
+local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
+
+
+local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 local SetBuildMode: RemoteEvent = ReplicatedStorage.Remotes.Events.SetBuildMode
 
-    
+-- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
+local newConstructionSystem = ConstructionSystemEntity.new() 
 
+redBuildingButton.MouseButton1Click:Connect(function()
+    BuildingsPanel.Visible = not BuildingsPanel.Visible
+
+    newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter)
+    newConstructionSystem:PreviewBuilding()
+    newConstructionSystem:ExitBuildMode(generalKeys.X)
+end)
+
+local yellowBuildingButton: ImageButton = BuildingsPanel.YellowBuildingButton
+
+yellowBuildingButton.MouseButton1Click:Connect(function()
+    BuildingsPanel.Visible = not BuildingsPanel.Visible
+
+    newConstructionSystem:Init(workspace.Yellow, mouse, whiteListFilter)
+    newConstructionSystem:PreviewBuilding()
+    newConstructionSystem:ExitBuildMode(generalKeys.X)
+end)

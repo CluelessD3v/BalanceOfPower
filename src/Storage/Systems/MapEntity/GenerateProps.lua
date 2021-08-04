@@ -1,7 +1,8 @@
 local GenerateProps = {}
 
 
---//TODO put all of this with the tile class in the future
+--//TODO FIXCON3 put all of this with the tile class in the future
+
 
 --[[
     this places N number of assets allong the tile

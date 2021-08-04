@@ -1,6 +1,6 @@
 local CollectionService = game:GetService('CollectionService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local Utilities = require(ReplicatedStorage.Utilities)
+local GetNormalizedValue = require(ReplicatedStorage.Utilities.GetNormalizedValue)
 
 local Debug = {}
 
@@ -53,7 +53,7 @@ function Debug.WhitelistAndGradient(self, attribute: string, theFilteredTags: ta
             for key, entry in pairs(theFilteredTags) do
                 if CollectionService:HasTag(tileInstance, entry.Tag) then
                    tileInstance.Color = entry.Color
-                   local normalizedVal = Utilities.GetNormalizedValue(tileInstance:GetAttribute(attribute), entry.Max, entry.Min)
+                   local normalizedVal = GetNormalizedValue(tileInstance:GetAttribute(attribute), entry.Max, entry.Min)
 
                    local r =  math.clamp((entry.Color.R * normalizedVal)+.5, 0, 1)
                    local g =  math.clamp((entry.Color.G * normalizedVal)+.5, 0, 1)
