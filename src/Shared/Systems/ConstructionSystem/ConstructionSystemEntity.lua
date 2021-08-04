@@ -4,12 +4,18 @@
 
 ]]--
 
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
+-------------------- Services --------------------
 
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local ContextActionService = game:GetService('ContextActionService')
 local CollectionService = game:GetService('CollectionService')
 local RunService = game:GetService('RunService')
 local UserInputService = game:GetService('UserInputService')
-local Maid= require (ReplicatedStorage.Utilities.Maid)
+
+
+local Maid = require (ReplicatedStorage.Utilities.Maid)
+local keybinds = require(ReplicatedStorage.Components.Keybinds)
+local generalKeys = keybinds.GeneralKeys
 
 local ConstructionSystemEntity = {} 
 ConstructionSystemEntity.__index = ConstructionSystemEntity
@@ -26,14 +32,31 @@ function ConstructionSystemEntity.new()
     return self
 end
 
+function ConstructionSystemEntity:Destroy()
+    self.Maid:DoCleaning()
+end
 
-function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist) --//TODO FIXCON 4 Type these
+function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
     self.SelectedObject = aSelectedObject:Clone()
     self.Mouse = aMouse
     self.TagsWhitelist = aTagsWhitelist
-
-        self.Maid.SelectedObject = self.SelectedObject
     self.Mouse.TargetFilter = self.SelectedObject
+
+    
+    self.Maid.SelectedObject = self.SelectedObject
+    self.Maid.UpdateBuildingPreview = self.UpdateBuildingPreview
+
+    local function BindToBuildMode(_, inputState, _)
+        
+        if inputState == Enum.UserInputState.Begin then                
+            --newConstructionSystem:PlacePrefab()
+            print("Click")
+            remote:FireServer()
+        end
+    end
+
+    ContextActionService:BindAction("InBuildMode", BindToBuildMode, false, generalKeys.LMB)
+
 end
 
 
@@ -54,11 +77,13 @@ function ConstructionSystemEntity:PreviewBuilding()
     end))
 end
 
-function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode)
+function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
     self.ExitBuildModeConnection = UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if anInputObject.KeyCode == key and not isTyping then
             print("Out")
-            self.Maid:Destroy()
+            remote:FireServer()
+            ContextActionService:UnbindAction("InBuildMode")
+            self:Destroy()
         end
     end)    
 end
