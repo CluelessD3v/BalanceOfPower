@@ -1,19 +1,19 @@
 
-local ServerStorage = game:GetService('ServerStorage')
+    local ServerStorage = game:GetService('ServerStorage')
 
 
 
--------------------- Modules --------------------
-local MapClass = require(ServerStorage.Systems.MapEntity)
+    -------------------- Modules --------------------
+    local MapClass = require(ServerStorage.Systems.MapEntity)
 
--------------------- Map Generation --------------------
-local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
+    -------------------- Map Generation --------------------
+    local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
 
--- Mapping MapGenerationConfig values to the map gen tbable
-local Map = MapClass.new(mapGenerationTable)
+    -- Mapping MapGenerationConfig values to the map gen tbable
+    local Map = MapClass.new(mapGenerationTable)
 
-local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
-Map:GenerateMap(terrainTypesTable.InitialTerrains)
+    local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
+    Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
 --//TODO Add the different transformed terrain to the terrain types table
 
