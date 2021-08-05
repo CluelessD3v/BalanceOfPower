@@ -17,6 +17,10 @@ local Maid = require (ReplicatedStorage.Utilities.Maid)
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
 local generalKeys = keybinds.GeneralKeys
 
+
+-->//TODO FIXCON 3 Clean this module
+
+
 local ConstructionSystemEntity = {} 
 ConstructionSystemEntity.__index = ConstructionSystemEntity
 
@@ -28,25 +32,34 @@ function ConstructionSystemEntity.new()
     self.TagsWhiltelist = nil
     self.UpdateBuildingPreview = nil
 
+    self._SetBuildMode = Instance.new("RemoteEvent")
+    self._SetBuildMode.Parent = ReplicatedStorage.Remotes.Events
+
     self.Maid = Maid.new()
     return self
 end
 
-function ConstructionSystemEntity:Destroy()
-    self.Maid:DoCleaning()
+
+local function BindBuildingPlacement(_, inputState, _)
+    if inputState == Enum.UserInputState.Begin then                
+        --newConstructionSystem:PlacePrefab()
+        print("Click")
+        remote:FireServer()
+    end
 end
 
 function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
     self.SelectedObject = aSelectedObject:Clone()
+    self.Maid:GiveTask(self.SelectedObject)
+
     self.Mouse = aMouse
+    self.Maid:GiveTask(self.Mouse)
+
     self.TagsWhitelist = aTagsWhitelist
+    
     self.Mouse.TargetFilter = self.SelectedObject
 
-    
-    self.Maid.SelectedObject = self.SelectedObject
-    self.Maid.UpdateBuildingPreview = self.UpdateBuildingPreview
-
-    local function BindToBuildMode(_, inputState, _)
+    local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         
         if inputState == Enum.UserInputState.Begin then                
             --newConstructionSystem:PlacePrefab()
@@ -55,8 +68,8 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
         end
     end
 
-    ContextActionService:BindAction("InBuildMode", BindToBuildMode, false, generalKeys.LMB)
 
+    ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
 
@@ -77,15 +90,25 @@ function ConstructionSystemEntity:PreviewBuilding()
     end))
 end
 
+
+-------------------- Ceanup methods --------------------
+
+function ConstructionSystemEntity:Destroy()
+    ContextActionService:UnbindAction("InBuildMode")
+    self.TagsWhitelist = nil
+    self.Maid:DoCleaning()
+end
+
+
 function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
-    self.ExitBuildModeConnection = UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
+    self.Maid:GiveTask(UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if anInputObject.KeyCode == key and not isTyping then
             print("Out")
             remote:FireServer()
-            ContextActionService:UnbindAction("InBuildMode")
+
             self:Destroy()
         end
-    end)    
+    end))
 end
  
 return ConstructionSystemEntity

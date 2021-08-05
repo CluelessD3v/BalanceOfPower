@@ -47,7 +47,6 @@ local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionS
 
 
 local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
-local SetBuildMode: RemoteEvent = ReplicatedStorage.Remotes.Events.SetBuildMode
 local ibm = false
 -- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 local newConstructionSystem = ConstructionSystemEntity.new() 
@@ -59,7 +58,7 @@ redBuildingButton.MouseButton1Click:Connect(function()
 
     newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
+    newConstructionSystem:ExitBuildMode(generalKeys.X)
 
  
 end)
