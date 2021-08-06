@@ -43,6 +43,8 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
         self.SelectedObject:Destroy()
         self.SelectedObject = aSelectedObject
     end
+
+    
     self.SelectedObject = aSelectedObject:Clone()
     self.Maid:GiveTask(self.SelectedObject)
 

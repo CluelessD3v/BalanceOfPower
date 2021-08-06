@@ -11,6 +11,9 @@ local keybinds = require(ReplicatedStorage.Components.Keybinds)
 local localPlayer = Players.LocalPlayer
 local Gui = localPlayer:WaitForChild("PlayerGui")
 
+
+-------------------- Top level instances --------------------
+
 local PanelsGui = Gui.PanelsGui
 local buildingsPanelbutton: ImageButton = PanelsGui.ButtonsPanel.BuildingsPanelButton
 local BuildingsPanel = PanelsGui.BuildingsPanel
@@ -46,28 +49,25 @@ local whiteListFilter = {"Tile", "UsableLand"}
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
 
 
-local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 -- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 
-local isInBuildMode = localPlayer.Data.States.InBuildMode
-
 local newConstructionSystem = {} 
+
+local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
+
 redBuildingButton.MouseButton1Click:Connect(function()
+print(BuildingsPanel.GreenBuildingButton)
+
     BuildingsPanel.Visible = not BuildingsPanel.Visible
 
-    
     if newConstructionSystem.Enabled == nil then
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-
-
     newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter, SetBuildMode) 
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
-
- 
 end)
 
 
@@ -80,8 +80,37 @@ yellowBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-
     newConstructionSystem:Init(workspace.Yellow, mouse, whiteListFilter, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
 end)
+
+local greenBuildingButton: ImageButton = BuildingsPanel.GreenBuildingButton
+greenBuildingButton.MouseButton1Click:Connect(function()
+    print("Clicked")
+    BuildingsPanel.Visible = not BuildingsPanel.Visible
+
+    if newConstructionSystem.Enabled == nil then
+        newConstructionSystem = ConstructionSystemEntity.new()
+    end
+
+    newConstructionSystem:Init(workspace.Green, mouse, whiteListFilter, SetBuildMode) 
+    newConstructionSystem:PreviewBuilding()
+    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
+end)
+
+
+local blueBuildingButton: ImageButton = BuildingsPanel.BlueBuildingButton
+
+blueBuildingButton.MouseButton1Click:Connect(function()
+    BuildingsPanel.Visible = not BuildingsPanel.Visible
+
+    if newConstructionSystem.Enabled == nil then
+        newConstructionSystem = ConstructionSystemEntity.new()
+    end
+
+    newConstructionSystem:Init(workspace.Blue, mouse, whiteListFilter, SetBuildMode)
+    newConstructionSystem:PreviewBuilding()
+    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
+end)
+
