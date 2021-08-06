@@ -1,19 +1,19 @@
 
-    local ServerStorage = game:GetService('ServerStorage')
+local ServerStorage = game:GetService('ServerStorage')
+local require = require(game:GetService("ReplicatedStorage"):WaitForChild("Nevermore").Nevermore)
 
 
+-------------------- Modules --------------------
+local MapClass = require("MapEntity")
 
-    -------------------- Modules --------------------
-    local MapClass = require(ServerStorage.Systems.MapEntity)
+-------------------- Map Generation --------------------
+local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
 
-    -------------------- Map Generation --------------------
-    local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
+-- Mapping MapGenerationConfig values to the map gen tbable
+local Map = MapClass.new(mapGenerationTable)
 
-    -- Mapping MapGenerationConfig values to the map gen tbable
-    local Map = MapClass.new(mapGenerationTable)
-
-    local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
-    Map:GenerateMap(terrainTypesTable.InitialTerrains)
+local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
+Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
 --//TODO Add the different transformed terrain to the terrain types table
 
@@ -31,7 +31,7 @@ Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypes
 
 
 -------------------- setting resource deposit sizes --------------------
---//TODO look into moving this somewere else
+--//TODO look into moving this somewere elseW
 Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
 Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
 Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
