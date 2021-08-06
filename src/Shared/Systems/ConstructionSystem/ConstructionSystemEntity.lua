@@ -26,28 +26,30 @@ ConstructionSystemEntity.__index = ConstructionSystemEntity
 
 function ConstructionSystemEntity.new()
     local self = setmetatable({}, ConstructionSystemEntity)
-    
     self.SelectedObject = nil --> //TODO FIXCON 4 rename this  
     self.Mouse = nil
     self.TagsWhiltelist = nil
     self.UpdateBuildingPreview = nil
 
-    self._SetBuildMode = Instance.new("RemoteEvent")
-    self._SetBuildMode.Parent = ReplicatedStorage.Remotes.Events
-
+    self.Enabled = nil
     self.Maid = Maid.new()
+
     return self
 end
 
 
 function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
-    print(self)
+    if self.SelectedObject then
+        self.SelectedObject:Destroy()
+        self.SelectedObject = aSelectedObject
+    end
     self.SelectedObject = aSelectedObject:Clone()
     self.Maid:GiveTask(self.SelectedObject)
 
     self.Mouse = aMouse
     self.Maid:GiveTask(self.Mouse)
 
+    self.Enabled = true
     self.TagsWhitelist = aTagsWhitelist
     
     self.Mouse.TargetFilter = self.SelectedObject
@@ -56,10 +58,14 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
         
         if inputState == Enum.UserInputState.Begin then                
             --newConstructionSystem:PlacePrefab()
+            self.Enabled = false
             print("Click")
-            remote:FireServer()
+            remote:FireServer(self.Enabled) --> Flip build mode state if we place a building
         end
     end
+
+    remote:FireServer(self.Enabled) --> flip buildmode when we initt the construction system?
+
     print(self.Maid)
 
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
@@ -78,8 +84,6 @@ function ConstructionSystemEntity:PreviewBuilding()
         
         local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
         self.SelectedObject.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
-
-        print(self.Mouse.Target)
     end))
 end
 
@@ -88,8 +92,8 @@ end
 
 function ConstructionSystemEntity:Destroy()
     ContextActionService:UnbindAction("InBuildMode")
-    self.TagsWhitelist = nil
     self.Maid:DoCleaning()
+    table.clear(self)
 end
 
 
@@ -97,7 +101,10 @@ function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
     self.Maid:GiveTask(UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if anInputObject.KeyCode == key and not isTyping then
             print("Out")
-            remote:FireServer()
+
+            self.Enabled = false
+            remote:FireServer(self.Enabled)
+            
             self:Destroy()
             print(self)
         end
