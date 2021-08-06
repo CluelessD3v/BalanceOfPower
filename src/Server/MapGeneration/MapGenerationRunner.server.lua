@@ -1,10 +1,9 @@
 
 local ServerStorage = game:GetService('ServerStorage')
-local require = require(game:GetService("ReplicatedStorage"):WaitForChild("Nevermore").Nevermore)
 
 
 -------------------- Modules --------------------
-local MapClass = require("MapEntity")
+local MapClass = require(ServerStorage.Systems.MapEntity)
 
 -------------------- Map Generation --------------------
 local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)

@@ -40,15 +40,8 @@ function ConstructionSystemEntity.new()
 end
 
 
-local function BindBuildingPlacement(_, inputState, _)
-    if inputState == Enum.UserInputState.Begin then                
-        --newConstructionSystem:PlacePrefab()
-        print("Click")
-        remote:FireServer()
-    end
-end
-
 function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
+    print(self)
     self.SelectedObject = aSelectedObject:Clone()
     self.Maid:GiveTask(self.SelectedObject)
 
@@ -67,7 +60,7 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
             remote:FireServer()
         end
     end
-
+    print(self.Maid)
 
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
@@ -105,8 +98,8 @@ function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
         if anInputObject.KeyCode == key and not isTyping then
             print("Out")
             remote:FireServer()
-
             self:Destroy()
+            print(self)
         end
     end))
 end
