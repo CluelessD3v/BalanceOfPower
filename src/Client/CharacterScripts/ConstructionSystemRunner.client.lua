@@ -53,12 +53,10 @@ local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 -- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 
 local newConstructionSystem = {} 
-
+-->FIXCON3: refactor this to avoid so much code repetition
 local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 
 redBuildingButton.MouseButton1Click:Connect(function()
-print(BuildingsPanel.GreenBuildingButton)
-
     BuildingsPanel.Visible = not BuildingsPanel.Visible
 
     if newConstructionSystem.Enabled == nil then
@@ -86,8 +84,8 @@ yellowBuildingButton.MouseButton1Click:Connect(function()
 end)
 
 local greenBuildingButton: ImageButton = BuildingsPanel.GreenBuildingButton
+
 greenBuildingButton.MouseButton1Click:Connect(function()
-    print("Clicked")
     BuildingsPanel.Visible = not BuildingsPanel.Visible
 
     if newConstructionSystem.Enabled == nil then

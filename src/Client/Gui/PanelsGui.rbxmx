@@ -306,7 +306,7 @@
 					<Ref name="NextSelectionRight">null</Ref>
 					<Ref name="NextSelectionUp">null</Ref>
 					<UDim2 name="Position">
-						<XS>0.0631674305</XS>
+						<XS>0.0727021396</XS>
 						<XO>0</XO>
 						<YS>0.165677443</YS>
 						<YO>0</YO>
@@ -469,7 +469,7 @@
 				<bool name="ClipsDescendants">false</bool>
 				<bool name="Draggable">false</bool>
 				<int name="LayoutOrder">0</int>
-				<string name="Name">Frame</string>
+				<string name="Name">ButtonsPanel</string>
 				<Ref name="NextSelectionDown">null</Ref>
 				<Ref name="NextSelectionLeft">null</Ref>
 				<Ref name="NextSelectionRight">null</Ref>
@@ -541,7 +541,7 @@
 					<float name="ImageTransparency">0</float>
 					<int name="LayoutOrder">0</int>
 					<bool name="Modal">false</bool>
-					<string name="Name">ImageButton</string>
+					<string name="Name">BuildingsPanelButton</string>
 					<Ref name="NextSelectionDown">null</Ref>
 					<Ref name="NextSelectionLeft">null</Ref>
 					<Ref name="NextSelectionRight">null</Ref>
