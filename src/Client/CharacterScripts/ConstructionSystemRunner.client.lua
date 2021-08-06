@@ -56,7 +56,7 @@ redBuildingButton.MouseButton1Click:Connect(function()
 
 
 
-    newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter, SetBuildMode)
+    newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter, SetBuildMode) -->//TODO FIXCON 4 Bind this param to a remote event!
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X)
 
