@@ -14,7 +14,6 @@ local Map = MapClass.new(mapGenerationTable)
 local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
 Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
---//TODO Add the different transformed terrain to the terrain types table
 
 Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
 Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
@@ -30,7 +29,6 @@ Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypes
 
 
 -------------------- setting resource deposit sizes --------------------
---//TODO look into moving this somewere elseW
 Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
 Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
 Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)

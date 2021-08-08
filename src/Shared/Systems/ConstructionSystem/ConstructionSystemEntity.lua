@@ -41,6 +41,7 @@ end
 function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
     if self.SelectedObject then
         self.SelectedObject:Destroy()
+        self.Maid:DoCleaning()
         self.SelectedObject = aSelectedObject
     end
 
