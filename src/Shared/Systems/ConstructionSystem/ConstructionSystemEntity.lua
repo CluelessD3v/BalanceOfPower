@@ -62,7 +62,7 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
             --newConstructionSystem:PlacePrefab()
             self.Enabled = false
             print("Click")
-            remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO ixcon2 put this in the place prefab method
+            remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO Fixcon2 put this in the place prefab method
         end
     end
 
