@@ -1,6 +1,6 @@
 local Players = game:GetService('Players')
 
---//TODO HIDE FACE DECAL AS WELL
+--//TODO make this variable, normal camera speed, and when shift is pressed to start running
 Players.PlayerAdded:Connect(function(aPlayer)
     aPlayer.CameraMinZoomDistance = 500
     aPlayer.CharacterAdded:Connect(function(aCharacter)

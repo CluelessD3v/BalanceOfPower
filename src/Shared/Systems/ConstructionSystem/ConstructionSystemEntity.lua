@@ -55,11 +55,11 @@ function ConstructionSystemEntity:PreviewBuilding()
 
 end
 
-function ConstructionSystemEntity:ExitBuildMode(remoteFunction: RemoteFunction, key: Enum.KeyCode)
+function ConstructionSystemEntity:ExitBuildMode(remoteEvent: RemoteEvent, key: Enum.KeyCode)
     self.ExitBuildModeConnection = UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if anInputObject.KeyCode == key and not isTyping then
             print("Exited build mode")
-            remoteFunction:InvokeServer()
+            remoteEvent:FireServer()
         end
     end)    
 end
@@ -88,6 +88,8 @@ function ConstructionSystemEntity:PlacePrefab()
     end
     
     local newBuilding = self.Prefab:Clone()
+    newBuilding.CanCollide = false
+    newBuilding.Anchored = true
     local yOffset =  self.Mouse.Target.Size.Y/2 + newBuilding.Size.Y/2
     
     newBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
