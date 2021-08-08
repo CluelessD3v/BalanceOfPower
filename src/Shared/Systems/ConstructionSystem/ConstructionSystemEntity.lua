@@ -4,98 +4,114 @@
 
 ]]--
 
+-------------------- Services --------------------
+
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local ContextActionService = game:GetService('ContextActionService')
 local CollectionService = game:GetService('CollectionService')
 local RunService = game:GetService('RunService')
 local UserInputService = game:GetService('UserInputService')
 
 
+local Maid = require (ReplicatedStorage.Utilities.Maid)
+local keybinds = require(ReplicatedStorage.Components.Keybinds)
+local generalKeys = keybinds.GeneralKeys
+
+
+-->//TODO FIXCON 3 Clean this module
+
+
 local ConstructionSystemEntity = {} 
 ConstructionSystemEntity.__index = ConstructionSystemEntity
 
-function ConstructionSystemEntity.new(theSelectedBuilding: BasePart, thePlayerMouse: Mouse,  aValidTilesList: table)
+function ConstructionSystemEntity.new()
     local self = setmetatable({}, ConstructionSystemEntity)
+    self.SelectedObject = nil --> //TODO FIXCON 4 rename this  
+    self.Mouse = nil
+    self.TagsWhiltelist = nil
+    self.UpdateBuildingPreview = nil
 
-    self.Prefab = theSelectedBuilding
-    self.BuildingPreview = self.Prefab:Clone() 
-    
-    self.BuildingPreview.CanCollide = false
-    self.BuildingPreview.Anchored = true
-    self.BuildingPreview.Transparency = .5
-    
-    self.BuildingPreview.Parent = workspace
+    self.Enabled = nil
+    self.Maid = Maid.new()
 
-    self.ValidTilesList = aValidTilesList
-    self.Mouse = thePlayerMouse
-
-    self.PreviousTarget = nil --> form of debounce to avoid processing on the same tile (DOES NOOT DISCONNECTS!)
-    self.UpdatePreviewPosCon = nil --> Connection of the update loop that updates the prefab position
-    self.ExitBuildModeConnection = nil --> holds the connection of the exit UIS InputBegan event binded to exit build mode
     return self
 end
+
+
+function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
+    if self.SelectedObject then
+        self.SelectedObject:Destroy()
+        self.Maid:DoCleaning()
+        self.SelectedObject = aSelectedObject
+    end
+
     
-function ConstructionSystemEntity:PreviewBuilding()
+    self.SelectedObject = aSelectedObject:Clone()
+    self.Maid:GiveTask(self.SelectedObject)
 
-    self.UpdatePreviewPosCon = RunService.Heartbeat:Connect(function()
-        if self.Mouse.Target == nil then return end
-        if self.Mouse.Target == self.PreviousTarget then return end
-        self.Mouse.TargetFilter = self.BuildingPreview
+    self.Mouse = aMouse
+    self.Maid:GiveTask(self.Mouse)
 
-        for _, tag in ipairs(self.ValidTilesList) do
-            if not CollectionService:HasTag(self.Mouse.Target, tag) then
-                return
-            end
-        end
-        print(self.Mouse.Target)
+    self.Enabled = true
+    self.TagsWhitelist = aTagsWhitelist
+    
+    self.Mouse.TargetFilter = self.SelectedObject
+
+    local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         
-        local yOffset =  self.Mouse.Target.Size.Y/2 + self.BuildingPreview.Size.Y/2
-        self.BuildingPreview.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
-        self.PreviousTarget = self.Mouse.Target
-    end) 
-    
-
-end
-
-function ConstructionSystemEntity:ExitBuildMode(remoteEvent: RemoteEvent, key: Enum.KeyCode)
-    self.ExitBuildModeConnection = UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
-        if anInputObject.KeyCode == key and not isTyping then
-            print("Exited build mode")
-            remoteEvent:FireServer()
-        end
-    end)    
-end
-
-function ConstructionSystemEntity:Destroy()
-    self.BuildingPreview:Destroy() --> destroy the preview
-    self.UpdatePreviewPosCon:Disconnect() 
-    self.ExitBuildModeConnection:Disconnect()
-    -- Order matters here, first destroy, then nil!
-    self.BuildingPreview = nil
-    self.Mouse = nil
-    self.PreviousTarget = nil
-    self.ValidTilesList = nil
-end
-
-
-
-
-
-function ConstructionSystemEntity:PlacePrefab()
-    self.Mouse.TargetFilter = self.BuildingPreview
-    for _, tag in ipairs(self.ValidTilesList) do
-        if not CollectionService:HasTag(self.Mouse.Target, tag) then
-            return
+        if inputState == Enum.UserInputState.Begin then                
+            --newConstructionSystem:PlacePrefab()
+            self.Enabled = false
+            print("Click")
+            remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO Fixcon2 put this in the place prefab method
         end
     end
-    
-    local newBuilding = self.Prefab:Clone()
-    newBuilding.CanCollide = false
-    newBuilding.Anchored = true
-    local yOffset =  self.Mouse.Target.Size.Y/2 + newBuilding.Size.Y/2
-    
-    newBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
-    newBuilding.Parent = self.Mouse.Target
-    print("Building placed in:", newBuilding.Parent)
 
+    remote:FireServer(self.Enabled) --> flip buildmode when we initt the construction system?
+
+    print(self.Maid)
+
+    ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
+
+function ConstructionSystemEntity:PreviewBuilding()
+    local previousTarget = nil
+    self.SelectedObject.Parent = workspace
+    
+    self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()
+        
+        if self.Mouse.Target == nil then return end
+        if self.Mouse.Target == previousTarget then return end
+        previousTarget = self.Mouse.Target
+        
+        local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
+        self.SelectedObject.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+    end))
+end
+
+
+-------------------- Ceanup methods --------------------
+
+function ConstructionSystemEntity:Destroy()
+    ContextActionService:UnbindAction("InBuildMode")
+    self.Maid:DoCleaning()
+    table.clear(self)
+end
+
+
+function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
+    self.Maid:GiveTask(UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
+        if anInputObject.KeyCode == key and not isTyping then
+            print("Out")
+
+            self.Enabled = false
+            remote:FireServer(self.Enabled)
+            
+            self:Destroy()
+            print(self)
+        end
+    end))
+end
+ 
 return ConstructionSystemEntity

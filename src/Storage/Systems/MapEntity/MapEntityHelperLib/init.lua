@@ -7,14 +7,14 @@ local CollectionService = game:GetService('CollectionService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 
 local Utilities = ReplicatedStorage.Utilities
-local GetWeightedDrop = require(Utilities.GetWeightedDrop)
+local WeightedChoice = require(Utilities.WeightedChoice)
 
 
 local MapEntityHelperLib = {}
 
 function MapEntityHelperLib.SetResourceDepositSize(aResourceTag, aResourceDataTable)
     for _, tile in ipairs(CollectionService:GetTagged(aResourceTag)) do
-        local WeightData = GetWeightedDrop(aResourceDataTable.WeightsData) -- returns the Key of the resource
+        local WeightData = WeightedChoice(aResourceDataTable.WeightsData) -- returns the Key of the resource
 
         -- Choosing a random value from  range of selected weight, e.g: Medium[400, 800] <-- num between those 
         local depositSize = math.random(WeightData.Ammount.Min, WeightData.Ammount.Max) 
