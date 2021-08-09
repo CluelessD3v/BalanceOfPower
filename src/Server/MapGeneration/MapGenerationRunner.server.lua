@@ -18,7 +18,8 @@ Map:GenerateMap(terrainTypesTable.InitialTerrains)
 Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
 Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
 Map.HelperLib.SetTerrainElevation(Map)
-task.wait()
+
+task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE IT!
 -------------------- Resource Generation --------------------
 local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
 
@@ -49,3 +50,5 @@ task.wait(10)
 --     RawResourcesTypesTable.Clay.Debug,
 --     RawResourcesTypesTable.Iron.Debug,
 -- })
+
+
