@@ -1,7 +1,6 @@
 local CollectionService = game:GetService('CollectionService')
-local CustomInstance = {}
 
-function CustomInstance.new(aClassName, aFieldMap)
+return function (anInstance: PVInstance, aFieldMap: table)
     aFieldMap = aFieldMap or {
         Properties = {},
         Attributes = {},
@@ -9,27 +8,23 @@ function CustomInstance.new(aClassName, aFieldMap)
 
     }
 
+    -- Default to empty table if there is no field
     local properties = aFieldMap.Properties or {}
     local Attributes = aFieldMap.Attributes or {}
     local tags = aFieldMap.Tags or {}
 
-    local newInstance = Instance.new(aClassName)
-
     for property, value in pairs (properties) do 
-        newInstance[property] = value
+        anInstance[property] = value
     end
 
  
     for attribute, value in pairs(Attributes) do
-        newInstance:SetAttribute(attribute, value)
+        anInstance:SetAttribute(attribute, value)
     end
 
     for _, tag in pairs(tags) do
-        CollectionService:AddTag(newInstance, tag)
+        CollectionService:AddTag(anInstance, tag)
     end
 
-    return newInstance
+    return anInstance
 end
-
-
-return CustomInstance

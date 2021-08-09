@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local CollectionService = game:GetService('CollectionService')
 
+local MapDataToInstance = require(ReplicatedStorage.Utilities.MapDataToInstance)
 -------------------- Constructor --------------------
 
 local Tile = {} 
@@ -22,7 +23,7 @@ end
 local function RemoveMetadata(self)
     local oldTags = CollectionService:GetTags(self.GameObject)
     local oldAttributes = self.GameObject:GetAttributes()
-
+    
     for attribute, _ in pairs(oldAttributes) do
         self.GameObject:SetAttribute(attribute, nil)
     end
@@ -40,27 +41,13 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
 
 
     for i = 1, #theTerrainTypesTable -1 do
-        local this = theTerrainTypesTable[i] -- current value in the list
-        local next = theTerrainTypesTable[i + 1]   -- next value in the list
+        local currentKey = theTerrainTypesTable[i] -- current value in the list
+        local nextKey = theTerrainTypesTable[i + 1]   -- next value in the list
         
-        -- this is an If statement to check if we are in rangeBTW
-        if theNoiseResult >= this.Threshold and theNoiseResult <= next.Threshold then
-            this.Properties = this.Properties or {}
-            this.Tags = this.Tags or {} 
-            this.Attributes = this.Attributes or {}
-            this.Limit = this.Limit or 2e9
-
-            for property, value in pairs(this.Properties) do
-                self.GameObject[property] = value
-            end
-
-            for attribute, value in pairs(this.Attributes) do
-                self.GameObject:SetAttribute(attribute, value)
-            end
-
-            for _, tag in ipairs (this.Tags) do
-                CollectionService:AddTag(self.GameObject, tag)
-            end 
+        -- this is an If statement to check if we are in range 
+        if theNoiseResult >= currentKey.Threshold and theNoiseResult <= nextKey.Threshold then
+            currentKey.Limit = currentKey.Limit or 2e9 --> 
+            MapDataToInstance(self.GameObject, currentKey)
         end
     end
 
@@ -72,24 +59,12 @@ function Tile:SetMetadata(newTerrainDataTable)
     newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
     newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
     newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
-    newTerrainDataTable.Limit = newTerrainDataTable.Limit or 2e9
-    newTerrainDataTable.Threshold = newTerrainDataTable.Threshold or .5 
+    
     RemoveMetadata(self)
     
-    -- reseting tile tag
+    -- reseting tile tag, we erased it by calling RemoveData ┐(￣ヘ￣)┌	
     CollectionService:AddTag(self.GameObject, "Tile")
-
-    for property, value in pairs(newTerrainDataTable.Properties) do
-        self.GameObject[property] = value
-    end
-
-    for attribute, value in pairs(newTerrainDataTable.Attributes) do
-        self.GameObject:SetAttribute(attribute, value)
-    end
-
-    for _, tag in ipairs (newTerrainDataTable.Tags) do
-        CollectionService:AddTag(self.GameObject, tag)
-    end
+    MapDataToInstance(self.GameObject, newTerrainDataTable)
 end
 
 -- Updates existing data w/o removing existing data
@@ -97,22 +72,10 @@ function Tile:UpdateMetaData(newTerrainDataTable)
     newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
     newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
     newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
-    newTerrainDataTable.Threshold = newTerrainDataTable.Threshold or .5
-    newTerrainDataTable.Limit = newTerrainDataTable.Limit or 2e9 
+
     -- Updating Data tile tag
-    CollectionService:AddTag(self.GameObject, "Tile")
-
-    for property, value in pairs(newTerrainDataTable.Properties) do
-        self.GameObject[property] = value
-    end
-
-    for attribute, value in pairs(newTerrainDataTable.Attributes) do
-        self.GameObject:SetAttribute(attribute, value)
-    end
-
-    for _, tag in ipairs (newTerrainDataTable.Tags) do
-        CollectionService:AddTag(self.GameObject, tag)
-    end
+    CollectionService:AddTag(self.GameObject, "Tile") --> idk if this is necessary ._. //TODO FIXCON4 test if is necessary to update tile tag
+    MapDataToInstance(self.GameObject, newTerrainDataTable)
 end
 
 

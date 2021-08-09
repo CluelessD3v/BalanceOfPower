@@ -18,7 +18,7 @@ Map:GenerateMap(terrainTypesTable.InitialTerrains)
 Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
 Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
 Map.HelperLib.SetTerrainElevation(Map)
-wait()
+task.wait()
 -------------------- Resource Generation --------------------
 local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
 
@@ -27,14 +27,14 @@ Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron, RawResourcesTypes
 Map:UpdateFromTag("Tile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
 Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
 
-
+task.wait()
 -------------------- setting resource deposit sizes --------------------
 Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
 Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
 Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
 
 
---[[
+
 Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
     RawResourcesTypesTable.Timber.Debug,
@@ -42,11 +42,10 @@ Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
     RawResourcesTypesTable.Iron.Debug,
 })
 
-wait(10)
+task.wait(10)
 
-Map.Debug.FilterTiles.Blacklist(Map, {
-    RawResourcesTypesTable.Timber.Debug,
-    RawResourcesTypesTable.Clay.Debug,
-    RawResourcesTypesTable.Iron.Debug,
-})
---]]
+-- Map.Debug.FilterTiles.Blacklist(Map, {
+--     RawResourcesTypesTable.Timber.Debug,
+--     RawResourcesTypesTable.Clay.Debug,
+--     RawResourcesTypesTable.Iron.Debug,
+-- })
