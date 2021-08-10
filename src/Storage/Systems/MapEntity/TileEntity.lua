@@ -11,11 +11,7 @@ function Tile.new(anInstance: PVInstance)
     local self = setmetatable({}, Tile)
     assert(anInstance ~= nil, "Error, cannot must pass an instance!")
     self.GameObject = anInstance
-    
-    
-    CollectionService:AddTag(self.GameObject, "Tile")
 
-        
     return self
 end
     
@@ -39,7 +35,7 @@ end
 
 -- Automatically sets metadata to tile from the terrain types table
 function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
-
+    CollectionService:AddTag(self.GameObject, "Tile")
 
     for i = 1, #theTerrainTypesTable -1 do
         local currentKey = theTerrainTypesTable[i] -- current value in the list

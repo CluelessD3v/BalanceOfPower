@@ -57,6 +57,7 @@ function Map.new(theMapGenerationTable: table)
 
 
     self.TileMap = table.create(self.MapSize)
+    self.TileList = table.create(self.MapSize^2)
 
     self.Debug = {
         FilterTiles = {
@@ -113,8 +114,8 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             tileInstance.Material = Enum.Material.SmoothPlastic
             
             newTile:InitMetadata(noiseResult, theTerrainTypesTable)
-
-
+            
+            table.insert(newTile, self.TileList)
             self.TileMap[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
 
             tileInstance.Parent = workspace 
@@ -140,7 +141,6 @@ function Map:TransformFromTag(aTag: string, aTerrainTable: table, filteredTags: 
     
     local count = 0
 
-
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             local tile = self.TileMap[x][z]
@@ -150,8 +150,7 @@ function Map:TransformFromTag(aTag: string, aTerrainTable: table, filteredTags: 
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             local hasFilteredTag = false
-            
-           
+        
             if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
                 if noiseResult <= aTerrainTable.Threshold then
                     for _, tag in pairs(filteredTags) do
@@ -280,18 +279,14 @@ end
 
 -------------------- Setters --------------------
 
--->//TDDO FIXCON2 LOOK INTO HOW TO REFACTOR THESE FUNCTIONS
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
 function Map:PositionInstanceOnTaggedTiles(aTag: string, propsList: table, aThreshold: number, hasRandomOrientation: boolean)
     for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
         local newTile = Tile.new(tile)
 
-
         local chance = Random.new():NextNumber(0, 1)
         if chance <= aThreshold then
             newTile:InstanceToOriginOffseted(propsList, hasRandomOrientation)
-            CollectionService:AddTag(newTile.GameObject, "Asset")
-            newTile = nil
         end
     end
 end
