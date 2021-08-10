@@ -102,7 +102,7 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             -- Creating tile object and setting metadata via internal tile class
-            local newTile = Tile.new()
+            local newTile = Tile.new(Instance.new("Part"))
             local tileInstance = newTile.GameObject
             
             tileInstance.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
@@ -283,19 +283,24 @@ end
 
 -->//TDDO FIXCON2 LOOK INTO HOW TO REFACTOR THESE FUNCTIONS
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
-function Map:SetInstanceOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
-    local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
-    local taggedpropList = CollectionService:GetTagged(aTaggedProp)
+function Map:PositionInstanceOnTaggedTiles(aTag: string, propsList: table, aThreshold: number, hasRandomOrientation: boolean)
+    for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
+        local newTile = Tile.new()
+        newTile.GameObject = tile
 
-    GenerateProps.InstanceToOrigin(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)  
+        local chance = Random.new():NextNumber(0, 1)
+        if chance <= aThreshold then
+            newTile:InstanceToOriginOffseted(propsList, hasRandomOrientation)
+            CollectionService:AddTag(newTile.GameObject, "Asset")
+            newTile = nil
+        end
+    end
 end
 
 -- THis function sets props across the tile, THIS IS TILE SIZE DEPENDANT, BIGGER TILES = MORE PROPS!
-function Map:SetInstanceAcrossTile(aTile: BasePart, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
-    local taggedpropList = CollectionService:GetTagged(aTaggedProp)
-    
-    GenerateProps.InstanceAcrossTile(aTile, taggedpropList, aChance, hasRandomOrientation)
-end
+-- function Map:SetInstanceAcrossTile(aTile: BasePart, aPropList: string, aThreshold: integer, hasRandomOrientation: boolean)
+--     GenerateProps.InstanceAcrossTile(aTile, aPropList, aThreshold, hasRandomOrientation)
+-- end
 
 
 -------------------- Getters --------------------

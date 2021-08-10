@@ -7,9 +7,9 @@ local MapDataToInstance = require(ReplicatedStorage.Utilities.MapDataToInstance)
 local Tile = {} 
 Tile.__index = Tile
 
-function Tile.new()
+function Tile.new(anInstance: PVInstance)
     local self = setmetatable({}, Tile)
-    self.GameObject = Instance.new("Part")
+    self.GameObject = anInstance or Instance.new("Part")
     
     
     CollectionService:AddTag(self.GameObject, "Tile")
@@ -80,18 +80,8 @@ end
 
 
 -------------------- Positioning relative to tile Routines --------------------
---[[
-    this places N number of assets allong the tile
-    
-    x   o   x -- representation of a tile, each X is an asset
-    o   x   o -- specially good for trees and pebbles
-    x   x   o
-    o   x   x
 
-    NOTE: this function will respect the boundaries of the tile INDEPENDENTLY of the asset size.
-]]--
 
--->//TODO FIXCON3 probably delete this method due to performance reasons and replace with single models
 function Tile:InstanceAcrossTile(taggedpropList: table, aChance: integer, hasRandomOrientation: boolean)
     for x = 1, self.GameObject.Size.X do
         for z = 1, self.GameObject.Size.Z do
@@ -111,41 +101,45 @@ function Tile:InstanceAcrossTile(taggedpropList: table, aChance: integer, hasRan
                     prop.Orientation = Vector3.new(0, math.random(0, 360),0)
                 end
 
-                prop.Parent = self.GameObject
+                prop.Parent = self.ga
              end
          end
      end
 end
---[[ 
-    tHIS PLACES AN ASSET EXACTLY IN THE MIDLE OF TILE + Y offset 
-            I
-            I            
-            I-- TREE ASSET EXAMPLE
-    ----------------------
-    ----------------------
-                specially good for grass and big rocks
---]]
 
-function Tile.InstanceToOrigin(taggedTilesList: table, taggedpropList: table, aChance: integer, hasRandomOrientation: boolean)
-    for _, tile in ipairs(taggedTilesList) do
+-- function Tile.InstanceToOriginOffseted(: table, taggedpropList: table, aChance: integer, hasRandomOrientation: boolean)
+--     for _, tile in ipairs(taggedTilesList) do
 
-        local chance = Random.new():NextNumber(0, 1)
-        if chance <= aChance then
-            local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
+--         local chance = Random.new():NextNumber(0, 1)
+--         if chance <= aChance then
+--             local prop = taggedpropList[math.random(1, #taggedpropList)]:Clone()
             
-            if hasRandomOrientation then
-                prop.Orientation = Vector3.new(0, math.random(0, 360),0)
-            end
+--             if hasRandomOrientation then
+--                 prop.Orientation = Vector3.new(0, math.random(0, 360),0)
+--             end
 
-            prop.Size = Vector3.new(tile.Size.X, prop.Size.Y, tile.Size.Z)
+--             prop.Size = Vector3.new(tile.Size.X, prop.Size.Y, tile.Size.Z)
             
-            local yOffset =  tile.Size.Y/2 + prop.Size.Y/2
-            prop.Position = tile.Position + Vector3.new(0, yOffset, 0)
-            prop.Parent = tile
-        end
+--             local yOffset =  tile.Size.Y/2 + prop.Size.Y/2
+--             prop.Position = tile.Position + Vector3.new(0, yOffset, 0)
+--             prop.Parent = tile
+--         end
+--     end
+-- end
+
+
+function Tile:InstanceToOriginOffseted(aPropList: table, hasRandomOrientation: boolean)
+
+    local prop = aPropList[math.random(1, #aPropList)]:Clone()    
+    local yOffset =  self.GameObject.Size.Y/2 + prop.Size.Y/2
+    prop.Position = self.GameObject.Position + Vector3.new(0, yOffset, 0)
+    
+    if hasRandomOrientation then
+        prop.Orientation = Vector3.new(0, math.random(0, 360),0)
     end
+    
+    prop.Parent = self.GameObject  
+
 end
-
-
 
 return Tile
