@@ -3,7 +3,6 @@ local CollectionService = game:GetService('CollectionService')
 local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
 local Tile = require(script.TileEntity)
-local GenerateProps = require(script.GenerateProps)
 local Debug = require(script.Debug)
 local MapEntityHelperLib = require(script.MapEntityHelperLib)
 -------------------- Constructor --------------------
@@ -285,8 +284,8 @@ end
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
 function Map:PositionInstanceOnTaggedTiles(aTag: string, propsList: table, aThreshold: number, hasRandomOrientation: boolean)
     for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
-        local newTile = Tile.new()
-        newTile.GameObject = tile
+        local newTile = Tile.new(tile)
+
 
         local chance = Random.new():NextNumber(0, 1)
         if chance <= aThreshold then

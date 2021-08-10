@@ -9,7 +9,8 @@ Tile.__index = Tile
 
 function Tile.new(anInstance: PVInstance)
     local self = setmetatable({}, Tile)
-    self.GameObject = anInstance or Instance.new("Part")
+    assert(anInstance ~= nil, "Error, cannot must pass an instance!")
+    self.GameObject = anInstance
     
     
     CollectionService:AddTag(self.GameObject, "Tile")
