@@ -1,3 +1,7 @@
+--[[
+    This module assists in the easy mapping of metadata organic proper to an instance
+]]---
+
 local CollectionService = game:GetService('CollectionService')
 
 return function (anInstance: PVInstance, aFieldMap: table)

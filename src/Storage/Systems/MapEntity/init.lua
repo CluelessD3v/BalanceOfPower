@@ -280,12 +280,14 @@ end
 
 
 -------------------- Setters --------------------
+
+-->//TDDO FIXCON2 LOOK INTO HOW TO REFACTOR THESE FUNCTIONS
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
 function Map:SetInstanceOnTile(aTaggedTilesList: string, aTaggedProp: string, aChance: integer, hasRandomOrientation: boolean)
     local taggedTilesList = CollectionService:GetTagged(aTaggedTilesList)
     local taggedpropList = CollectionService:GetTagged(aTaggedProp)
 
-    GenerateProps.InstanceToOrigin(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)
+    GenerateProps.InstanceToOrigin(taggedTilesList, taggedpropList, aChance, hasRandomOrientation)  
 end
 
 -- THis function sets props across the tile, THIS IS TILE SIZE DEPENDANT, BIGGER TILES = MORE PROPS!
