@@ -8,7 +8,7 @@ function Debug.BlacklistTiles(self, theBlacklistedTags: table)
     
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.TileMap[x][z]
+            local tile = self._TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             
             for key, entry in pairs(theBlacklistedTags) do
@@ -26,7 +26,7 @@ function Debug.WhitelistTiles(self, theWhitelistedTags: table)
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             
-            local tile = self.TileMap[x][z]
+            local tile = self._TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             tileInstance.BrickColor = BrickColor.new("White")
             -- Check if it has any of the filtered tags
@@ -45,7 +45,7 @@ function Debug.WhitelistAndGradient(self, attribute: string, theFilteredTags: ta
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
             
-            local tile = self.TileMap[x][z]
+            local tile = self._TileMap[x][z]
             local tileInstance: BasePart = tile.GameObject
             
             tileInstance.BrickColor = BrickColor.new("White")

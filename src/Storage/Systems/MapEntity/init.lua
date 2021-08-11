@@ -59,6 +59,8 @@ function Map.new(theMapGenerationTable: table)
     self._TileMap = table.create(self.MapSize)
     self._TileList = table.create(self.MapSize^2)
     
+    self.DoPrintStatus = false
+
     self.Debug = {
         FilterTiles = {
             Blacklist = Debug.BlacklistTiles,
@@ -75,12 +77,17 @@ function Map.new(theMapGenerationTable: table)
     return self
 end
 
-
+-------------------- Private Routines --------------------
+local function PrintStatus(self, message)
+    if self.DoPrintStatus then 
+        print(message) 
+    end
+end
 -------------------- Public Routines --------------------
 -- Generates a tile map with a noise map colored on top
 function Map:GenerateMap(theTerrainTypesTable: table)
     for x = 1, self.MapSize do
-        self.TileMap[x] = table.create(self.MapSize) -- Reserving space in memmory beforehand
+        self._TileMap[x] = table.create(self.MapSize) -- Reserving space in memmory beforehand
 
         for z = 1, self.MapSize do
             -- Noise calculation
@@ -116,12 +123,13 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             newTile:InitMetadata(noiseResult, theTerrainTypesTable)
             
             table.insert(newTile, self.TileList)
-            self.TileMap[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
+            self._TileMap[x][z] = newTile -- table.create reserved the space in table, now tiles ordered 2D-mentionally
 
             tileInstance.Parent = workspace 
         end
     end
-    print("Map generated")
+    
+    PrintStatus(self, "A map of size"..tostring(self.MapSize).."was generated")
 end
 
 
@@ -129,30 +137,30 @@ end
 -------------------- Transform Routines --------------------
 --[[
     this routines compare the threshold value of the given data table and if the
-    Threshold <= of the generated value ( from randomnes or noise) it will transform the tile info
+    Threshold <= of the generated value (from randomnes or noise) it will mutate the tile metadata
 ]]--
 
 
 -- Transform tile metadata based on a generated perlin noise value, OVERWRITES PREVIOUS DATA!
-function Map:TransformFromTagPN(aTag: string, aTerrainTable: table, aTagsBlacklist: table)
-    aTerrainTable.Seed = aTerrainTable.Seed or math.random(-100_000, 100_000)
-    aTerrainTable.Limit = aTerrainTable.Limit or 2e9 
+function Map:ProcedurallyTransformFromTag(aTag: string, aDataTable: table, aTagsBlacklist: table)
+    aDataTable.Seed = aDataTable.Seed or math.random(-100_000, 100_000)
+    aDataTable.Limit = aDataTable.Limit or 2e9 
     aTagsBlacklist = aTagsBlacklist or {}
     
     local count = 0
 
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.TileMap[x][z]
+            local tile = self._TileMap[x][z]
             local tileInstance = tile.GameObject
             
-            local noiseResult  = PerlinNoise.new({(x + aTerrainTable.Seed) * self.Scale, ( z + aTerrainTable.Seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
+            local noiseResult  = PerlinNoise.new({(x + aDataTable.Seed) * self.Scale, ( z + aDataTable.Seed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             local hasFilteredTag = false
         
-            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
-                if noiseResult <= aTerrainTable.Threshold then
+            if CollectionService:HasTag(tileInstance, aTag) and count <= aDataTable.Limit then
+                if noiseResult <= aDataTable.Threshold then
                     for _, tag in pairs(aTagsBlacklist) do
                         if CollectionService:HasTag(tileInstance, tag) then  
                             hasFilteredTag = true
@@ -160,27 +168,27 @@ function Map:TransformFromTagPN(aTag: string, aTerrainTable: table, aTagsBlackli
                     end
                     if not hasFilteredTag then
                         count += 1
-                        tile:SetMetadata(aTerrainTable)
+                        tile:SetMetadata(aDataTable)
                     end
                 end
             end
         end
     end
 
-    print(count,"tiles transformed")
+    PrintStatus(self, tostring(count).." tiles were tranformed to".. unpack(aDataTable.Tags))
 end
 
--- Updates tile metadata based on a generated perlin noise value, Previous data IS NOT OVERWRITTEN/DELETED!
-function Map:UpdateFromTagPN(aTag: string, aTerrainTable: table, aTagsBlacklist: table, aSeed)
+-- Updates tile metadata based on a generated perlin noise value, Previous data IS NOT OVERWRITTEN/DELETED!( except for duplicates)
+function Map:ProcedurallyUpdateFromTag(aTag: string, aDataTable: table, aTagsBlacklist: table, aSeed)
      aSeed = aSeed or math.random(-100_000, 100_000)
-    aTerrainTable.Limit = aTerrainTable.Limit or 2e9 
+    aDataTable.Limit = aDataTable.Limit or 2e9 
     aTagsBlacklist = aTagsBlacklist or {}
     
     local count = 0
 
     for x = 1, self.MapSize do
         for z = 1, self.MapSize do
-            local tile = self.TileMap[x][z]
+            local tile = self._TileMap[x][z]
             local tileInstance = tile.GameObject
             
             local noiseResult  = PerlinNoise.new({(x + aSeed) * self.Scale, ( z + aSeed)  * self.Scale}, self.Amplitude, self.Octaves, self.Persistence)
@@ -188,8 +196,8 @@ function Map:UpdateFromTagPN(aTag: string, aTerrainTable: table, aTagsBlacklist:
 
             local hasFilteredTag = false
 
-            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
-                if noiseResult <= aTerrainTable.Threshold then
+            if CollectionService:HasTag(tileInstance, aTag) and count <= aDataTable.Limit then
+                if noiseResult <= aDataTable.Threshold then
                     for _, tag in pairs(aTagsBlacklist) do
                         if CollectionService:HasTag(tileInstance, tag) then  
                             hasFilteredTag = true
@@ -197,85 +205,78 @@ function Map:UpdateFromTagPN(aTag: string, aTerrainTable: table, aTagsBlacklist:
                     end
                     if not hasFilteredTag then
                         count += 1
-                        tile:UpdateMetaData(aTerrainTable)
+                        tile:UpdateMetaData(aDataTable)
                     end
                 end
             end
         end
     end
 
-    print(count, "Tiles Updated")
+    PrintStatus(self, tostring(count).." tiles were Updated to".. unpack(aDataTable.Tags))
 end
 
-
--- Transform tile metadata based on a generated random value, OVERWRITES PREVIOUS DATA!
-function Map:TransformFromTagRandom(aTag: string, aTerrainTable: table, aTagsBlacklist: table)
+-- Transforms tile metadata, the distribution is procedural, Respects previous values, dupicates are overwritten.
+function Map:RandomlyTransformFromTag(aTag: string, aDataTable: table, aTagsBlacklist: table)
     aTagsBlacklist = aTagsBlacklist or {}
-    aTerrainTable.Limit = aTerrainTable.Limit or 2e9 
-    
+    aDataTable.Limit = aDataTable.Limit or 2e9 
+
     local count = 0
 
-    for x = 1, self.MapSize do
-        for z = 1, self.MapSize do
-            local tile = self.TileMap[x][z]
-            local tileInstance = tile.GameObject
-            
-            local chance = Random.new():NextNumber()
-            local hasFilteredTag = false
+    for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
+        local TileEntity = Tile.new(tile)
+        
+        local chance = Random.new():NextNumber()
+        local hasFilteredTag = false
 
-            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
-                if chance <= aTerrainTable.Threshold then
-                    for _, tag in pairs(aTagsBlacklist) do
-                        if CollectionService:HasTag(tileInstance, tag) then  
-                            hasFilteredTag = true
-                        end
+        if count <= aDataTable.Limit then
+            if chance <= aDataTable.Threshold then
+                for _, tag in pairs(aTagsBlacklist) do
+                    if CollectionService:HasTag(TileEntity.GameObject, tag) then  
+                        hasFilteredTag = true
                     end
-                    if not hasFilteredTag then
-                        count += 1
-                        tile:SetMetadata(aTerrainTable)
-                    end
+                end
+                if not hasFilteredTag then
+                    count += 1
+                    TileEntity:SetMetadata(aDataTable)
                 end
             end
         end
     end
 
-    print(count,"tiles transformed")
+    PrintStatus(self, tostring(count).." tiles were transformed to".. unpack(aDataTable.Tags))
 end
 
--- Updates tile metadata based on a generated random noise value, Previous data IS NOT OVERWRITTEN/DELETED!
-function Map:UpdateFromTagRandom(aTag: string, aTerrainTable: table, aTagsBlacklist: table)
+-- Updates tile metadata, the distribution is random, and threshold 0 does not updates any tile.
+function Map:RandomlyUpdateFromTag(aTag: string, aDataTable: table, aTagsBlacklist: table)
     aTagsBlacklist = aTagsBlacklist or {}
-    aTerrainTable.Limit = aTerrainTable.Limit or 2e9 
-    
+    aDataTable.Limit = aDataTable.Limit or 2e9
+
     local count = 0
 
-    for x = 1, self.MapSize do
-        for z = 1, self.MapSize do
-            local tile = self.TileMap[x][z]
-            local tileInstance = tile.GameObject
+    for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
+        local TileEntity = Tile.new(tile)
 
-            local chance = Random.new():NextNumber()
-            local hasFilteredTag = false
+        local chance = Random.new():NextNumber()
+        local hasFilteredTag = false
 
-            if CollectionService:HasTag(tileInstance, aTag) and count <= aTerrainTable.Limit then
-                if chance <= aTerrainTable.Threshold then
-                    for _, tag in pairs(aTagsBlacklist) do
-                        if CollectionService:HasTag(tileInstance, tag) then  
-                            hasFilteredTag = true
-                        end
+        if count <= aDataTable.Limit then
+            if chance <= aDataTable.Threshold then
+                for _, tag in pairs(aTagsBlacklist) do
+                    if CollectionService:HasTag(TileEntity.GameObject, tag) then  
+                        hasFilteredTag = true
                     end
-                    if not hasFilteredTag then
-                        count += 1
-                        tile:UpdateMetaData(aTerrainTable)
-                    end
+                end
+                if not hasFilteredTag then
+                    count += 1
+                    TileEntity:UpdateMetaData(aDataTable)
                 end
             end
         end
     end
-    print(count, "Tiles Updated")
+    
+    PrintStatus(self, tostring(count).." tiles were Updated to".. unpack(aDataTable.Tags))
+    
 end
-
-
 
 -------------------- Setters --------------------
 
@@ -295,10 +296,6 @@ end
 -- function Map:SetInstanceAcrossTile(aTile: BasePart, aPropList: string, aThreshold: integer, hasRandomOrientation: boolean)
 --     GenerateProps.InstanceAcrossTile(aTile, aPropList, aThreshold, hasRandomOrientation)
 -- end
-
-
-
-
 
 return Map
 

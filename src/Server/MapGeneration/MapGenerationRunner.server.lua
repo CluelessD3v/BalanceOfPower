@@ -1,49 +1,56 @@
 
-local ServerStorage = game:GetService('ServerStorage')
+    local ServerStorage = game:GetService('ServerStorage')
 
 
--------------------- Modules --------------------
-local MapClass = require(ServerStorage.Systems.MapEntity)
+    -------------------- Modules --------------------
+    local MapClass = require(ServerStorage.Systems.MapEntity)
 
--------------------- Map Generation --------------------
-local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
+    -------------------- Map Generation --------------------
+    local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
 
--- Mapping MapGenerationConfig values to the map gen tbable
-local Map = MapClass.new(mapGenerationTable)
-
-local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
-Map:GenerateMap(terrainTypesTable.InitialTerrains)
+    -- Mapping MapGenerationConfig values to the map gen tbable
+    local Map = MapClass.new(mapGenerationTable)
 
 
-Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
-Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
-Map.HelperLib.SetTerrainElevation(Map)
+    local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
+    Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
-task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE IT!
--------------------- Resource Generation --------------------
-local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
+    -------------------- Adding Landmarks and smoothing Terrain --------------------
+    --[[
+        If this was not done, we would end up with a huge flat bed of mountains
+        so to break the pattern we, add some land marks and depress the terrain a bit
+    ]]
+    Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
+    Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
+    Map.HelperLib.SetTerrainElevation(Map)
 
--- Updating Tiles with their respective resource
-Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
-Map:UpdateFromTag("Tile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
-Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
+    task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE IT!
+    -------------------- Resource Generation --------------------
+    local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
 
-task.wait()
--------------------- setting resource deposit sizes --------------------
-Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
-Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
-Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
+    -- Updating Tiles with their respective resource
+    Map:RandomlyTransformFromTag("Tile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
+    Map:ProcedurallyUpdateFromTag("Tile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
+    Map:RandomlyTransformFromTag("Tile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
+
+    Map.DoPrintStatus = true
 
 
-Map:PositionInstanceOnTaggedTiles("Timber", game.ServerStorage.Assets.TerrainAssets.Trees:GetChildren(), 1, true)
+    -------------------- setting resource deposit sizes --------------------
+    Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
+    Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
+    Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
 
-print(Map.TileList)
--- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+    task.wait()
+    Map:PositionInstanceOnTaggedTiles("Timber", game.ServerStorage.Assets.TerrainAssets.Trees:GetChildren(), 1, true)
 
---     RawResourcesTypesTable.Timber.Debug,
---     RawResourcesTypesTable.Clay.Debug,
---     RawResourcesTypesTable.Iron.Debug,
--- })
+    task.wait()
+    Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+
+        RawResourcesTypesTable.Timber.Debug,
+        RawResourcesTypesTable.Clay.Debug,
+        RawResourcesTypesTable.Iron.Debug,
+    })
 
 -- task.wait(10)
 

@@ -26,7 +26,7 @@ end
 function MapEntityHelperLib.SetTerrainElevation(theMap)
     for x = 1, theMap.MapSize do
         for z = 1, theMap.MapSize do
-            local tile = theMap.TileMap[x][z]
+            local tile = theMap._TileMap[x][z]
             
             local tileInstance: BasePart = tile.GameObject
             local posX = tileInstance.Position.X
