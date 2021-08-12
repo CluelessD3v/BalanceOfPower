@@ -29,14 +29,16 @@
     local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
 
     -- Updating Tiles with their respective resource
-    Map:RandomlyTransformFromTag("Tile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
-    Map:ProcedurallyUpdateFromTag("Tile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
-    Map:RandomlyTransformFromTag("Tile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
+    Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
+    Map:ProcedurallyUpdateFromTag("UsableTile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
+    Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
 
+    print(#game:GetService('CollectionService'):GetTagged("UsableTile"))
     Map.DoPrintStatus = true
 
 
     -------------------- setting resource deposit sizes --------------------
+    -->//TODO FIXCON3 Check if this can be rafactored into a general "SetAttributeFomTag" function or something like that 
     Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
     Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
     Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
@@ -44,13 +46,13 @@
     task.wait()
     Map:PositionInstanceOnTaggedTiles("Timber", game.ServerStorage.Assets.TerrainAssets.Trees:GetChildren(), 1, true)
 
-    task.wait()
-    Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+    -- task.wait()
+    -- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
-        RawResourcesTypesTable.Timber.Debug,
-        RawResourcesTypesTable.Clay.Debug,
-        RawResourcesTypesTable.Iron.Debug,
-    })
+    --     RawResourcesTypesTable.Timber.Debug,
+    --     RawResourcesTypesTable.Clay.Debug,
+    --     RawResourcesTypesTable.Iron.Debug,
+    -- })
 
 -- task.wait(10)
 
