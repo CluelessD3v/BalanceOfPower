@@ -44,8 +44,9 @@
     Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
 
     task.wait()
+    Map:PositionInstanceOnTaggedTiles("Iron", game.ServerStorage.Assets.TerrainAssets.Iron:GetChildren(), 1, true)
+    Map:PositionInstanceOnTaggedTiles("Clay", game.ServerStorage.Assets.TerrainAssets.Clay:GetChildren(), 1, true)
     Map:PositionInstanceOnTaggedTiles("Timber", game.ServerStorage.Assets.TerrainAssets.Trees:GetChildren(), 1, true)
-
     -- task.wait()
     -- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 

@@ -11,6 +11,7 @@
 
 ]]--
 
+-->//TODO Fixcon2 Include the debug table into the Extra data bit
 return {
     Iron = {
 
