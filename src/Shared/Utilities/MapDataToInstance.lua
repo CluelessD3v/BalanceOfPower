@@ -8,14 +8,15 @@ return function (anInstance: PVInstance, aFieldMap: table)
     aFieldMap = aFieldMap or {
         Properties = {},
         Attributes = {},
-        Tags = {}
-
+        Tags = {},
+        ExtraData = {}
     }
 
     -- Default to empty table if there is no field
     local properties = aFieldMap.Properties or {}
     local Attributes = aFieldMap.Attributes or {}
     local tags = aFieldMap.Tags or {}
+    
 
     for property, value in pairs (properties) do 
         anInstance[property] = value

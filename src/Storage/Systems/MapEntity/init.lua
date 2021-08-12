@@ -110,7 +110,7 @@ function Map:GenerateMap(theTerrainTypesTable: table)
 
             -- Creating tile object and setting metadata via internal tile class
             local newTile = Tile.new(Instance.new("Part"))
-            local tileInstance = newTile.GameObject
+            local tileInstance :PVInstance = newTile.GameObject
             
             tileInstance.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
             tileInstance.Position = Vector3.new(x * tileInstance.Size.X, tileInstance.Size.Y, z * tileInstance.Size.Z)
@@ -160,7 +160,7 @@ function Map:ProcedurallyTransformFromTag(aTag: string, aDataTable: table, aTags
             local hasFilteredTag = false
         
             if CollectionService:HasTag(tileInstance, aTag) and count <= aDataTable.Limit then
-                if noiseResult <= aDataTable.Threshold then
+                if noiseResult <= aDataTable.ExtraData.Threshold then
                     for _, tag in pairs(aTagsBlacklist) do
                         if CollectionService:HasTag(tileInstance, tag) then  
                             hasFilteredTag = true
@@ -197,7 +197,7 @@ function Map:ProcedurallyUpdateFromTag(aTag: string, aDataTable: table, aTagsBla
             local hasFilteredTag = false
 
             if CollectionService:HasTag(tileInstance, aTag) and count <= aDataTable.Limit then
-                if noiseResult <= aDataTable.Threshold then
+                if noiseResult <= aDataTable.ExtraData.Threshold then
                     for _, tag in pairs(aTagsBlacklist) do
                         if CollectionService:HasTag(tileInstance, tag) then  
                             hasFilteredTag = true
@@ -229,7 +229,7 @@ function Map:RandomlyTransformFromTag(aTag: string, aDataTable: table, aTagsBlac
         local hasFilteredTag = false
 
         if count <= aDataTable.Limit then
-            if chance <= aDataTable.Threshold then
+            if chance <= aDataTable.ExtraData.Threshold then
                 for _, tag in pairs(aTagsBlacklist) do
                     if CollectionService:HasTag(TileEntity.GameObject, tag) then  
                         hasFilteredTag = true
@@ -260,7 +260,7 @@ function Map:RandomlyUpdateFromTag(aTag: string, aDataTable: table, aTagsBlackli
         local hasFilteredTag = false
 
         if count <= aDataTable.Limit then
-            if chance <= aDataTable.Threshold then
+            if chance <= aDataTable.ExtraData.Threshold then
                 for _, tag in pairs(aTagsBlacklist) do
                     if CollectionService:HasTag(TileEntity.GameObject, tag) then  
                         hasFilteredTag = true

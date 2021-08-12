@@ -7,21 +7,22 @@
 return {
     InitialTerrains = {
             [1] = {
-                Threshold = 0,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Bright blue")
                 },
                 Attributes = {
-                ElevationOffset = 3,
-        
-                },  
+                    ElevationOffset = 3,
+                },
+
                 Tags = {"Ocean", "WaterBody"},
+
+                ExtraData = {
+                    Threshold = 0,
+                    Limit  = -1,
+                }
             },
         
             [2] = {
-                Threshold = .25,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Electric blue")
                 },
@@ -30,11 +31,13 @@ return {
         
                 },  
                 Tags = {"Littoral", "WaterBody"},
+                ExtraData = {
+                    Threshold = .25,
+                    Limit  = -1,
+                },
             },
         
             [3] = {
-                Threshold = .45,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Cyan")
                 },
@@ -43,12 +46,14 @@ return {
         
                 },  
                 Tags = {"Coastal", "WaterBody"},
+                ExtraData = {
+                    Threshold = .45,
+                    Limit  = -1,
+                },
             },
         
         
             [4] = {
-                Threshold = .55,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Daisy orange")
                 },
@@ -57,11 +62,13 @@ return {
         
                 },  
                 Tags = {"Beach", "UsableTile"},
+                ExtraData = {
+                    Threshold = .55,
+                    Limit  = -1,
+                }
             },
         
             [5] = {
-                Threshold = .6,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Moss")
                 },
@@ -70,11 +77,13 @@ return {
         
                 },  
                 Tags = {"Lowland", "UsableTile"},
+                ExtraData = {
+                    Threshold = .6,
+                    Limit  = -1,
+                }
             },
         
             [6] = {
-                Threshold = .75,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Bright green")
                 },
@@ -83,11 +92,13 @@ return {
         
                 },  
                 Tags = {"Upland", "UsableTile"},
+                ExtraData = {
+                    Threshold = .75,
+                    Limit  = -1,
+                },
             },
         
             [7] = {
-                Threshold = .85,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Sea green")
                 },
@@ -96,11 +107,13 @@ return {
         
                 },  
                 Tags = {"Highland", "UsableTile"},
+                ExtraData = {
+                    Threshold = .85,
+                    Limit  = -1,
+                },
             },
         
             [8] = {
-                Threshold = .95,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Dark green")
                 },
@@ -109,12 +122,14 @@ return {
         
                 },  
                 Tags = {"Steepland", "UsableTile"},
+                ExtraData = {
+                    Threshold = .95,
+                    Limit  = -1,
+                },
             },
         
         
             [9] = {
-                Threshold = .99,
-                Limit  = -1,
                 Properties = {
                     BrickColor = BrickColor.new("Slime green")
                 },
@@ -123,39 +138,47 @@ return {
         
                 },  
                 Tags = {"Mountainous", "UsableTile"},
+                ExtraData = {
+                    Threshold = .99,
+                    Limit  = -1,
+                },
             },
         
         
         
             [10] = {
-                Threshold = 1, -- placeholder val
-                Limit  = -1,
-        
+                ExtraData = {
+                    Threshold = 1, -- placeholder val
+                    Limit  = -1,
+                }
             }
 },
 
     StackedTerrains = {
         Impassable = {
-            Threshold = .15,
+            
             Properties = {
-            BrickColor = BrickColor.new("Medium stone grey")
+                BrickColor = BrickColor.new("Medium stone grey")
             },
             Attributes = {
-            ElevationOffset = 10,
-        
+                ElevationOffset = 10,
             },  
             Tags = {"Impassable"},
+            ExtraData = {
+                Threshold = .15,
+            }
         },
         Depression = {
-            Threshold = .3,
             Properties = {
                 BrickColor = BrickColor.new("Dark green")
             },
             Attributes = {
                 ElevationOffset = 7,
-    
             },  
             Tags = {"Steepland", "UsableTile"},
+            ExtraData = {
+                Threshold = .3
+            }
         },
 
     }

@@ -42,8 +42,8 @@ function Tile:InitMetadata(theNoiseResult: number, theTerrainTypesTable: table)
         local nextKey = theTerrainTypesTable[i + 1]   -- next value in the list
         
         -- this is an If statement to check if we are in range 
-        if theNoiseResult >= currentKey.Threshold and theNoiseResult <= nextKey.Threshold then
-            currentKey.Limit = currentKey.Limit or 2e9 --> 
+        if theNoiseResult >= currentKey.ExtraData.Threshold and theNoiseResult <= nextKey.ExtraData.Threshold then
+            currentKey.ExtraData.Limit = currentKey.ExtraData.Limit or 2e9 --> 
             MapDataToInstance(self.GameObject, currentKey)
         end
     end

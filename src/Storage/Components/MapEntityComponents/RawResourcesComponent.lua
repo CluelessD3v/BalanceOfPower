@@ -14,9 +14,12 @@
 return {
     Iron = {
 
-        Threshold = 0.003,
         Tags = {"Iron", "HasResource"},
-        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},
+        ExtraData = {
+            Threshold = 0.003,
+            FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},    
+        },
+
         Debug = {
             Tag = "Iron",
             Color = Color3.fromRGB(89, 34, 89),
@@ -54,10 +57,13 @@ return {
     },
 
     Timber = {
-        Threshold = 0.38,
-        Limit = 8000,
         Tags = {"Timber", "HasResource"},
         FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach"},
+        ExtraData = {
+            Threshold = 0.38,
+            Limit = 8000,
+        },
+
         Debug = {
             Tag = "Timber",
             Color = Color3.fromRGB(0, 255, 0),
@@ -94,9 +100,11 @@ return {
     },
 
     Clay = {
-        Threshold = 0.006,
         Tags = {"Clay", "HasResource"},
         FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
+        ExtraData = {
+            Threshold = 0.006,
+        },
         Debug = {
             Tag = "Clay",
             Color = Color3.fromRGB(255, 89, 89),
