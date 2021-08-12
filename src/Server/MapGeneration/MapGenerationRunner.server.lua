@@ -30,8 +30,9 @@
 
     -- Updating Tiles with their respective resource
     Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
-    Map:ProcedurallyUpdateFromTag("UsableTile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
     Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
+    Map:ProcedurallyUpdateFromTag("UsableTile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
+   
 
     print(#game:GetService('CollectionService'):GetTagged("UsableTile"))
     Map.DoPrintStatus = true
@@ -46,6 +47,7 @@
     task.wait()
     Map:PositionInstanceOnTaggedTiles("Iron", game.ServerStorage.Assets.TerrainAssets.Iron:GetChildren(), 1, true)
     Map:PositionInstanceOnTaggedTiles("Clay", game.ServerStorage.Assets.TerrainAssets.Clay:GetChildren(), 1, true)
+
     Map:PositionInstanceOnTaggedTiles("Timber", game.ServerStorage.Assets.TerrainAssets.Trees:GetChildren(), 1, true)
     -- task.wait()
     -- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {

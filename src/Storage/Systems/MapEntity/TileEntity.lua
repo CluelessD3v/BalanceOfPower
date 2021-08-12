@@ -127,13 +127,26 @@ end
 
 function Tile:InstanceToOriginOffseted(aPropList: table, hasRandomOrientation: boolean)
 
-    local prop = aPropList[math.random(1, #aPropList)]:Clone()    
-    local yOffset =  self.GameObject.Size.Y/2 + prop.Size.Y/2
-    prop.Position = self.GameObject.Position + Vector3.new(0, yOffset, 0)
+    local prop = aPropList[math.random(1, #aPropList)]:Clone()
     
-    if hasRandomOrientation then
-        prop.Orientation = Vector3.new(0, math.random(0, 360),0)
+    if  prop:IsA("Model") then
+        local yOffset =  self.GameObject.Size.Y/2 + prop:GetExtentsSize().Y/2-.5 
+        prop:PivotTo(CFrame.new(self.GameObject.Position + Vector3.new(0, yOffset, 0 )))
+    
+        if hasRandomOrientation then
+            local randi = math.random(0, 360)
+            prop:PivotTo(prop:GetPivot() * CFrame.Angles(0, randi, 0)) 
+        end
+    else
+        local yOffset =  self.GameObject.Size.Y/2 + prop.Size.Y/2
+        prop.Position = self.GameObject.Position + Vector3.new(0, yOffset, 0)
+        
+        if hasRandomOrientation then
+            prop.Orientation = Vector3.new(0, math.random(0, 360),0)
+        end        
     end
+    
+    
     
     prop.Parent = self.GameObject  
 

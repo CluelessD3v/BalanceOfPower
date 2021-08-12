@@ -17,7 +17,7 @@ return {
 
         Tags = {"Iron", "HasResource"},
         ExtraData = {
-            Threshold = 0.003,
+            Threshold = 0.0025,
             FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},    
         },
 
@@ -59,9 +59,9 @@ return {
 
     Timber = {
         Tags = {"Timber", "HasResource"},
-        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach"},
+        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
         ExtraData = {
-            Threshold = 0.38,
+            Threshold = 0.5,
             Limit = 8000,
         },
 
@@ -104,7 +104,7 @@ return {
         Tags = {"Clay", "HasResource"},
         FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
         ExtraData = {
-            Threshold = 0.006,
+            Threshold = 0.0035,
         },
         Debug = {
             Tag = "Clay",
