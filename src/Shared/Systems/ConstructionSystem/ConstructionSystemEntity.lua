@@ -37,6 +37,23 @@ function ConstructionSystemEntity.new()
     return self
 end
 
+-------------------- Private methods --------------------
+local function PlaceBuilding(self)
+    local yOffset =  self.SelectedObject.Size.Y/2 + self.Mouse.Target.Size.Y/2
+    local placedBuilding = self.SelectedObject:Clone()
+    placedBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+    placedBuilding.Anchored = true
+    placedBuilding.CanCollide = false
+
+    placedBuilding.Parent = self.Mouse.Target
+
+    
+    self:Destroy()
+    print(self)
+
+end
+
+-------------------- Public methods --------------------
 
 function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
     if self.SelectedObject then
@@ -63,6 +80,7 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
             --newConstructionSystem:PlacePrefab()
             self.Enabled = false
             print("Click")
+            PlaceBuilding(self)
             remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO Fixcon2 put this in the place prefab method
         end
     end
@@ -91,7 +109,7 @@ function ConstructionSystemEntity:PreviewBuilding()
 end
 
 
--------------------- Ceanup methods --------------------
+-------------------- Cleanup methods --------------------
 
 function ConstructionSystemEntity:Destroy()
     ContextActionService:UnbindAction("InBuildMode")
