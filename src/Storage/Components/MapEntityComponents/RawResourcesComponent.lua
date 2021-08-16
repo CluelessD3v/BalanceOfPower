@@ -61,7 +61,7 @@ return {
         Tags = {"Timber", "HasResource"},
         FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
         ExtraData = {
-            Threshold = 0.5,
+            Threshold = 0.4,
             Limit = 8000,
         },
 
