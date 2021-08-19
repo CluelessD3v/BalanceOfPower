@@ -44,15 +44,20 @@ end)
 
 --------------------------------------------------------------------------------------------------------------
 local mouse = Players.LocalPlayer:GetMouse()
-local whiteListFilter = {"Tile", "UsableLand"}
+local tagsBlacklist = {"Asset", "Player"}
 
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
+local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 
+local MouseCaster = MouseCasterLib.new()
+MouseCaster:UpdateTargetFilterFromTags(tagsBlacklist)
+MouseCaster:PrintFilterList()
 
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
--- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 
-local newConstructionSystem = {} 
+-- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
+local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
+
 -->FIXCON3: refactor this to avoid so much code repetition
 local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 
@@ -63,7 +68,7 @@ redBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-    newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter, SetBuildMode) 
+    newConstructionSystem:Init(workspace.Red, MouseCaster, SetBuildMode) 
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
 end)
