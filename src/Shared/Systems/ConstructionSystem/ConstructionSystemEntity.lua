@@ -56,6 +56,7 @@ end
 -------------------- Public methods --------------------
 
 function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO FIXCON 4 Type these
+    -- this is to destroy the previous selected building WHEN a player selects a new one w/O having placed the previous one or exit build mode
     if self.SelectedObject then
         self.SelectedObject:Destroy()
         self.Maid:DoCleaning()
@@ -64,16 +65,13 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
 
     
     self.SelectedObject = aSelectedObject:Clone()
-    self.Maid:GiveTask(self.SelectedObject)
-
+    self.Maid:GiveTask(self.SelectedObject) 
     self.Mouse = aMouse
-
     self.Enabled = true
-    
-    self.Mouse.TargetFilter = self.SelectedObject
+
+    self.Mouse:UpdateTargetFilter({self.SelectedObject})
 
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
-        
         if inputState == Enum.UserInputState.Begin then                
             --newConstructionSystem:PlacePrefab()
             self.Enabled = false
@@ -84,9 +82,6 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
     end
 
     remote:FireServer(self.Enabled) --> flip buildmode when we initt the construction system?
-
-    print(self.Maid)
-
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
@@ -96,12 +91,10 @@ function ConstructionSystemEntity:PreviewBuilding()
     self.SelectedObject.Parent = workspace
     
     self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()
-        local target = self.Mouse.Target()
-        print(target)
         if self.Mouse.Target() == nil then return end
         if self.Mouse.Target() == previousTarget then return end
         previousTarget = self.Mouse.Target()
-       
+        print(self.Mouse.Target())
         local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
         self.SelectedObject.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     end))
