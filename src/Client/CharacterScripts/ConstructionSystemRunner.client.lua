@@ -6,7 +6,8 @@ local ContextActionService = game:GetService('ContextActionService')
 
 -------------------- Modules --------------------
 local GuiUtility = require(ReplicatedStorage.Systems.GuiUtility)
-local keybinds = require(ReplicatedStorage.Components.Keybinds)
+local Keybinds = require(ReplicatedStorage.Components.Keybinds)
+local BuildingsComponent = require(ReplicatedStorage.Components.BuildingsComponent)
 
 -------------------- Top level instances --------------------
 local localPlayer = Players.LocalPlayer
@@ -20,7 +21,7 @@ local BuildingsPanel: Framel = PanelsGui.BuildingsPanel
 
 GuiUtility.OnGuiButtonSetGuiVisibility(buildingsPanelbutton, BuildingsPanel)
 
-local generalKeys = keybinds.GeneralKeys
+local generalKeys = Keybinds.GeneralKeys
 GuiUtility.OnKeySetGuiVisibility(generalKeys.B, BuildingsPanel)
 
 --------------------------------------------------------------------------------------------------------------
@@ -52,11 +53,10 @@ local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInsta
     end)
 end
 
---//Fixcon2 Save the building instances in a module
-onBuildingButtonClicked(BuildingsPanel.RedBuildingButton, workspace.Red)
-onBuildingButtonClicked(BuildingsPanel.GreenBuildingButton, workspace.Green)
-onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, workspace.Yellow)
-onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, workspace.Blue)
+onBuildingButtonClicked(BuildingsPanel.RedBuildingButton, BuildingsComponent.TestAssets.Red.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.GreenBuildingButton, BuildingsComponent.TestAssets.Green.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, BuildingsComponent.TestAssets.Yellow.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, BuildingsComponent.TestAssets.Blue.ExtraData.GameObject)
 
 
 

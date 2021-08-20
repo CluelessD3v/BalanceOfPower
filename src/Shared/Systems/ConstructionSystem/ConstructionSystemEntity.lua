@@ -70,6 +70,7 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
     self.Mouse = aMouse
     self.Enabled = true
 
+    --//TODO FIXCON2/NOTE: Now that I think of it, it would convenient to update the filter here 
     self.Mouse:UpdateTargetFilter({self.SelectedObject}) --> update target filter
 
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
