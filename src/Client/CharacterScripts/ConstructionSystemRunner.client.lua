@@ -44,15 +44,19 @@ end)
 
 --------------------------------------------------------------------------------------------------------------
 local mouse = Players.LocalPlayer:GetMouse()
-local whiteListFilter = {"Tile", "UsableLand"}
+local tagsBlacklist = {"Asset", "Player"} --> //TODO FIXCON2 This must be put in replicated storage as a component
 
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
+local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 
+local MouseCaster = MouseCasterLib.new()
+MouseCaster:UpdateTargetFilterFromTags(tagsBlacklist)
 
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
--- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 
-local newConstructionSystem = {} 
+-- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
+local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
+
 -->FIXCON3: refactor this to avoid so much code repetition
 local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 
@@ -63,7 +67,7 @@ redBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-    newConstructionSystem:Init(workspace.Red, mouse, whiteListFilter, SetBuildMode) 
+    newConstructionSystem:Init(workspace.Red, MouseCaster, SetBuildMode) 
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
 end)
@@ -73,12 +77,12 @@ local yellowBuildingButton: ImageButton = BuildingsPanel.YellowBuildingButton
 
 yellowBuildingButton.MouseButton1Click:Connect(function()
     BuildingsPanel.Visible = not BuildingsPanel.Visible
-
+    
     if newConstructionSystem.Enabled == nil then
         newConstructionSystem = ConstructionSystemEntity.new()
     end
-
-    newConstructionSystem:Init(workspace.Yellow, mouse, whiteListFilter, SetBuildMode)
+ 
+     newConstructionSystem:Init(workspace.Yellow, MouseCaster, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
 end)
@@ -92,7 +96,7 @@ greenBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-    newConstructionSystem:Init(workspace.Green, mouse, whiteListFilter, SetBuildMode) 
+    newConstructionSystem:Init(workspace.Green, MouseCaster, SetBuildMode) 
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
 end)
@@ -107,7 +111,7 @@ blueBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-    newConstructionSystem:Init(workspace.Blue, mouse, whiteListFilter, SetBuildMode)
+    newConstructionSystem:Init(workspace.Blue, MouseCaster, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
 end)

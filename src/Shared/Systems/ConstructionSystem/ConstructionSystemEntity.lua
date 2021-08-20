@@ -37,8 +37,27 @@ function ConstructionSystemEntity.new()
     return self
 end
 
+-------------------- Private methods --------------------
+local function PlaceBuilding(self)
+    local yOffset =  self.SelectedObject.Size.Y/2 + self.Mouse.Target().Size.Y/2
+    local placedBuilding = self.SelectedObject:Clone()
+    placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
+    placedBuilding.Anchored = true
+    placedBuilding.CanCollide = false
 
-function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, remote) --//TODO FIXCON 4 Type these
+    self.Mouse:UpdateTargetFilter({placedBuilding}) --> //TODO NOTE: Make sure that when you implement building destruction, to remove BUILDINGS from the filter list AS WELL!
+    
+    placedBuilding.Parent = self.Mouse.Target()
+
+    self:Destroy()
+    print(self)
+
+end
+
+-------------------- Public methods --------------------
+
+function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO FIXCON 4 Type these
+    -- this is to destroy the previous selected building WHEN a player selects a new one w/O having placed the previous one or exit build mode
     if self.SelectedObject then
         self.SelectedObject:Destroy()
         self.Maid:DoCleaning()
@@ -47,30 +66,23 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, aTagsWhitelist, 
 
     
     self.SelectedObject = aSelectedObject:Clone()
-    self.Maid:GiveTask(self.SelectedObject)
-
+    self.Maid:GiveTask(self.SelectedObject) 
     self.Mouse = aMouse
-    self.Maid:GiveTask(self.Mouse)
-
     self.Enabled = true
-    self.TagsWhitelist = aTagsWhitelist
-    
-    self.Mouse.TargetFilter = self.SelectedObject
+
+    self.Mouse:UpdateTargetFilter({self.SelectedObject}) --> update target filter
 
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
-        
         if inputState == Enum.UserInputState.Begin then                
             --newConstructionSystem:PlacePrefab()
             self.Enabled = false
             print("Click")
+            PlaceBuilding(self)
             remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO Fixcon2 put this in the place prefab method
         end
     end
 
     remote:FireServer(self.Enabled) --> flip buildmode when we initt the construction system?
-
-    print(self.Maid)
-
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
@@ -80,18 +92,17 @@ function ConstructionSystemEntity:PreviewBuilding()
     self.SelectedObject.Parent = workspace
     
     self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()
-        
-        if self.Mouse.Target == nil then return end
-        if self.Mouse.Target == previousTarget then return end
-        previousTarget = self.Mouse.Target
-        
-        local yOffset =  self.Mouse.Target.Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
-        self.SelectedObject.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+        if self.Mouse.Target() == nil then return end
+        if self.Mouse.Target() == previousTarget then return end
+        previousTarget = self.Mouse.Target()
+        print(self.Mouse.Target())
+        local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
+        self.SelectedObject.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     end))
 end
 
 
--------------------- Ceanup methods --------------------
+-------------------- Cleanup methods --------------------
 
 function ConstructionSystemEntity:Destroy()
     ContextActionService:UnbindAction("InBuildMode")
