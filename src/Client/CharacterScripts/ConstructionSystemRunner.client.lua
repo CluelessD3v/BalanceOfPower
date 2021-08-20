@@ -82,7 +82,7 @@ yellowBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
  
-     newConstructionSystem:Init(workspace.Yellow, mouse, whiteListFilter, SetBuildMode)
+     newConstructionSystem:Init(workspace.Yellow, MouseCaster, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
 end)
@@ -96,7 +96,7 @@ greenBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-    newConstructionSystem:Init(workspace.Green, mouse, whiteListFilter, SetBuildMode) 
+    newConstructionSystem:Init(workspace.Green, MouseCaster, SetBuildMode) 
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
 end)
@@ -111,7 +111,7 @@ blueBuildingButton.MouseButton1Click:Connect(function()
         newConstructionSystem = ConstructionSystemEntity.new()
     end
 
-    newConstructionSystem:Init(workspace.Blue, mouse, whiteListFilter, SetBuildMode)
+    newConstructionSystem:Init(workspace.Blue, MouseCaster, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
 end)

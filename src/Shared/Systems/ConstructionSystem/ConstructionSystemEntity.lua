@@ -44,10 +44,11 @@ local function PlaceBuilding(self)
     placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
-    self.Mouse:UpdateTargetFilter({placedBuilding})
+
+    self.Mouse:UpdateTargetFilter({placedBuilding}) --> //TODO NOTE: Make sure that when you implement building destruction, to remove this from the filter list!
+    
     placedBuilding.Parent = self.Mouse.Target()
 
-    
     self:Destroy()
     print(self)
 
