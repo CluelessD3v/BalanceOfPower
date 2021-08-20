@@ -53,10 +53,12 @@ local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInsta
     end)
 end
 
-onBuildingButtonClicked(BuildingsPanel.RedBuildingButton, BuildingsComponent.TestAssets.Red.ExtraData.GameObject)
-onBuildingButtonClicked(BuildingsPanel.GreenBuildingButton, BuildingsComponent.TestAssets.Green.ExtraData.GameObject)
-onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, BuildingsComponent.TestAssets.Yellow.ExtraData.GameObject)
-onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, BuildingsComponent.TestAssets.Blue.ExtraData.GameObject)
+local testAssets = BuildingsComponent.TestAssets
+
+onBuildingButtonClicked(BuildingsPanel.RedBuildingButton, testAssets.Red.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.GreenBuildingButton, testAssets.Green.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, testAssets.Yellow.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, testAssets.Blue.ExtraData.GameObject)
 
 
 
