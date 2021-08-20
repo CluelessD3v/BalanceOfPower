@@ -12,9 +12,9 @@ local keybinds = require(ReplicatedStorage.Components.Keybinds)
 local localPlayer = Players.LocalPlayer
 local Gui = localPlayer:WaitForChild("PlayerGui")
 
-local PanelsGui = Gui.PanelsGui
+local PanelsGui: ScreenGui = Gui.PanelsGui
 local buildingsPanelbutton: ImageButton = PanelsGui.ButtonsPanel.BuildingsPanelButton
-local BuildingsPanel = PanelsGui.BuildingsPanel
+local BuildingsPanel: Framel = PanelsGui.BuildingsPanel
 
 -------------------- Panel visible via Gui --------------------
 
@@ -24,7 +24,6 @@ local generalKeys = keybinds.GeneralKeys
 GuiUtility.OnKeySetGuiVisibility(generalKeys.B, BuildingsPanel)
 
 --------------------------------------------------------------------------------------------------------------
-local mouse = Players.LocalPlayer:GetMouse()
 local tagsBlacklist = {"Asset", "Player"} --> //TODO FIXCON2 This must be put in replicated storage as a component
 
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
@@ -37,61 +36,27 @@ local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
 local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
 
-local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
+--//TODO FIXCON3 This still weirds me out a bit...
+--> when a building button is clicked, call this
+local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInstance)
+    aBuildingButton.MouseButton1Click:Connect(function()
+        BuildingsPanel.Visible = not BuildingsPanel.Visible
 
-redBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
+        if newConstructionSystem.Enabled == nil then
+            newConstructionSystem = ConstructionSystemEntity.new()
+        end
 
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
+        newConstructionSystem:Init(buildingInstance, MouseCaster, SetBuildMode) 
+        newConstructionSystem:PreviewBuilding()
+        newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
+    end)
+end
 
-    newConstructionSystem:Init(workspace.Red, MouseCaster, SetBuildMode) 
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
-end)
-
-
-local yellowBuildingButton: ImageButton = BuildingsPanel.YellowBuildingButton
-
-yellowBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
- 
-     newConstructionSystem:Init(workspace.Yellow, MouseCaster, SetBuildMode)
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
-end)
-
-local greenBuildingButton: ImageButton = BuildingsPanel.GreenBuildingButton
-
-greenBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
-
-    newConstructionSystem:Init(workspace.Green, MouseCaster, SetBuildMode) 
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
-end)
+--//Fixcon2 Save the building instances in a module
+onBuildingButtonClicked(BuildingsPanel.RedBuildingButton, workspace.Red)
+onBuildingButtonClicked(BuildingsPanel.GreenBuildingButton, workspace.Green)
+onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, workspace.Yellow)
+onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, workspace.Blue)
 
 
-local blueBuildingButton: ImageButton = BuildingsPanel.BlueBuildingButton
-
-blueBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
-
-    newConstructionSystem:Init(workspace.Blue, MouseCaster, SetBuildMode)
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
-end)
 
