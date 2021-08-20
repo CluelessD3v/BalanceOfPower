@@ -44,7 +44,7 @@ local function PlaceBuilding(self)
     placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
-
+    self.Mouse:UpdateTargetFilter({placedBuilding})
     placedBuilding.Parent = self.Mouse.Target()
 
     
