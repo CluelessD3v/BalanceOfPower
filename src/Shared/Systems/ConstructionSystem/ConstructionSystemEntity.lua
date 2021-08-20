@@ -39,13 +39,13 @@ end
 
 -------------------- Private methods --------------------
 local function PlaceBuilding(self)
-    local yOffset =  self.SelectedObject.Size.Y/2 + self.Mouse.Target.Size.Y/2
+    local yOffset =  self.SelectedObject.Size.Y/2 + self.Mouse.Target().Size.Y/2
     local placedBuilding = self.SelectedObject:Clone()
-    placedBuilding.Position = self.Mouse.Target.Position + Vector3.new(0, yOffset, 0)
+    placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
 
-    placedBuilding.Parent = self.Mouse.Target
+    placedBuilding.Parent = self.Mouse.Target()
 
     
     self:Destroy()
@@ -69,7 +69,7 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
     self.Mouse = aMouse
     self.Enabled = true
 
-    self.Mouse:UpdateTargetFilter({self.SelectedObject})
+    self.Mouse:UpdateTargetFilter({self.SelectedObject}) --> weirdly enough, I must include this selected object in the target filter, else it will not ignore the selected object, OH WELL!
 
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         if inputState == Enum.UserInputState.Begin then                

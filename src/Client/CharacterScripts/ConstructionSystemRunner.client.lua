@@ -44,14 +44,13 @@ end)
 
 --------------------------------------------------------------------------------------------------------------
 local mouse = Players.LocalPlayer:GetMouse()
-local tagsBlacklist = {"Asset", "Player"}
+local tagsBlacklist = {"Asset", "Player"} --> //TODO FIXCON2 This must be put in replicated storage as a component
 
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
 local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 
 local MouseCaster = MouseCasterLib.new()
 MouseCaster:UpdateTargetFilterFromTags(tagsBlacklist)
-MouseCaster:PrintFilterList()
 
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
@@ -82,8 +81,8 @@ yellowBuildingButton.MouseButton1Click:Connect(function()
     if newConstructionSystem.Enabled == nil then
         newConstructionSystem = ConstructionSystemEntity.new()
     end
-
-    newConstructionSystem:Init(workspace.Yellow, mouse, whiteListFilter, SetBuildMode)
+ 
+     newConstructionSystem:Init(workspace.Yellow, mouse, whiteListFilter, SetBuildMode)
     newConstructionSystem:PreviewBuilding()
     newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
 end)
