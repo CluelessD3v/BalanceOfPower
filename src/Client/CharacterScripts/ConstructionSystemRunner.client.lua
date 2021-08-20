@@ -77,7 +77,7 @@ local yellowBuildingButton: ImageButton = BuildingsPanel.YellowBuildingButton
 
 yellowBuildingButton.MouseButton1Click:Connect(function()
     BuildingsPanel.Visible = not BuildingsPanel.Visible
-
+    
     if newConstructionSystem.Enabled == nil then
         newConstructionSystem = ConstructionSystemEntity.new()
     end

@@ -45,7 +45,7 @@ local function PlaceBuilding(self)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
 
-    self.Mouse:UpdateTargetFilter({placedBuilding}) --> //TODO NOTE: Make sure that when you implement building destruction, to remove this from the filter list!
+    self.Mouse:UpdateTargetFilter({placedBuilding}) --> //TODO NOTE: Make sure that when you implement building destruction, to remove BUILDINGS from the filter list AS WELL!
     
     placedBuilding.Parent = self.Mouse.Target()
 
@@ -70,7 +70,7 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
     self.Mouse = aMouse
     self.Enabled = true
 
-    self.Mouse:UpdateTargetFilter({self.SelectedObject}) --> weirdly enough, I must include this selected object in the target filter, else it will not ignore the selected object, OH WELL!
+    self.Mouse:UpdateTargetFilter({self.SelectedObject}) --> update target filter
 
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         if inputState == Enum.UserInputState.Begin then                
