@@ -5,42 +5,23 @@ local UserInputService = game:GetService('UserInputService')
 local ContextActionService = game:GetService('ContextActionService')
 
 -------------------- Modules --------------------
+local GuiUtility = require(ReplicatedStorage.Systems.GuiUtility)
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
 
-
+-------------------- Top level instances --------------------
 local localPlayer = Players.LocalPlayer
 local Gui = localPlayer:WaitForChild("PlayerGui")
-
-
--------------------- Top level instances --------------------
 
 local PanelsGui = Gui.PanelsGui
 local buildingsPanelbutton: ImageButton = PanelsGui.ButtonsPanel.BuildingsPanelButton
 local BuildingsPanel = PanelsGui.BuildingsPanel
 
-
-
 -------------------- Panel visible via Gui --------------------
---[[
-    Binding panel visibility to gui image button
-]]--
 
-buildingsPanelbutton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-end)
+GuiUtility.OnGuiButtonSetGuiVisibility(buildingsPanelbutton, BuildingsPanel)
 
-
--------------------- Panel visible via UserInput --------------------
---[[
-    Binding panel visibility to a keyboard key
-]]
 local generalKeys = keybinds.GeneralKeys
-UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
-    if anInputObject.KeyCode == generalKeys.B and not isTyping then
-        BuildingsPanel.Visible = not BuildingsPanel.Visible
-    end
-end)
-
+GuiUtility.OnKeySetGuiVisibility(generalKeys.B, BuildingsPanel)
 
 --------------------------------------------------------------------------------------------------------------
 local mouse = Players.LocalPlayer:GetMouse()
@@ -49,15 +30,13 @@ local tagsBlacklist = {"Asset", "Player"} --> //TODO FIXCON2 This must be put in
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
 local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 
+
 local MouseCaster = MouseCasterLib.new()
 MouseCaster:UpdateTargetFilterFromTags(tagsBlacklist)
-
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
--- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
 
--->FIXCON3: refactor this to avoid so much code repetition
 local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
 
 redBuildingButton.MouseButton1Click:Connect(function()
@@ -77,7 +56,7 @@ local yellowBuildingButton: ImageButton = BuildingsPanel.YellowBuildingButton
 
 yellowBuildingButton.MouseButton1Click:Connect(function()
     BuildingsPanel.Visible = not BuildingsPanel.Visible
-    
+
     if newConstructionSystem.Enabled == nil then
         newConstructionSystem = ConstructionSystemEntity.new()
     end

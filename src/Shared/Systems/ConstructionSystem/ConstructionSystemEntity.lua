@@ -101,9 +101,7 @@ function ConstructionSystemEntity:PreviewBuilding()
     end))
 end
 
-
 -------------------- Cleanup methods --------------------
-
 function ConstructionSystemEntity:Destroy()
     ContextActionService:UnbindAction("InBuildMode")
     self.Maid:DoCleaning()
