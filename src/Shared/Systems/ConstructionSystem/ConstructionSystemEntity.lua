@@ -49,8 +49,6 @@ local function PlaceBuilding(self)
     placedBuilding.Parent = self.Mouse.Target()
 
     self:Destroy()
-    print(self)
-
 end
 
 -------------------- Public methods --------------------
@@ -63,25 +61,17 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
         self.SelectedObject = aSelectedObject
     end
 
-    
     self.SelectedObject = aSelectedObject:Clone()
     self.Maid:GiveTask(self.SelectedObject) 
     self.Mouse = aMouse
     self.Enabled = true
 
     --//TODO FIXCON2/NOTE: Now that I think of it, it would convenient to update the filter here 
-    self.Mouse:UpdateTargetFilter(
-        {
-        self.SelectedObject, 
-        localPlayer.Character
+    self.Mouse:UpdateTargetFilter({self.SelectedObject, localPlayer.Character}) --> update target filter
     
-    }) --> update target filter
-
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         if inputState == Enum.UserInputState.Begin then                
-            --newConstructionSystem:PlacePrefab()
             self.Enabled = false
-            print("Click")
             PlaceBuilding(self)
             remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO Fixcon2 put this in the place prefab method
         end
@@ -100,8 +90,10 @@ function ConstructionSystemEntity:PreviewBuilding()
         if self.Mouse.Target() == nil then return end
         if self.Mouse.Target() == prevTarget then return end
         prevTarget = self.Mouse.Target()
+        
         print(self.Mouse.Target())
-        local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
+        
+        local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedObject.Size.Y/2
         self.SelectedObject.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     end))
 end
@@ -123,7 +115,6 @@ function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
             remote:FireServer(self.Enabled)
             
             self:Destroy()
-            print(self)
         end
     end))
 end
