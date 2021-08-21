@@ -89,13 +89,13 @@ end
 
 
 function ConstructionSystemEntity:PreviewBuilding()
-    local previousTarget = nil
+    local prevTarget = nil
     self.SelectedObject.Parent = workspace
     
     self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()
         if self.Mouse.Target() == nil then return end
-        if self.Mouse.Target() == previousTarget then return end
-        previousTarget = self.Mouse.Target()
+        if self.Mouse.Target() == prevTarget then return end
+        prevTarget = self.Mouse.Target()
         print(self.Mouse.Target())
         local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedObject.Size.Y/2 -->//TODO FIXCON 3 make this an utilty and apply all over the codebase
         self.SelectedObject.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)

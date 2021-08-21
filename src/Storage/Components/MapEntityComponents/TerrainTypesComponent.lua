@@ -4,6 +4,8 @@
                        ^ penultimate value is the actual LAST!
 
     --]]
+
+--//TODO FIXCON2 Change the colors of the terrain to match those of the delivered color study
 return {
     InitialTerrains = {
             [1] = {

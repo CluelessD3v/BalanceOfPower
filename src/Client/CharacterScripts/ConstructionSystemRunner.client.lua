@@ -61,4 +61,3 @@ onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, testAssets.Yellow.E
 onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, testAssets.Blue.ExtraData.GameObject)
 
 
-
