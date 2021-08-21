@@ -16,7 +16,7 @@ local UserInputService = game:GetService('UserInputService')
 local Maid = require (ReplicatedStorage.Utilities.Maid)
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
 local generalKeys = keybinds.GeneralKeys
-
+local localPlayer = game:GetService('Players').LocalPlayer
 
 -->//TODO FIXCON 3 Clean this module
 
@@ -33,7 +33,6 @@ function ConstructionSystemEntity.new()
 
     self.Enabled = nil
     self.Maid = Maid.new()
-
     return self
 end
 
@@ -71,7 +70,12 @@ function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO
     self.Enabled = true
 
     --//TODO FIXCON2/NOTE: Now that I think of it, it would convenient to update the filter here 
-    self.Mouse:UpdateTargetFilter({self.SelectedObject}) --> update target filter
+    self.Mouse:UpdateTargetFilter(
+        {
+        self.SelectedObject, 
+        localPlayer.Character
+    
+    }) --> update target filter
 
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         if inputState == Enum.UserInputState.Begin then                
