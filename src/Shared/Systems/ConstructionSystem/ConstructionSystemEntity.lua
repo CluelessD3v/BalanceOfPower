@@ -15,11 +15,9 @@ local UserInputService = game:GetService('UserInputService')
 
 local Maid = require (ReplicatedStorage.Utilities.Maid)
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
-local generalKeys = keybinds.GeneralKeys
+
 local localPlayer = game:GetService('Players').LocalPlayer
-
--->//TODO FIXCON 3 Clean this module
-
+local generalKeys = keybinds.GeneralKeys
 
 local ConstructionSystemEntity = {} 
 ConstructionSystemEntity.__index = ConstructionSystemEntity
@@ -62,7 +60,7 @@ end
 
 -------------------- Public methods --------------------
 
-function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: MouseCaster, remote: RemoteEvent) 
+function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: MouseCaster, SetBuildModeEvent: RemoteEvent) 
     ResetSelectedBuilding(self, aSelectedBuilding)
 
     self.SelectedBuilding = aSelectedBuilding:Clone()
@@ -70,18 +68,18 @@ function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: Mous
     self.Mouse = aMouse
     self.Enabled = true
 
-    --//TODO FIXCON2/NOTE: Now that I think of it, it would convenient to update the filter here 
-    self.Mouse:UpdateTargetFilter({self.SelectedBuilding, localPlayer.Character}) --> update target filter
-    
-    local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
+    self.Mouse:UpdateTargetFilter({self.SelectedBuilding, localPlayer.Character, workspace.Baseplate, workspace.SpawnLocation}) --> update target filter
+    self.Mouse:UpdateTargetFilterFromTags({"Assets"})
+
+    local function BindBuildingPlacement(_, inputState, _) 
         if inputState == Enum.UserInputState.Begin then                
             self.Enabled = false
             PlaceBuilding(self)
-            remote:FireServer(self.Enabled) --> Flip build mode state if we place a building --> //TODO Fixcon2 put this in the place prefab method
+            SetBuildModeEvent:FireServer(self.Enabled) --> Exit build mode state if we place a building
         end
     end
 
-    remote:FireServer(self.Enabled) --> flip buildmode when we initt the construction system?
+    SetBuildModeEvent:FireServer(self.Enabled) --> flip buildmode when we initt the construction system?
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
@@ -110,13 +108,11 @@ function ConstructionSystemEntity:Destroy()
 end
 
 
-function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, remote)
+function ConstructionSystemEntity:ExitBuildMode(key: Enum.KeyCode, SetBuildModeEvent: RemoteEvent)
     self.Maid:GiveTask(UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
         if anInputObject.KeyCode == key and not isTyping then
-            print("Out")
-
             self.Enabled = false
-            remote:FireServer(self.Enabled)
+            SetBuildModeEvent:FireServer(self.Enabled)
             
             self:Destroy()
         end
