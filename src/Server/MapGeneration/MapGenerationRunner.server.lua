@@ -39,7 +39,6 @@
 
 
     -------------------- setting resource deposit sizes --------------------
-    -->//TODO FIXCON3 Check if this can be rafactored into a general "SetAttributeFomTag" function or something like that 
     Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
     Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
     Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)

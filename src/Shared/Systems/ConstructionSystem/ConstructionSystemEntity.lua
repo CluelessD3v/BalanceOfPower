@@ -26,7 +26,7 @@ ConstructionSystemEntity.__index = ConstructionSystemEntity
 
 function ConstructionSystemEntity.new()
     local self = setmetatable({}, ConstructionSystemEntity)
-    self.SelectedObject = nil --> //TODO FIXCON 4 rename this  
+    self.SelectedBuilding = nil 
     self.Mouse = nil
     self.TagsWhiltelist = nil
     self.UpdateBuildingPreview = nil
@@ -38,8 +38,8 @@ end
 
 -------------------- Private methods --------------------
 local function PlaceBuilding(self)
-    local yOffset =  self.SelectedObject.Size.Y/2 + self.Mouse.Target().Size.Y/2
-    local placedBuilding = self.SelectedObject:Clone()
+    local yOffset =  self.SelectedBuilding.Size.Y/2 + self.Mouse.Target().Size.Y/2
+    local placedBuilding = self.SelectedBuilding:Clone()
     placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
@@ -51,23 +51,27 @@ local function PlaceBuilding(self)
     self:Destroy()
 end
 
+local function ResetSelectedBuilding(self, aSelectedBuilding)
+    -- this is to destroy the previous selected building WHEN a player selects a new one w/O having placed the previous one or exit build mode
+    if self.SelectedBuilding then
+        self.SelectedBuilding:Destroy()
+        self.Maid:DoCleaning()
+        self.SelectedBuilding = aSelectedBuilding
+    end
+end
+
 -------------------- Public methods --------------------
 
-function ConstructionSystemEntity:Init(aSelectedObject, aMouse, remote) --//TODO FIXCON 4 Type these
-    -- this is to destroy the previous selected building WHEN a player selects a new one w/O having placed the previous one or exit build mode
-    if self.SelectedObject then
-        self.SelectedObject:Destroy()
-        self.Maid:DoCleaning()
-        self.SelectedObject = aSelectedObject
-    end
+function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: MouseCaster, remote: RemoteEvent) 
+    ResetSelectedBuilding(self, aSelectedBuilding)
 
-    self.SelectedObject = aSelectedObject:Clone()
-    self.Maid:GiveTask(self.SelectedObject) 
+    self.SelectedBuilding = aSelectedBuilding:Clone()
+    self.Maid:GiveTask(self.SelectedBuilding) 
     self.Mouse = aMouse
     self.Enabled = true
 
     --//TODO FIXCON2/NOTE: Now that I think of it, it would convenient to update the filter here 
-    self.Mouse:UpdateTargetFilter({self.SelectedObject, localPlayer.Character}) --> update target filter
+    self.Mouse:UpdateTargetFilter({self.SelectedBuilding, localPlayer.Character}) --> update target filter
     
     local function BindBuildingPlacement(_, inputState, _) -->//TODO FIXCON 3 put this in a CAS contexts component module
         if inputState == Enum.UserInputState.Begin then                
@@ -84,7 +88,7 @@ end
 
 function ConstructionSystemEntity:PreviewBuilding()
     local prevTarget = nil
-    self.SelectedObject.Parent = workspace
+    self.SelectedBuilding.Parent = workspace
     
     self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()
         if self.Mouse.Target() == nil then return end
@@ -93,8 +97,8 @@ function ConstructionSystemEntity:PreviewBuilding()
         
         print(self.Mouse.Target())
         
-        local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedObject.Size.Y/2
-        self.SelectedObject.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
+        local yOffset =  self.Mouse.Target().Size.Y/2 + self.SelectedBuilding.Size.Y/2
+        self.SelectedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     end))
 end
 
@@ -102,7 +106,7 @@ end
 function ConstructionSystemEntity:Destroy()
     ContextActionService:UnbindAction("InBuildMode")
     self.Maid:DoCleaning()
-    table.clear(self)
+    table.clear(self) --> destroy any remaining cache?
 end
 
 
