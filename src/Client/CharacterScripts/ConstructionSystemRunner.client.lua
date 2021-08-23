@@ -32,7 +32,7 @@ local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 
 
 local MouseCaster = MouseCasterLib.new()
-MouseCaster:UpdateTargetFilterFromTags(tagsBlacklist)
+MouseCaster:SetTargetFilter({localPlayer.Character, workspace.Baseplate, workspace.SpawnLocation})
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
 local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
@@ -47,7 +47,7 @@ local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInsta
             newConstructionSystem = ConstructionSystemEntity.new()
         end
 
-        newConstructionSystem:Init(buildingInstance, MouseCaster, SetBuildMode) 
+        newConstructionSystem:Init(buildingInstance, MouseCaster, SetBuildMode, tagsBlacklist) 
         newConstructionSystem:PreviewBuilding()
         newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
     end)

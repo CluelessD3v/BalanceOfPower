@@ -15,8 +15,6 @@ local UserInputService = game:GetService('UserInputService')
 
 local Maid = require (ReplicatedStorage.Utilities.Maid)
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
-
-local localPlayer = game:GetService('Players').LocalPlayer
 local generalKeys = keybinds.GeneralKeys
 
 local ConstructionSystemEntity = {} 
@@ -28,7 +26,7 @@ function ConstructionSystemEntity.new()
     self.Mouse = nil
     self.TagsWhiltelist = nil
     self.UpdateBuildingPreview = nil
-
+    self.FilterList = nil
     self.Enabled = nil
     self.Maid = Maid.new()
     return self
@@ -60,7 +58,7 @@ end
 
 -------------------- Public methods --------------------
 
-function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: MouseCaster, SetBuildModeEvent: RemoteEvent) 
+function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: MouseCaster, SetBuildModeEvent: RemoteEvent, aTagsBlacklist: table) 
     ResetSelectedBuilding(self, aSelectedBuilding)
 
     self.SelectedBuilding = aSelectedBuilding:Clone()
@@ -68,8 +66,9 @@ function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: Mous
     self.Mouse = aMouse
     self.Enabled = true
 
-    self.Mouse:UpdateTargetFilter({self.SelectedBuilding, localPlayer.Character, workspace.Baseplate, workspace.SpawnLocation}) --> update target filter
-    self.Mouse:UpdateTargetFilterFromTags({"Assets"})
+    self.FilterList = aTagsBlacklist
+    self.Mouse:UpdateTargetFilter({self.SelectedBuilding}) --> update target filter
+    self.Mouse:UpdateTargetFilterFromTags(aTagsBlacklist)
 
     local function BindBuildingPlacement(_, inputState, _) 
         if inputState == Enum.UserInputState.Begin then                
