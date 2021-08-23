@@ -36,9 +36,12 @@ end
 local function PlaceBuilding(self)
     local yOffset =  self.SelectedBuilding.Size.Y/2 + self.Mouse.Target().Size.Y/2
     local placedBuilding = self.SelectedBuilding:Clone()
+   
     placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
+    placedBuilding.Transparency = 0
+
     placedBuilding.Parent = self.Mouse.Target()
     
     self:Destroy() -->//todo DEFCON4: rewrite this bit to account for multiple building placement selection, E.G: Hold shift and you can keep adding the same building.
@@ -86,6 +89,8 @@ end
 -- set and Update the building preview position in the world map
 function ConstructionSystemEntity:PreviewBuilding()
     local prevTarget = nil
+
+    self.SelectedBuilding.Transparency = .5
     self.SelectedBuilding.Parent = workspace
     
     self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()
