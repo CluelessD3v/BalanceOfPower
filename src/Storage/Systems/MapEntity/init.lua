@@ -281,13 +281,15 @@ end
 -------------------- Setters --------------------
 
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
-function Map:PositionInstanceOnTaggedTiles(aTag: string, propsList: table, aThreshold: number, hasRandomOrientation: boolean)
+function Map:PositionInstanceOnTaggedTiles(aTag: string, aProp: Instance, aThreshold: number, hasRandomOrientation: boolean)
+    if aProp == nil then return end
+
     for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
         local newTile = Tile.new(tile)
 
         local chance = Random.new():NextNumber(0, 1)
         if chance <= aThreshold then
-            newTile:InstanceToOriginOffseted(propsList, hasRandomOrientation)
+            newTile:InstanceToOriginOffseted(aProp, hasRandomOrientation)
         end
     end
 end

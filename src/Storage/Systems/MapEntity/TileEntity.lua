@@ -124,11 +124,13 @@ end
 --     end
 -- end
 
+-- Positions an instance on top with the tile "FLUSH"
+function Tile:InstanceToOriginOffseted(aProp: Instance, hasRandomOrientation: boolean)
 
-function Tile:InstanceToOriginOffseted(aPropList: table, hasRandomOrientation: boolean)
+    local prop = aProp:Clone()
 
-    local prop = aPropList[math.random(1, #aPropList)]:Clone()
-    
+    -- Taking into account wheter the model is part or a model.
+
     if  prop:IsA("Model") then
         local yOffset =  self.GameObject.Size.Y/2 + prop:GetExtentsSize().Y/2-.5 
         prop:PivotTo(CFrame.new(self.GameObject.Position + Vector3.new(0, yOffset, 0 )))
@@ -145,8 +147,6 @@ function Tile:InstanceToOriginOffseted(aPropList: table, hasRandomOrientation: b
             prop.Orientation = Vector3.new(0, math.random(0, 360),0)
         end        
     end
-    
-    
     
     prop.Parent = self.GameObject  
 

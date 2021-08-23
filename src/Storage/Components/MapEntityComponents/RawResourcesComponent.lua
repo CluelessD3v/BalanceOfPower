@@ -18,7 +18,8 @@ return {
         Tags = {"Iron", "HasResource"},
         ExtraData = {
             Threshold = 0.0025,
-            FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},    
+            FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},
+            GameObject = workspace.Props.Iron    
         },
 
         Debug = {
@@ -63,6 +64,7 @@ return {
         ExtraData = {
             Threshold = 0.4,
             Limit = 8000,
+            GameObject = workspace.Props.EbonyTree1
         },
 
         Debug = {
