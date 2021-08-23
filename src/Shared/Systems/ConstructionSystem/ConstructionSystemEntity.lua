@@ -39,16 +39,13 @@ local function PlaceBuilding(self)
     placedBuilding.Position = self.Mouse.Target().Position + Vector3.new(0, yOffset, 0)
     placedBuilding.Anchored = true
     placedBuilding.CanCollide = false
-
-    self.Mouse:UpdateTargetFilter({placedBuilding}) --> //TODO NOTE: Make sure that when you implement building destruction, to remove BUILDINGS from the filter list AS WELL!
-    
     placedBuilding.Parent = self.Mouse.Target()
-
-    self:Destroy()
+    
+    self:Destroy() -->//todo DEFCON4: rewrite this bit to account for multiple building placement selection, E.G: Hold shift and you can keep adding the same building.
 end
 
+-- destroy the previous selected building (if any) WHEN a player selects a new one  
 local function ResetSelectedBuilding(self, aSelectedBuilding)
-    -- this is to destroy the previous selected building WHEN a player selects a new one w/O having placed the previous one or exit build mode
     if self.SelectedBuilding then
         self.SelectedBuilding:Destroy()
         self.Maid:DoCleaning()
@@ -67,8 +64,12 @@ function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: Mous
     self.Enabled = true
 
     self.FilterList = aTagsBlacklist
-    self.Mouse:UpdateTargetFilter({self.SelectedBuilding}) --> update target filter
+    
+    --> update target filter with latest info, and the selected building.
+    self.Mouse:UpdateTargetFilter({self.SelectedBuilding}) 
     self.Mouse:UpdateTargetFilterFromTags(aTagsBlacklist)
+
+    self.Mouse:PrintFilterList()
 
     local function BindBuildingPlacement(_, inputState, _) 
         if inputState == Enum.UserInputState.Begin then                
@@ -82,7 +83,7 @@ function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: Mous
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
-
+-- set and Update the building preview position in the world map
 function ConstructionSystemEntity:PreviewBuilding()
     local prevTarget = nil
     self.SelectedBuilding.Parent = workspace
