@@ -5,114 +5,59 @@ local UserInputService = game:GetService('UserInputService')
 local ContextActionService = game:GetService('ContextActionService')
 
 -------------------- Modules --------------------
-local keybinds = require(ReplicatedStorage.Components.Keybinds)
+local GuiUtility = require(ReplicatedStorage.Systems.GuiUtility)
+local Keybinds = require(ReplicatedStorage.Components.Keybinds)
+local BuildingsComponent = require(ReplicatedStorage.Components.BuildingsComponent)
 
-
+-------------------- Top level instances --------------------
 local localPlayer = Players.LocalPlayer
 local Gui = localPlayer:WaitForChild("PlayerGui")
 
-
--------------------- Top level instances --------------------
-
-local PanelsGui = Gui.PanelsGui
+local PanelsGui: ScreenGui = Gui.PanelsGui
 local buildingsPanelbutton: ImageButton = PanelsGui.ButtonsPanel.BuildingsPanelButton
-local BuildingsPanel = PanelsGui.BuildingsPanel
-
-
+local BuildingsPanel: Framel = PanelsGui.BuildingsPanel
 
 -------------------- Panel visible via Gui --------------------
---[[
-    Binding panel visibility to gui image button
-]]--
 
-buildingsPanelbutton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-end)
+GuiUtility.OnGuiButtonSetGuiVisibility(buildingsPanelbutton, BuildingsPanel)
 
-
--------------------- Panel visible via UserInput --------------------
---[[
-    Binding panel visibility to a keyboard key
-]]
-local generalKeys = keybinds.GeneralKeys
-UserInputService.InputBegan:Connect(function(anInputObject, isTyping)
-    if anInputObject.KeyCode == generalKeys.B and not isTyping then
-        BuildingsPanel.Visible = not BuildingsPanel.Visible
-    end
-end)
-
+local generalKeys = Keybinds.GeneralKeys
+GuiUtility.OnKeySetGuiVisibility(generalKeys.B, BuildingsPanel)
 
 --------------------------------------------------------------------------------------------------------------
-local mouse = Players.LocalPlayer:GetMouse()
 local tagsBlacklist = {"Asset", "Player"} --> //TODO FIXCON2 This must be put in replicated storage as a component
 
 local ConstructionSystemEntity = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemEntity)
 local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 
-local MouseCaster = MouseCasterLib.new()
-MouseCaster:UpdateTargetFilterFromTags(tagsBlacklist)
 
+local MouseCaster = MouseCasterLib.new()
+MouseCaster:SetTargetFilter({localPlayer.Character, workspace.Baseplate, workspace.SpawnLocation})
 local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
--- prevents new instances from appearing when clicking a building button WHILE not having disposed of the class instance
 local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
 
--->FIXCON3: refactor this to avoid so much code repetition
-local redBuildingButton: ImageButton = BuildingsPanel.RedBuildingButton
+--//TODO FIXCON3 This still weirds me out a bit...
+--> when a building button is clicked, call this
+local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInstance)
+    aBuildingButton.MouseButton1Click:Connect(function()
+        BuildingsPanel.Visible = not BuildingsPanel.Visible
 
-redBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
+        if newConstructionSystem.Enabled == nil then
+            newConstructionSystem = ConstructionSystemEntity.new()
+        end
 
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
+        newConstructionSystem:Init(buildingInstance, MouseCaster, SetBuildMode, tagsBlacklist) 
+        newConstructionSystem:PreviewBuilding()
+        newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
+    end)
+end
 
-    newConstructionSystem:Init(workspace.Red, MouseCaster, SetBuildMode) 
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
-end)
+local testAssets = BuildingsComponent.TestAssets
 
+onBuildingButtonClicked(BuildingsPanel.RedBuildingButton, testAssets.Red.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.GreenBuildingButton, testAssets.Green.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.YellowBuildingButton, testAssets.Yellow.ExtraData.GameObject)
+onBuildingButtonClicked(BuildingsPanel.BlueBuildingButton, testAssets.Blue.ExtraData.GameObject)
 
-local yellowBuildingButton: ImageButton = BuildingsPanel.YellowBuildingButton
-
-yellowBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-    
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
- 
-     newConstructionSystem:Init(workspace.Yellow, MouseCaster, SetBuildMode)
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
-end)
-
-local greenBuildingButton: ImageButton = BuildingsPanel.GreenBuildingButton
-
-greenBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
-
-    newConstructionSystem:Init(workspace.Green, MouseCaster, SetBuildMode) 
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
-end)
-
-
-local blueBuildingButton: ImageButton = BuildingsPanel.BlueBuildingButton
-
-blueBuildingButton.MouseButton1Click:Connect(function()
-    BuildingsPanel.Visible = not BuildingsPanel.Visible
-
-    if newConstructionSystem.Enabled == nil then
-        newConstructionSystem = ConstructionSystemEntity.new()
-    end
-
-    newConstructionSystem:Init(workspace.Blue, MouseCaster, SetBuildMode)
-    newConstructionSystem:PreviewBuilding()
-    newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode) 
-end)
 
