@@ -282,7 +282,10 @@ end
 
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
 function Map:PositionInstanceOnTaggedTiles(aTag: string, aProp: Instance, aThreshold: number, hasRandomOrientation: boolean)
-    if aProp == nil then return end
+    if aProp == nil then 
+        warn("Warning!, No game object was passed to positioning function, tile will be empty")
+        return 
+    end
 
     for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
         local newTile = Tile.new(tile)

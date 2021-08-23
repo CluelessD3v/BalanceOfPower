@@ -29,9 +29,9 @@ task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE I
 local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
 
 -- Updating Tiles with their respective resource
-Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
-Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
-Map:ProcedurallyUpdateFromTag("UsableTile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
+Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.ExtraData.FilteredTags)
+Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.ExtraData.FilteredTags )
+Map:ProcedurallyUpdateFromTag("UsableTile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.ExtraData.FilteredTags)
 
 
 print(#game:GetService('CollectionService'):GetTagged("UsableTile").. " tiles are usable")

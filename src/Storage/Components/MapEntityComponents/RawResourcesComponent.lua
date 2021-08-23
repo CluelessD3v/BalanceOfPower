@@ -60,8 +60,8 @@ return {
 
     Timber = {
         Tags = {"Timber", "HasResource"},
-        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
         ExtraData = {
+            FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
             Threshold = 0.4,
             Limit = 8000,
             GameObject = workspace.Props.EbonyTree1
@@ -104,9 +104,10 @@ return {
 
     Clay = {
         Tags = {"Clay", "HasResource"},
-        FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
         ExtraData = {
+            FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
             Threshold = 0.0035,
+            GameObject = workspace.Props.Clay
         },
         Debug = {
             Tag = "Clay",
