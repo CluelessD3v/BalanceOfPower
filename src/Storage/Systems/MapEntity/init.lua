@@ -297,6 +297,10 @@ end
 --     GenerateProps.InstanceAcrossTile(aTile, aPropList, aThreshold, hasRandomOrientation)
 -- end
 
+function Map:PositionInstanceOnTaggedTileFromTable(positionTable)
+
+end
+
 return Map
 
 
