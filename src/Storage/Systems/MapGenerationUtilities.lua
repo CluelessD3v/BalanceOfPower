@@ -12,13 +12,16 @@ local WeightedChoice = require(Utilities.WeightedChoice)
 
 local MapEntityHelperLib = {}
 
-function MapEntityHelperLib.SetResourceDepositSize(aResourceTag, aResourceDataTable)
-    for _, tile in ipairs(CollectionService:GetTagged(aResourceTag)) do
-        local WeightData = WeightedChoice(aResourceDataTable.WeightsData) -- returns the Key of the resource
-
-        -- Choosing a random value from  range of selected weight, e.g: Medium[400, 800] <-- num between those 
-        local depositSize = math.random(WeightData.Ammount.Min, WeightData.Ammount.Max) 
-        tile:SetAttribute("ResourceAmmount", depositSize) 
+function MapEntityHelperLib.SetResourceDepositSize(aResourceDataTable)
+    for _, resourceData in ipairs(aResourceDataTable) do
+        local lookUpTag = resourceData.ExtraData.LookUpTag
+        for _, tile in ipairs(CollectionService:GetTagged(lookUpTag)) do
+            local WeightData = WeightedChoice(resourceData.ExtraData.WeightsData) -- returns the Key of the resource
+    
+            -- Choosing a random value from  range of selected weight, e.g: Medium[400, 800] <-- num between those 
+            local depositSize = math.random(WeightData.Ammount.Min, WeightData.Ammount.Max) 
+            tile:SetAttribute("ResourceAmmount", depositSize) 
+        end
     end
 end
 
