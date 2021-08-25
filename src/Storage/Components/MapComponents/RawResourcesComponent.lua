@@ -21,7 +21,7 @@ return {
             
             ExtraData = {
                 LookUpTag = "Iron",
-                Threshold = 0.0025,
+                Threshold = 0.003,
                 FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Lowland"},
                 GameObject = workspace.Props.Iron,
                 
@@ -67,7 +67,7 @@ return {
             ExtraData = {
                 LookUpTag = "Clay",
                 FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
-                Threshold = 0.0035,
+                Threshold = 0.004,
                 GameObject = workspace.Props.Clay,
 
                 Debug = {
@@ -110,7 +110,7 @@ return {
             Tags = {"Timber", "HasResource"},
             ExtraData = {
                 FilteredTags = {"Impassable", "HasResource", "WaterBody", "Beach", "Mountainous", "Steepland"},
-                Threshold = 0.4,
+                Threshold = 0.45,
                 Limit = 8000,
                 
                 LookUpTag = "Timber",

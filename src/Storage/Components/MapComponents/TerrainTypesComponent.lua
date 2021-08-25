@@ -10,7 +10,9 @@ return {
     InitialTerrains = {
             [1] = {
                 Properties = {
-                    BrickColor = BrickColor.new("Bright blue")
+                    BrickColor = BrickColor.new("Bright blue"),
+                    Reflectance = .7,
+                    CastShadow = false,
                 },
                 Attributes = {
                     ElevationOffset = 3,
@@ -26,7 +28,9 @@ return {
         
             [2] = {
                 Properties = {
-                    BrickColor = BrickColor.new("Electric blue")
+                    BrickColor = BrickColor.new("Electric blue"),
+                    Reflectance = .7,
+                    CastShadow = false,
                 },
                 Attributes = {
                     ElevationOffset = 3,
@@ -41,7 +45,8 @@ return {
         
             [3] = {
                 Properties = {
-                    BrickColor = BrickColor.new("Cyan")
+                    BrickColor = BrickColor.new("Cyan"),
+                    Reflectance = .7,
                 },
                 Attributes = {
                     ElevationOffset = 3,
@@ -65,7 +70,7 @@ return {
                 },  
                 Tags = {"Beach", "UsableTile"},
                 ExtraData = {
-                    Threshold = .55,
+                    Threshold = .545,
                     Limit  = -1,
                 }
             },
@@ -167,7 +172,7 @@ return {
             },  
             Tags = {"Impassable"},
             ExtraData = {
-                Threshold = .15,
+                Threshold = .12,
             }
         },
         Depression = {
@@ -179,7 +184,7 @@ return {
             },  
             Tags = {"Steepland", "UsableTile"},
             ExtraData = {
-                Threshold = .3
+                Threshold = .25
             }
         },
 
