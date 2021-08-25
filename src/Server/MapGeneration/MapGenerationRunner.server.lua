@@ -1,67 +1,75 @@
 
-    local ServerStorage = game:GetService('ServerStorage')
+local ServerStorage = game:GetService('ServerStorage')
 
 
-    -------------------- Modules --------------------
-    local MapClass = require(ServerStorage.Systems.MapEntity)
+-------------------- Modules --------------------
+local MapClass = require(ServerStorage.Systems.MapEntity)
+local MapGenerationUtilities = require(ServerStorage.Systems.MapGenerationUtilities)
+-------------------- Map Generation --------------------
+local mapGenerationTable = require(ServerStorage.Components.MapComponents.MapGenerationComponent)
 
-    -------------------- Map Generation --------------------
-    local mapGenerationTable = require(ServerStorage.Components.MapEntityComponents.MapGenerationComponent)
-
-    -- Mapping MapGenerationConfig values to the map gen tbable
-    local Map = MapClass.new(mapGenerationTable)
-
-
-    local terrainTypesTable = require(ServerStorage.Components.MapEntityComponents.TerrainTypesComponent)
-    Map:GenerateMap(terrainTypesTable.InitialTerrains)
-
-    -------------------- Adding Landmarks and smoothing Terrain --------------------
-    --[[
-        If this was not done, we would end up with a huge flat bed of mountains
-        so to break the pattern we, add some land marks and depress the terrain a bit
-    ]]
-    Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
-    Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
-    Map.HelperLib.SetTerrainElevation(Map)
-
-    task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE IT!
-    -------------------- Resource Generation --------------------
-    local RawResourcesTypesTable = require(ServerStorage.Components.MapEntityComponents.RawResourcesComponent)
-
-    -- Updating Tiles with their respective resource
-    Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
-    Map:RandomlyTransformFromTag("UsableTile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
-    Map:ProcedurallyUpdateFromTag("UsableTile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
-   
-
-    print(#game:GetService('CollectionService'):GetTagged("UsableTile"))
-    Map.DoPrintStatus = true
+-- Mapping MapGenerationConfig values to the map gen tbable
+local Map = MapClass.new(mapGenerationTable)
 
 
-    -------------------- setting resource deposit sizes --------------------
-    Map.HelperLib.SetResourceDepositSize("Timber", RawResourcesTypesTable.Timber)
-    Map.HelperLib.SetResourceDepositSize("Iron", RawResourcesTypesTable.Iron)
-    Map.HelperLib.SetResourceDepositSize("Clay", RawResourcesTypesTable.Clay)
+local terrainTypesTable = require(ServerStorage.Components.MapComponents.TerrainTypesComponent)
+Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
-    task.wait()
-    Map:PositionInstanceOnTaggedTiles("Iron", game.ServerStorage.Assets.TerrainAssets.Iron:GetChildren(), 1, true)
-    Map:PositionInstanceOnTaggedTiles("Clay", game.ServerStorage.Assets.TerrainAssets.Clay:GetChildren(), 1, true)
+-------------------- Adding Landmarks and smoothing Terrain --------------------
+--[[
+    If this was not done, we would end up with a huge flat bed of mountains
+    so to break the pattern we, add some land marks and depress the terrain a bit
+]]
+Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
+Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
+MapGenerationUtilities.SetTerrainElevation(Map)
 
-    Map:PositionInstanceOnTaggedTiles("Timber", game.ServerStorage.Assets.TerrainAssets.Trees:GetChildren(), 1, true)
-    -- task.wait()
-    -- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE IT!
+-------------------- Resource Generation --------------------
+local RawResourcesTypesTable = require(ServerStorage.Components.MapComponents.RawResourcesComponent)
 
-    --     RawResourcesTypesTable.Timber.Debug,
-    --     RawResourcesTypesTable.Clay.Debug,
-    --     RawResourcesTypesTable.Iron.Debug,
-    -- })
+-- Updating Tiles with their respective resource
 
--- task.wait(10)
+local procedurallyGeneratedResources = RawResourcesTypesTable.ProcedurallyGenerated
+local randomlyGeneratedResources = RawResourcesTypesTable.RandomlyGenerated
+
+Map:RandomlyUpdateFromTag("UsableTile", randomlyGeneratedResources[1], randomlyGeneratedResources[1].ExtraData.FilteredTags)
+Map:RandomlyUpdateFromTag("UsableTile", randomlyGeneratedResources[2], procedurallyGeneratedResources[1].ExtraData.FilteredTags ) 
+
+Map:ProcedurallyUpdateFromTag("UsableTile", procedurallyGeneratedResources[1], randomlyGeneratedResources[2].ExtraData.FilteredTags)
+
+-- print(#game:GetService('CollectionService'):GetTagged("UsableTile").. " tiles are usable")
+-- Map.DoPrintStatus = true
+
+-------------------- setting resource deposit sizes --------------------
+MapGenerationUtilities.SetResourceDepositSize(randomlyGeneratedResources)
+MapGenerationUtilities.SetResourceDepositSize(procedurallyGeneratedResources)
+
+-- -------------------- Positioning props/assets on tiles --------------------
+task.wait()
+Map:PositionInstanceOnTaggedTiles("Iron", randomlyGeneratedResources[1].ExtraData.GameObject, 1, true)
+Map:PositionInstanceOnTaggedTiles("Clay", randomlyGeneratedResources[2].ExtraData.GameObject, 1, true)
+--Map:PositionInstanceOnTaggedTiles("Timber", nil, 1, true)
+MapGenerationUtilities.GenerateTrees()
+
+
+
+
+
+-- task.wait()
+-- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+
+--     procedurallyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[2].ExtraData.Debug,
+-- })
+
+--  task.wait()
 
 -- Map.Debug.FilterTiles.Blacklist(Map, {
---     RawResourcesTypesTable.Timber.Debug,
---     RawResourcesTypesTable.Clay.Debug,
---     RawResourcesTypesTable.Iron.Debug,
+--     procedurallyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[2].ExtraData.Debug,
 -- })
 
 

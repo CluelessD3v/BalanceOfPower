@@ -4,7 +4,6 @@ local PerlinNoise = require(script.PerlinNoise)
 local FallOffMap = require(script.FallOffMap)
 local Tile = require(script.TileEntity)
 local Debug = require(script.Debug)
-local MapEntityHelperLib = require(script.MapEntityHelperLib)
 -------------------- Constructor --------------------
 local Map = {} 
 Map.__index = Map
@@ -69,10 +68,6 @@ function Map.new(theMapGenerationTable: table)
         }
     }
 
-    self.HelperLib = {
-        SetTerrainElevation = MapEntityHelperLib.SetTerrainElevation,
-        SetResourceDepositSize = MapEntityHelperLib.SetResourceDepositSize
-    }
     print("Map settings set")
     return self
 end
@@ -281,13 +276,18 @@ end
 -------------------- Setters --------------------
 
 -- this function sets ONE prop on off the tile origin (respects both tile and asset sizes)
-function Map:PositionInstanceOnTaggedTiles(aTag: string, propsList: table, aThreshold: number, hasRandomOrientation: boolean)
+function Map:PositionInstanceOnTaggedTiles(aTag: string, aProp: Instance, aThreshold: number, hasRandomOrientation: boolean)
+    if aProp == nil then 
+        warn("Warning!, No game object was passed to positioning function, tile will be empty")
+        return 
+    end
+
     for _, tile in ipairs(CollectionService:GetTagged(aTag)) do
         local newTile = Tile.new(tile)
 
         local chance = Random.new():NextNumber(0, 1)
         if chance <= aThreshold then
-            newTile:InstanceToOriginOffseted(propsList, hasRandomOrientation)
+            newTile:InstanceToOriginOffseted(aProp, hasRandomOrientation)
         end
     end
 end
@@ -296,6 +296,10 @@ end
 -- function Map:SetInstanceAcrossTile(aTile: BasePart, aPropList: string, aThreshold: integer, hasRandomOrientation: boolean)
 --     GenerateProps.InstanceAcrossTile(aTile, aPropList, aThreshold, hasRandomOrientation)
 -- end
+
+function Map:PositionInstanceOnTaggedTileFromTable(positionTable)
+
+end
 
 return Map
 
