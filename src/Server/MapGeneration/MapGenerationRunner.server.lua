@@ -49,45 +49,8 @@ MapGenerationUtilities.SetResourceDepositSize(procedurallyGeneratedResources)
 task.wait()
 Map:PositionInstanceOnTaggedTiles("Iron", randomlyGeneratedResources[1].ExtraData.GameObject, 1, true)
 Map:PositionInstanceOnTaggedTiles("Clay", randomlyGeneratedResources[2].ExtraData.GameObject, 1, true)
-Map:PositionInstanceOnTaggedTiles("Timber", nil, 1, true)
-
-local cs = game:GetService('CollectionService')
-
-local posTable = {
-	{.25, 0, .25},
-	{-.25, 0, .25},
-	{.25, 0, -.25},
-	{-.25, 0, -.25}
-}
- 
- 
-local function PositionInTile(prop, tile, positionTable)
-	local yOffset =  tile.Size.Y/2 + prop.Size.Y/2 * .5
-	local xOffset = tile.Size.X * positionTable[1]
-	local zOffset = tile.Size.Z * positionTable[3]	
-	prop.Position = tile.Position + Vector3.new(xOffset, yOffset, zOffset)
-    --prop.Orientation = Vector3.new(0, math.random(0, 360), 0)
-    prop.Size /= 1.5
-	prop.Parent = tile.TreeGroup
-end
- 
-local function GetProp(propList)
-	return propList[math.random(1, #propList)]:Clone()
-end
- 
-local props = workspace.Props.Trees:GetChildren()
-local cs = game:GetService('CollectionService')
-
-for _, tile in ipairs(cs:GetTagged("Timber")) do
-    local treeGroup = Instance.new("Model")
-    treeGroup.Name = "TreeGroup"
-    treeGroup.Parent = tile
-    for i = 1, 4 do
-        PositionInTile(GetProp(props), tile, posTable[i])
-    end    
-
-    treeGroup:PivotTo(treeGroup:GetPivot() * CFrame.Angles(0, math.random(0, 360), 0))
-end
+--Map:PositionInstanceOnTaggedTiles("Timber", nil, 1, true)
+MapGenerationUtilities.GenerateTrees()
 
 
 

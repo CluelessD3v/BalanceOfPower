@@ -37,7 +37,7 @@ local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
 local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
 
---//TODO FIXCON3 This still weirds me out a bit...
+--//TODO FIXCON3 This still weirds me out a bit... Having this local function here is kinda weird
 --> when a building button is clicked, call this
 local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInstance)
     aBuildingButton.MouseButton1Click:Connect(function()
