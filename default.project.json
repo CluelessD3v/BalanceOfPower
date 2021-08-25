@@ -29,6 +29,12 @@
             }
         },
 
+
+        "StarterGui": {
+            "$className": "StarterGui",
+            "$path": "src/Client/Gui"
+        },
+
         "ServerStorage": {
             "$className": "ServerStorage",
             "$path": "src/Storage",

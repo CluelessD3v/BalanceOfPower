@@ -1,81 +1,75 @@
--- Services
-local CollectionService = game:GetService('CollectionService')
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
+
 local ServerStorage = game:GetService('ServerStorage')
 
 
-local Utilities = ReplicatedStorage.Utilities
-
 -------------------- Modules --------------------
 local MapClass = require(ServerStorage.Systems.MapEntity)
-local MapGenHelperLib = require(ServerStorage.Systems.MapGenHelperLib)
-local GetWeightedDrop = require(Utilities.GetWeightedDrop)
-
-
--------------------- Tables --------------------
-local mapGenerationTable = require(ServerStorage.Components.MapGenerationTable)
-local ResourceWeightedDropTable = require(ServerStorage.Components.ResourceWeightedDropTable)
-local RawResourcesTypesTable = require(ServerStorage.Components.RawResourcesTypesTable)
-
+local MapGenerationUtilities = require(ServerStorage.Systems.MapGenerationUtilities)
 -------------------- Map Generation --------------------
+local mapGenerationTable = require(ServerStorage.Components.MapComponents.MapGenerationComponent)
+
 -- Mapping MapGenerationConfig values to the map gen tbable
 local Map = MapClass.new(mapGenerationTable)
 
-local terrainTypesTable = require(ServerStorage.Components.TerrainTypesTable)
+
+local terrainTypesTable = require(ServerStorage.Components.MapComponents.TerrainTypesComponent)
 Map:GenerateMap(terrainTypesTable.InitialTerrains)
 
---//TODO Add the different transformed terrain to the terrain types table
+-------------------- Adding Landmarks and smoothing Terrain --------------------
+--[[
+    If this was not done, we would end up with a huge flat bed of mountains
+    so to break the pattern we, add some land marks and depress the terrain a bit
+]]
+Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
+Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
+MapGenerationUtilities.SetTerrainElevation(Map)
 
-Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
-Map:TransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
-
-MapGenHelperLib.SetTerrainElevation(Map)
-wait()
+task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE IT!
 -------------------- Resource Generation --------------------
--- Updating Tiles with their respective resource
---//TODO, ADD THE FILTERED TAGS TO THE Resource types table
-Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Iron, RawResourcesTypesTable.Iron.FilteredTags)
-Map:UpdateFromTag("Tile", RawResourcesTypesTable.Timber, RawResourcesTypesTable.Timber.FilteredTags)
-Map:UpdateFromTagRandomly("Tile", RawResourcesTypesTable.Clay, RawResourcesTypesTable.Clay.FilteredTags )
+local RawResourcesTypesTable = require(ServerStorage.Components.MapComponents.RawResourcesComponent)
 
+-- Updating Tiles with their respective resource
+
+local procedurallyGeneratedResources = RawResourcesTypesTable.ProcedurallyGenerated
+local randomlyGeneratedResources = RawResourcesTypesTable.RandomlyGenerated
+
+Map:RandomlyUpdateFromTag("UsableTile", randomlyGeneratedResources[1], randomlyGeneratedResources[1].ExtraData.FilteredTags)
+Map:RandomlyUpdateFromTag("UsableTile", randomlyGeneratedResources[2], procedurallyGeneratedResources[1].ExtraData.FilteredTags ) 
+
+Map:ProcedurallyUpdateFromTag("UsableTile", procedurallyGeneratedResources[1], randomlyGeneratedResources[2].ExtraData.FilteredTags)
+
+-- print(#game:GetService('CollectionService'):GetTagged("UsableTile").. " tiles are usable")
+-- Map.DoPrintStatus = true
 
 -------------------- setting resource deposit sizes --------------------
---//TODO look into moving this somewere else
-for _, tile in ipairs(CollectionService:GetTagged("Iron")) do
-    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Iron) -- returns the Key of the resource
-    local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
-    tile:SetAttribute("ResourceAmmount", depositSize)
-end
+MapGenerationUtilities.SetResourceDepositSize(randomlyGeneratedResources)
+MapGenerationUtilities.SetResourceDepositSize(procedurallyGeneratedResources)
 
-for _, tile in ipairs(CollectionService:GetTagged("Timber")) do
-    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Timber) -- returns the Key of the resource
-    local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
-    tile:SetAttribute("ResourceAmmount", depositSize)
-end
+-- -------------------- Positioning props/assets on tiles --------------------
+task.wait()
+Map:PositionInstanceOnTaggedTiles("Iron", randomlyGeneratedResources[1].ExtraData.GameObject, 1, true)
+Map:PositionInstanceOnTaggedTiles("Clay", randomlyGeneratedResources[2].ExtraData.GameObject, 1, true)
+--Map:PositionInstanceOnTaggedTiles("Timber", nil, 1, true)
+MapGenerationUtilities.GenerateTrees()
 
-for _, tile in ipairs(CollectionService:GetTagged("Clay")) do
-    local ResourceData = GetWeightedDrop(ResourceWeightedDropTable.Clay) -- returns the Key of the resource
-    local depositSize = math.random(ResourceData.Ammount.Min, ResourceData.Ammount.Max)
-    tile:SetAttribute("ResourceAmmount", depositSize)
-end
 
---[[
-    This executes after the map loads, comment out to not view
-    --//TODO MAKE INTERFACE FOR THIS TO NOT DO THIS IN CODE!
-]]--
--------------------- Debugging view --------------------
---[[Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
 
-    RawResourcesTypesTable.Timber.Debug,
-    RawResourcesTypesTable.Clay.Debug,
-    RawResourcesTypesTable.Iron.Debug,
-})
 
-wait(10)
 
-Map.Debug.FilterTiles.Blacklist(Map, {
-    RawResourcesTypesTable.Timber.Debug,
-    RawResourcesTypesTable.Clay.Debug,
-    RawResourcesTypesTable.Iron.Debug,
-})
---]]
+-- task.wait()
+-- Map.Debug.FilterTiles.WhitelistAndGradient(Map, "ResourceAmmount", {
+
+--     procedurallyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[2].ExtraData.Debug,
+-- })
+
+--  task.wait()
+
+-- Map.Debug.FilterTiles.Blacklist(Map, {
+--     procedurallyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[1].ExtraData.Debug,
+--     randomlyGeneratedResources[2].ExtraData.Debug,
+-- })
+
+
