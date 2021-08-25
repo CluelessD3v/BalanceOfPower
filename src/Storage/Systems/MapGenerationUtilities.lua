@@ -64,16 +64,17 @@ end
 
 
 function MapEntityHelperLib.SetTerrainElevation(theMap)
-    for x = 1, theMap.MapSize do
-        for z = 1, theMap.MapSize do
-            local tile = theMap._TileMap[x][z]
-            
-            local tileInstance: BasePart = tile.GameObject
-            local posX = tileInstance.Position.X
-            local posZ = tileInstance.Position.Z
-            local yOffset = tileInstance:GetAttribute("ElevationOffset")
+    local self = theMap
 
-            tileInstance.Position = Vector3.new(posX, yOffset, posZ )
+    for x = 1, self.MapSize do
+        for z = 1, self.MapSize do
+            local tile = self.TileMap[x][z]
+
+            local posX = tile.Position.X
+            local posZ = tile.Position.Z
+            local yOffset = tile:GetAttribute("ElevationOffset")
+
+            tile.Position = Vector3.new(posX, yOffset, posZ )
         end
     end
     print("Terrain Elevated")

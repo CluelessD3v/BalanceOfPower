@@ -65,7 +65,7 @@ function Tile:SetMetadata(newTerrainDataTable)
 end
 
 -- Updates existing data w/o removing existing data
-function Tile:UpdateMetaData(newTerrainDataTable)
+function Tile:UpdateMetadata(newTerrainDataTable)
     newTerrainDataTable.Attributes = newTerrainDataTable.Attributes or {}
     newTerrainDataTable.Properties = newTerrainDataTable.Properties or {} 
     newTerrainDataTable.Tags = newTerrainDataTable.Tags or {}  
