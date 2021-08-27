@@ -7,8 +7,10 @@ local RunService = game:GetService('RunService')
 local BuildingEntity = {} 
 BuildingEntity.__index = BuildingEntity
 
-function BuildingEntity.new()
+function BuildingEntity.new(anInstance)
     local self = setmetatable({}, BuildingEntity)
+    
+    self.GameObject = anInstance
 end
 
 

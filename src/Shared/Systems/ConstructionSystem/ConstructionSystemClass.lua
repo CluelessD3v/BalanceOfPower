@@ -42,9 +42,9 @@ local function PlaceBuilding(self)
     placedBuilding.CanCollide = false
     placedBuilding.Transparency = 0
 
-    placedBuilding.Parent = self.Mouse.Target()
+    self.Mouse:UpdateTargetFilter({placedBuilding})
     
-    self:Destroy() -->//todo DEFCON4: rewrite this bit to account for multiple building placement selection, E.G: Hold shift and you can keep adding the same building.
+    placedBuilding.Parent = self.Mouse.Target()
 end
 
 -- destroy the previous selected building (if any) WHEN a player selects a new one  
@@ -52,17 +52,25 @@ local function ResetSelectedBuilding(self, aSelectedBuilding)
     if self.SelectedBuilding then
         self.SelectedBuilding:Destroy()
         self.Maid:DoCleaning()
-        self.SelectedBuilding = aSelectedBuilding
+        self.SelectedBuilding = aSelectedBuilding   
     end
 end
 
--------------------- Public methods --------------------
+local function UpdateTileData(self)
+    self.Mouse.Target():SetAttribute("Occupied", true)
+    CollectionService:AddTag(self.Mouse.Target(), "OccupiedTile")
+end
 
-function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: MouseCaster, SetBuildModeEvent: RemoteEvent, aTagsBlacklist: table) 
+-------------------- Public methods --------------------
+function ConstructionSystemEntity:Init(aSelectedBuilding:any, aMouse:MouseCaster, SetBuildModeEvent:RemoteEvent, aTagsBlacklist:table) 
+    
     ResetSelectedBuilding(self, aSelectedBuilding)
 
     self.SelectedBuilding = aSelectedBuilding:Clone()
+    self.SelectedBuilding.Transparency = .5
+
     self.Maid:GiveTask(self.SelectedBuilding) 
+    
     self.Mouse = aMouse
     self.Enabled = true
 
@@ -72,13 +80,21 @@ function ConstructionSystemEntity:Init(aSelectedBuilding: BasePart, aMouse: Mous
     self.Mouse:UpdateTargetFilter({self.SelectedBuilding}) 
     self.Mouse:UpdateTargetFilterFromTags(aTagsBlacklist)
 
-    self.Mouse:PrintFilterList()
-
     local function BindBuildingPlacement(_, inputState, _) 
         if inputState == Enum.UserInputState.Begin then                
+            if CollectionService:HasTag(self.Mouse.Target(), "OccupiedTile") then 
+                print("Tile occupied")
+                return 
+            end
+
             self.Enabled = false
+            print(self)
+            UpdateTileData(self)
             PlaceBuilding(self)
             SetBuildModeEvent:FireServer(self.Enabled) --> Exit build mode state if we place a building
+
+            self:Destroy() -->//todo DEFCON4: rewrite this bit to account for multiple building placement selection, E.G: Hold shift and you can keep adding the same building.
+
         end
     end
 
@@ -90,7 +106,6 @@ end
 function ConstructionSystemEntity:PreviewBuilding()
     local prevTarget = nil
 
-    self.SelectedBuilding.Transparency = .5
     self.SelectedBuilding.Parent = workspace
     
     self.UpdatePreview = self.Maid:GiveTask(RunService.Heartbeat:Connect(function()

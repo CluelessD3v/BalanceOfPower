@@ -1,8 +1,8 @@
 return {
     TestAssets = {
-        Red = {
+        [1] = {
             Properties = {},
-            Tags = {"Asset"},
+            Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Red
@@ -10,9 +10,9 @@ return {
     
         },
 
-        Yellow = {
+        [2] = {
             Properties = {},
-            Tags = {"Asset"},
+            Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Yellow
@@ -20,9 +20,9 @@ return {
     
         },
 
-        Blue = {
+        [3] = {
             Properties = {},
-            Tags = {"Asset"},
+            Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Blue
@@ -30,9 +30,9 @@ return {
     
         },
 
-        Green = {
+        [4] = {
             Properties = {},
-            Tags = {"Asset"},
+            Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Green
