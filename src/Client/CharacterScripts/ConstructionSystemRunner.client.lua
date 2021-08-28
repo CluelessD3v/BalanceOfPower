@@ -7,11 +7,12 @@ local ContextActionService = game:GetService('ContextActionService')
 -------------------- Systems --------------------
 local ConstructionSystemClass = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemClass)
 local BuildingClass = require(ReplicatedStorage.Systems.ConstructionSystem.BuildongClass)
-
 -------------------- Components --------------------
+local BuildingsComponent = require(ReplicatedStorage.Components.ConstructionSystemComponents.BuildingsComponent)
+
+-------------------- Utilities --------------------
 local GuiUtility = require(ReplicatedStorage.Systems.GuiUtility)
 local Keybinds = require(ReplicatedStorage.Components.Keybinds)
-local BuildingsComponent = require(ReplicatedStorage.Components.ConstructionSystemComponents.BuildingsComponent)
 local MouseCasterLib = require(ReplicatedStorage.Utilities.MouseCaster)
 local MouseFilterComponent = require(ReplicatedStorage.Components.ConstructionSystemComponents.MouseFilterComponent)
 -------------------- Data --------------------
@@ -41,15 +42,23 @@ local newConstructionSystem = {} --> initializing as empty table cause you canno
 
 --//TODO FIXCON3 This still weirds me out a bit... Having this local function here is kinda weird
 --> when a building button is clicked, a new construction system object is instanced
-local function onBuildingButtonClicked(aBuildingButton: GuiButton, buildingInstance)
+local function onBuildingButtonClicked(aBuildingButton: GuiButton,  aBuildingGameObject: BasePart)
+    if aBuildingGameObject == nil then
+        warn("No building game object was set, defaulting to BasePart")
+        aBuildingGameObject = Instance.new("Part")
+    end
+    
     aBuildingButton.MouseButton1Click:Connect(function()
-        BuildingsPanel.Visible = not BuildingsPanel.Visible
+        BuildingsPanel.Visible = not BuildingsPanel.Visible 
 
+        -- since the construction system class is destroyed, we need to re-initialize it
         if newConstructionSystem.Enabled == nil then
             newConstructionSystem = ConstructionSystemClass.new()
         end
 
-        newConstructionSystem:Init(buildingInstance, MouseCaster, SetBuildMode, MouseFilterComponent[2]) --> This would be "BuildingAssets"
+        local buildingEntity = BuildingClass.new(aBuildingGameObject)
+
+        newConstructionSystem:Init(aBuildingGameObject, MouseCaster, SetBuildMode, MouseFilterComponent[2]) --> This would be "BuildingAssets"
         newConstructionSystem:PreviewBuilding()
         newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
     end)

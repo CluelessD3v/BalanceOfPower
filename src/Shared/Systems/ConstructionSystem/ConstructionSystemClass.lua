@@ -5,15 +5,15 @@
 ]]--
 
 -------------------- Services --------------------
-
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ContextActionService = game:GetService('ContextActionService')
 local CollectionService = game:GetService('CollectionService')
 local RunService = game:GetService('RunService')
 local UserInputService = game:GetService('UserInputService')
 
-
+-------------------- Utiltiies --------------------
 local Maid = require (ReplicatedStorage.Utilities.Maid)
+local MapDataToInstance = require(ReplicatedStorage.Utilities.MapDataToInstance)
 local keybinds = require(ReplicatedStorage.Components.Keybinds)
 local generalKeys = keybinds.GeneralKeys
 
@@ -22,17 +22,36 @@ ConstructionSystemEntity.__index = ConstructionSystemEntity
 
 function ConstructionSystemEntity.new()
     local self = setmetatable({}, ConstructionSystemEntity)
-    self.SelectedBuilding = nil 
-    self.Mouse = nil
-    self.TagsWhiltelist = nil
-    self.UpdateBuildingPreview = nil
-    self.FilterList = nil
-    self.Enabled = nil
     self.Maid = Maid.new()
     return self
 end
 
+
 -------------------- Private methods --------------------
+-- destroy the previous selected building (if any) WHEN a player selects a new one  
+local function ResetSelectedBuilding(self, aSelectedBuilding)
+    if self.SelectedBuilding then
+        self.SelectedBuilding:Destroy()
+        self.Maid:DoCleaning()
+        self.SelectedBuilding = aSelectedBuilding   
+    end
+end
+
+
+local function IsTileValid(self, buildingComponent)
+    if CollectionService:HasTag(self.Mouse.Target(), "OccupiedTile") then 
+        print("Tile occupied")
+        return 
+    end
+
+    for _, filteredTag in ipairs(buildingComponent.ExtraData.FilteredTags) do
+        if CollectionService:HasTag(self.Mouse.Target(), filteredTag) then
+            print("Building cannot be placed here")
+            return
+        end
+    end
+end
+
 local function PlaceBuilding(self)
     local yOffset =  self.SelectedBuilding.Size.Y/2 + self.Mouse.Target().Size.Y/2
     local placedBuilding = self.SelectedBuilding:Clone()
@@ -47,23 +66,18 @@ local function PlaceBuilding(self)
     placedBuilding.Parent = self.Mouse.Target()
 end
 
--- destroy the previous selected building (if any) WHEN a player selects a new one  
-local function ResetSelectedBuilding(self, aSelectedBuilding)
-    if self.SelectedBuilding then
-        self.SelectedBuilding:Destroy()
-        self.Maid:DoCleaning()
-        self.SelectedBuilding = aSelectedBuilding   
-    end
-end
-
+-- when a building is placed, the tile metadata must be updated
 local function UpdateTileData(self)
     self.Mouse.Target():SetAttribute("Occupied", true)
-    CollectionService:AddTag(self.Mouse.Target(), "OccupiedTile")
+
+    MapDataToInstance(self.Mouse.Target(), {
+        Tags = {"OccupiedTile"},
+        Attributes = {Building = self.SelectedBuilding.Name}
+    })
 end
 
 -------------------- Public methods --------------------
 function ConstructionSystemEntity:Init(aSelectedBuilding:any, aMouse:MouseCaster, SetBuildModeEvent:RemoteEvent, aTagsBlacklist:table) 
-    
     ResetSelectedBuilding(self, aSelectedBuilding)
 
     self.SelectedBuilding = aSelectedBuilding:Clone()
@@ -81,17 +95,13 @@ function ConstructionSystemEntity:Init(aSelectedBuilding:any, aMouse:MouseCaster
     self.Mouse:UpdateTargetFilterFromTags(aTagsBlacklist)
 
     local function BindBuildingPlacement(_, inputState, _) 
-        if inputState == Enum.UserInputState.Begin then                
-            if CollectionService:HasTag(self.Mouse.Target(), "OccupiedTile") then 
-                print("Tile occupied")
-                return 
-            end
+        if inputState == Enum.UserInputState.Begin then
+            IsTileValid(self)                
+            PlaceBuilding(self)
+            UpdateTileData(self)
 
             self.Enabled = false
-            print(self)
-            UpdateTileData(self)
-            PlaceBuilding(self)
-            SetBuildModeEvent:FireServer(self.Enabled) --> Exit build mode state if we place a building
+            SetBuildModeEvent:FireServer(self.Enabled, self) --> Exit build mode state if we place a building
 
             self:Destroy() -->//todo DEFCON4: rewrite this bit to account for multiple building placement selection, E.G: Hold shift and you can keep adding the same building.
 

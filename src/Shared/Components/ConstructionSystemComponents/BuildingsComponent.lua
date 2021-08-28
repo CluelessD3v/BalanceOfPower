@@ -1,3 +1,8 @@
+--[[
+    This component has all the data related to tiles with buildings. NOTE: Tiles are the ones that hold this info, buildings are just
+    visual feedback!
+]]
+
 return {
     TestAssets = {
         [1] = {
@@ -5,7 +10,8 @@ return {
             Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
-                GameObject = workspace.Red
+                GameObject = workspace.Red,
+                WhitelistedTags = {"Beach", "Lowland", "Highland", "Upland", "Steepland", "Mountainous"},
             }
     
         },
@@ -15,7 +21,8 @@ return {
             Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
-                GameObject = workspace.Yellow
+                GameObject = workspace.Yellow,
+                WhitelistedTags = {"Iron"},
             }
     
         },
@@ -25,7 +32,8 @@ return {
             Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
-                GameObject = workspace.Blue
+                GameObject = workspace.Blue,
+                WhitelistedTags = {"Clay"},
             }
     
         },
@@ -35,7 +43,8 @@ return {
             Tags = {"BuildingAsset"},
             Attributes = {},
             ExtraData = {
-                GameObject = workspace.Green
+                GameObject = workspace.Green,
+                WhitelistedTags = {"Timber"}
             }
     
         },
