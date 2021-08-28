@@ -68,7 +68,7 @@ return {
                     ElevationOffset = 4,
         
                 },  
-                Tags = {"Beach", "UsableTile"},
+                Tags = {"Beach", "UseableTile"},
                 ExtraData = {
                     Threshold = .545,
                     Limit  = -1,
@@ -83,7 +83,7 @@ return {
                     ElevationOffset = 4,
         
                 },  
-                Tags = {"Lowland", "UsableTile"},
+                Tags = {"Lowland", "UseableTile"},
                 ExtraData = {
                     Threshold = .6,
                     Limit  = -1,
@@ -113,7 +113,7 @@ return {
                     ElevationOffset = 6,
         
                 },  
-                Tags = {"Highland", "UsableTile"},
+                Tags = {"Highland", "UseableTile"},
                 ExtraData = {
                     Threshold = .85,
                     Limit  = -1,
@@ -128,7 +128,7 @@ return {
                     ElevationOffset = 7,
         
                 },  
-                Tags = {"Steepland", "UsableTile"},
+                Tags = {"Steepland", "UseableTile"},
                 ExtraData = {
                     Threshold = .95,
                     Limit  = -1,
@@ -144,7 +144,7 @@ return {
                     ElevationOffset = 8,
         
                 },  
-                Tags = {"Mountainous", "UsableTile"},
+                Tags = {"Mountainous", "UseableTile"},
                 ExtraData = {
                     Threshold = .99,
                     Limit  = -1,
@@ -182,7 +182,7 @@ return {
             Attributes = {
                 ElevationOffset = 7,
             },  
-            Tags = {"Steepland", "UsableTile"},
+            Tags = {"Steepland", "UseableTile"},
             ExtraData = {
                 Threshold = .25
             }

@@ -11,7 +11,8 @@ return {
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Red,
-                WhitelistedTags = {"Beach", "Lowland", "Highland", "Upland", "Steepland", "Mountainous"},
+                AllowedTags = {"UseableTile"},
+                FilteredTags = {"Beach"}
             }
     
         },
@@ -22,7 +23,8 @@ return {
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Yellow,
-                WhitelistedTags = {"Iron"},
+                AllowedTags = {"Iron"},
+                FilteredTags = {}
             }
     
         },
@@ -33,7 +35,8 @@ return {
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Blue,
-                WhitelistedTags = {"Clay"},
+                AllowedTags = {"Clay"},
+                FilteredTags = {},
             }
     
         },
@@ -44,7 +47,8 @@ return {
             Attributes = {},
             ExtraData = {
                 GameObject = workspace.Green,
-                WhitelistedTags = {"Timber"}
+                AllowedTags = {"Timber"},
+                FilteredTags = {},
             }
     
         },

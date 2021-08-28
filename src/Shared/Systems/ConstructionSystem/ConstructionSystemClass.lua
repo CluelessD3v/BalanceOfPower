@@ -20,8 +20,14 @@ local generalKeys = keybinds.GeneralKeys
 local ConstructionSystemEntity = {} 
 ConstructionSystemEntity.__index = ConstructionSystemEntity
 
-function ConstructionSystemEntity.new()
+function ConstructionSystemEntity.new(MouseCasterInstance: any, aTagsBlacklist:table)
     local self = setmetatable({}, ConstructionSystemEntity)
+    
+    --> update target filter with latest info, and the selected building.
+    self.Mouse = MouseCasterInstance
+    self.Mouse:UpdateTargetFilter({self.SelectedBuilding}) 
+    self.Mouse:UpdateTargetFilterFromTags(aTagsBlacklist)
+    
     self.Maid = Maid.new()
     return self
 end
@@ -39,15 +45,30 @@ end
 
 
 local function IsTileValid(self, buildingComponent)
+    buildingComponent.ExtraData.FilteredTags = buildingComponent.ExtraData.FilteredTags or {}
+    buildingComponent.ExtraData.AllowedTags = buildingComponent.ExtraData.AllowedTags or {}
+
+
+
     if CollectionService:HasTag(self.Mouse.Target(), "OccupiedTile") then 
         print("Tile occupied")
-        return 
+        return false
     end
 
     for _, filteredTag in ipairs(buildingComponent.ExtraData.FilteredTags) do
-        if CollectionService:HasTag(self.Mouse.Target(), filteredTag) then
-            print("Building cannot be placed here")
-            return
+        if CollectionService:HasTag(self.Mouse.Target(), filteredTag) then 
+            print("Cannot place here, tag is filtered")
+            return false 
+        end
+    end
+
+    for _, allowedTag in ipairs(buildingComponent.ExtraData.AllowedTags) do
+        if CollectionService:HasTag(self.Mouse.Target(), allowedTag) then 
+            print("Placing building")
+            return true
+        else
+            print("Cannot place here, not allowed tag was found")
+            return false
         end
     end
 end
@@ -77,32 +98,27 @@ local function UpdateTileData(self)
 end
 
 -------------------- Public methods --------------------
-function ConstructionSystemEntity:Init(aSelectedBuilding:any, aMouse:MouseCaster, SetBuildModeEvent:RemoteEvent, aTagsBlacklist:table) 
-    ResetSelectedBuilding(self, aSelectedBuilding)
+function ConstructionSystemEntity:Init(aBuildingComponent:table, SetBuildModeEvent:RemoteEvent)
+    ResetSelectedBuilding(self, aBuildingComponent.ExtraData.GameObject)
 
-    self.SelectedBuilding = aSelectedBuilding:Clone()
+    self.SelectedBuilding = aBuildingComponent.ExtraData.GameObject:Clone()
     self.SelectedBuilding.Transparency = .5
 
     self.Maid:GiveTask(self.SelectedBuilding) 
-    
-    self.Mouse = aMouse
+
     self.Enabled = true
 
-    self.FilterList = aTagsBlacklist
-    
-    --> update target filter with latest info, and the selected building.
+    --> update target filter with the selected building.
     self.Mouse:UpdateTargetFilter({self.SelectedBuilding}) 
-    self.Mouse:UpdateTargetFilterFromTags(aTagsBlacklist)
 
     local function BindBuildingPlacement(_, inputState, _) 
         if inputState == Enum.UserInputState.Begin then
-            IsTileValid(self)                
+            if not IsTileValid(self, aBuildingComponent) then return end               
             PlaceBuilding(self)
             UpdateTileData(self)
 
             self.Enabled = false
-            SetBuildModeEvent:FireServer(self.Enabled, self) --> Exit build mode state if we place a building
-
+            SetBuildModeEvent:FireServer(self.Enabled, self) --> Exit build mode state if we place a building 
             self:Destroy() -->//todo DEFCON4: rewrite this bit to account for multiple building placement selection, E.G: Hold shift and you can keep adding the same building.
 
         end
@@ -112,7 +128,7 @@ function ConstructionSystemEntity:Init(aSelectedBuilding:any, aMouse:MouseCaster
     ContextActionService:BindAction("InBuildMode", BindBuildingPlacement, false, generalKeys.LMB)
 end
 
--- set and Update the building preview position in the world map
+--  Updates the building preview position in the world map
 function ConstructionSystemEntity:PreviewBuilding()
     local prevTarget = nil
 

@@ -6,7 +6,7 @@ local ContextActionService = game:GetService('ContextActionService')
 
 -------------------- Systems --------------------
 local ConstructionSystemClass = require(ReplicatedStorage.Systems.ConstructionSystem.ConstructionSystemClass)
-local BuildingClass = require(ReplicatedStorage.Systems.ConstructionSystem.BuildongClass)
+local BuildingClass = require(ReplicatedStorage.Systems.ConstructionSystem.BuildingClass)
 -------------------- Components --------------------
 local BuildingsComponent = require(ReplicatedStorage.Components.ConstructionSystemComponents.BuildingsComponent)
 
@@ -36,16 +36,18 @@ local MouseCaster = MouseCasterLib.new()
 MouseCaster:SetTargetFilter({localPlayer.Character, workspace.Baseplate, workspace.SpawnLocation})
 MouseCaster:UpdateTargetFilterFromTags(MouseFilterComponent[1])
 
-local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 
+local SetBuildMode = ReplicatedStorage.Remotes.Events.SetBuildMode
 local newConstructionSystem = {} --> initializing as empty table cause you cannot index things to nil
+
+local testAssets = BuildingsComponent.TestAssets
 
 --//TODO FIXCON3 This still weirds me out a bit... Having this local function here is kinda weird
 --> when a building button is clicked, a new construction system object is instanced
-local function onBuildingButtonClicked(aBuildingButton: GuiButton,  aBuildingGameObject: BasePart)
-    if aBuildingGameObject == nil then
+local function onBuildingButtonClicked(aBuildingButton: GuiButton,  aBuildingComponent: table)
+    if aBuildingComponent.ExtraData.GameObject == nil then
         warn("No building game object was set, defaulting to BasePart")
-        aBuildingGameObject = Instance.new("Part")
+        aBuildingComponent.ExtraData.GameObject = Instance.new("Part")
     end
     
     aBuildingButton.MouseButton1Click:Connect(function()
@@ -53,28 +55,26 @@ local function onBuildingButtonClicked(aBuildingButton: GuiButton,  aBuildingGam
 
         -- since the construction system class is destroyed, we need to re-initialize it
         if newConstructionSystem.Enabled == nil then
-            newConstructionSystem = ConstructionSystemClass.new()
+            newConstructionSystem = ConstructionSystemClass.new(MouseCaster,  MouseFilterComponent[2])
         end
 
-        local buildingEntity = BuildingClass.new(aBuildingGameObject)
+        --local buildingEntity = BuildingClass.new(aBuildingGameObject)
 
-        newConstructionSystem:Init(aBuildingGameObject, MouseCaster, SetBuildMode, MouseFilterComponent[2]) --> This would be "BuildingAssets"
+        newConstructionSystem:Init(aBuildingComponent, SetBuildMode) --> This would be "BuildingAssets"
         newConstructionSystem:PreviewBuilding()
         newConstructionSystem:ExitBuildMode(generalKeys.X, SetBuildMode)
     end)
 end
 
-local testAssets = BuildingsComponent.TestAssets
-
 local buttons = { -->//TODO FIXCON3 Move this to a Gui buttons component
     BuildingsPanel.RedBuildingButton,
     BuildingsPanel.YellowBuildingButton,
-    BuildingsPanel.GreenBuildingButton,
     BuildingsPanel.BlueBuildingButton,   
+    BuildingsPanel.GreenBuildingButton,
 }
 
 for i = 1,  4 do -->//TODO FIXCON3 Make this loop accept n buttons
-    onBuildingButtonClicked(buttons[i], testAssets[i].ExtraData.GameObject)
+    onBuildingButtonClicked(buttons[i], testAssets[i])
 end
 
 
