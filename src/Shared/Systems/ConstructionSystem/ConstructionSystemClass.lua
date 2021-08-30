@@ -48,13 +48,12 @@ local function IsTileValid(self, buildingComponent)
     buildingComponent.ExtraData.FilteredTags = buildingComponent.ExtraData.FilteredTags or {}
     buildingComponent.ExtraData.AllowedTags = buildingComponent.ExtraData.AllowedTags or {}
 
-
-
     if CollectionService:HasTag(self.Mouse.Target(), "OccupiedTile") then 
         print("Tile occupied")
         return false
     end
 
+    -- Sometimes some tags overlap, so we check for both filtered and allowed tags if any.
     for _, filteredTag in ipairs(buildingComponent.ExtraData.FilteredTags) do
         if CollectionService:HasTag(self.Mouse.Target(), filteredTag) then 
             print("Cannot place here, tag is filtered")
@@ -67,7 +66,7 @@ local function IsTileValid(self, buildingComponent)
             print("Placing building")
             return true
         else
-            print("Cannot place here, not allowed tag was found")
+            print("Cannot place here, no allowed tag was found")
             return false
         end
     end
