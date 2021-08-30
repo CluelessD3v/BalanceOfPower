@@ -98,7 +98,7 @@ return {
                     ElevationOffset = 5,
         
                 },  
-                Tags = {"Upland", "UsableTile"},
+                Tags = {"Upland", "UseableTile"},
                 ExtraData = {
                     Threshold = .75,
                     Limit  = -1,

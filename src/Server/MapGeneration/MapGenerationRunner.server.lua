@@ -33,12 +33,12 @@ local RawResourcesTypesTable = require(ServerStorage.Components.MapComponents.Ra
 local procedurallyGeneratedResources = RawResourcesTypesTable.ProcedurallyGenerated
 local randomlyGeneratedResources = RawResourcesTypesTable.RandomlyGenerated
 
-Map:RandomlyUpdateFromTag("UsableTile", randomlyGeneratedResources[1])
-Map:RandomlyUpdateFromTag("UsableTile", randomlyGeneratedResources[2]) 
+Map:RandomlyUpdateFromTag("UseableTile", randomlyGeneratedResources[1])
+Map:RandomlyUpdateFromTag("UseableTile", randomlyGeneratedResources[2]) 
 
-Map:ProcedurallyUpdateFromTag("UsableTile", procedurallyGeneratedResources[1])
+Map:ProcedurallyUpdateFromTag("UseableTile", procedurallyGeneratedResources[1])
 
--- print(#game:GetService('CollectionService'):GetTagged("UsableTile").. " tiles are usable")
+-- print(#game:GetService('CollectionService'):GetTagged("UseableTile").. " tiles are usable")
 -- Map.DoPrintStatus = true
 
 -------------------- setting resource deposit sizes --------------------
