@@ -3,7 +3,7 @@ local ServerStorage = game:GetService('ServerStorage')
 
 
 -------------------- Modules --------------------
-local MapClass = require(ServerStorage.Systems.MapEntity)
+local MapClass = require(ServerStorage.Systems.MapClass)
 local MapGenerationUtilities = require(ServerStorage.Systems.MapGenerationUtilities)
 -------------------- Map Generation --------------------
 local mapGenerationTable = require(ServerStorage.Components.MapComponents.MapGenerationComponent)
@@ -20,6 +20,8 @@ Map:GenerateMap(terrainTypesTable.InitialTerrains)
     If this was not done, we would end up with a huge flat bed of mountains
     so to break the pattern we, add some land marks and depress the terrain a bit
 ]]
+
+task.wait()
 Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Impassable)
 Map:ProcedurallyTransformFromTag("Mountainous", terrainTypesTable.StackedTerrains.Depression)
 MapGenerationUtilities.SetTerrainElevation(Map)
@@ -29,7 +31,7 @@ task.wait() --> these waits is to restart script exhaution timer DO NOT REMOVE I
 local RawResourcesTypesTable = require(ServerStorage.Components.MapComponents.RawResourcesComponent)
 
 -- Updating Tiles with their respective resource
-
+task.wait()
 local procedurallyGeneratedResources = RawResourcesTypesTable.ProcedurallyGenerated
 local randomlyGeneratedResources = RawResourcesTypesTable.RandomlyGenerated
 
@@ -52,7 +54,7 @@ Map:PositionInstanceOnTaggedTiles("Clay", randomlyGeneratedResources[2].ExtraDat
 --Map:PositionInstanceOnTaggedTiles("Timber", nil, 1, true)
 MapGenerationUtilities.GenerateTrees()
 
-
+Map:GenerateRivers()
 
 
 

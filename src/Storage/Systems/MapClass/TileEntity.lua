@@ -7,10 +7,13 @@ local MapDataToInstance = require(ReplicatedStorage.Utilities.MapDataToInstance)
 local Tile = {} 
 Tile.__index = Tile
 
-function Tile.new(anInstance: PVInstance)
+function Tile.new(anInstance: PVInstance, xPos:number, zPos:number)
     local self = setmetatable({}, Tile)
     assert(anInstance ~= nil, "Error, cannot must pass an instance!")
     self.GameObject = anInstance
+
+    self.GameObject:SetAttribute("PosX", xPos)
+    self.GameObject:SetAttribute("PosZ", zPos)
 
     return self
 end
@@ -20,7 +23,9 @@ end
 local function RemoveMetadata(self)
     local oldTags = CollectionService:GetTags(self.GameObject)
     local oldAttributes = self.GameObject:GetAttributes()
-    
+
+    print(oldAttributes)
+
     for attribute, _ in pairs(oldAttributes) do
         self.GameObject:SetAttribute(attribute, nil)
     end

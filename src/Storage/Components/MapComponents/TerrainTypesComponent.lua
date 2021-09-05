@@ -38,7 +38,7 @@ return {
                 },  
                 Tags = {"Littoral", "WaterBody"},
                 ExtraData = {
-                    Threshold = .25,
+                    Threshold = .2,
                     Limit  = -1,
                 },
             },

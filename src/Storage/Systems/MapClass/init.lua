@@ -1,9 +1,9 @@
 local CollectionService = game:GetService('CollectionService')
 
 local PerlinNoise = require(script.PerlinNoise)
-local FallOffMap = require(script.FallOffMap)
 local TileClass = require(script.TileEntity)
 local Debug = require(script.Debug)
+local PrivateMethods = require(script.PrivateMethods)
 -------------------- Constructor --------------------
 local Map = {} 
 Map.__index = Map
@@ -92,19 +92,19 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             -- Check which filter if any and calculate accordingly
 
             if self.FilterType == 1 then
-                fallOff = FallOffMap.GenerateSquareFallOff(x, z , self.MapSize)
+                fallOff = PrivateMethods.GenerateSquareFallOff(x, z, self)
             elseif self.FilterType == 2 then
-                fallOff = FallOffMap.GenerateRadialFallOff(z, x , self.MapSize)
+                fallOff = PrivateMethods.GenerateRadialFallOff(z, x , self)
             else
                 fallOff = 0
             end
 
             -- Finaly, transform fall off and substract it from the noise
-            noiseResult  -= FallOffMap.Transform(fallOff, self.FallOffOffset, self.FallOffSmoothness)
+            noiseResult  -= fallOff
             noiseResult  = math.clamp(noiseResult +.5  , 0, 1)
 
             -- Creating tile object and setting metadata via internal tile class
-            local TileInstance = TileClass.new(Instance.new("Part"))
+            local TileInstance = TileClass.new(Instance.new("Part"), x, z)
             local tileEntity :BasePart = TileInstance.GameObject
             
             tileEntity.Size = Vector3.new(self.TileSize, self.TileSize, self.TileSize)
@@ -119,6 +119,7 @@ function Map:GenerateMap(theTerrainTypesTable: table)
             
             --table.insert(newTile, self.TileList)
             self.TileMap[x][z] = tileEntity -- table.create reserved the space in table, now tiles ordered 2D-mentionally
+
 
             tileEntity.Parent = workspace 
         end
@@ -313,6 +314,53 @@ end
 function Map:PositionInstanceOnTaggedTileFromTable(positionTable)
 
 end
+
+
+
+function Map:GenerateRivers()
+    local function GetNeigthbours(x, z)
+        return{
+            topLeft = self.TileMap[x + 1][z + 1],
+            top = self.TileMap[x][z + 1],
+            topRigth = self.TileMap[x - 1][z + 1],
+
+            left = self.TileMap[x + 1][z],
+            right = self.TileMap[x - 1][z],
+
+            bottomLeft = self.TileMap[x + 1][z - 1],
+            bottom = self.TileMap[x][z - 1],
+            bottomRigth = self.TileMap[x - 1][z],
+        }
+    end
+    
+    local mountainsList = CollectionService:GetTagged("Mountainous")
+    local origin = mountainsList[math.random(1, #mountainsList)]
+    print(origin)
+    local x = origin:GetAttribute("PosX")
+    local z = origin:GetAttribute("PosZ")
+    print(x, z)
+    print(GetNeigthbours(x, z))
+
+
+
+end
+
+
+
+-------------------- Private Methods --------------------
+
+local function GenerateRadialFallOff(x, z, theMapSize)
+        
+    -- normalization of values
+    local widthFallOff = math.abs(x/theMapSize * 2 - 1)
+    local lengthFallOff = math.abs(z/theMapSize * 2 - 1) 
+    
+    -- Pytagoras bs, lol, supposedly a circle is being inscribed on top of the square map and we are solving for the diameter by finding the hypotenuse
+    local result = math.clamp(math.sqrt(widthFallOff^2  + lengthFallOff^2), 0, 1)
+
+    return result
+end
+
 
 return Map
 
