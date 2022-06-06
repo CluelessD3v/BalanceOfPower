@@ -2,10 +2,14 @@
     "name": "BalanceOfPower",
     "tree": {
         "$className": "DataModel",
+        
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
             "$ignoreUnknownInstances": false,
-            "$path": "src/Shared"
+            "$path": "src/Shared",
+            "Packages": {
+                "$path": "packages"
+            }
         },
 
         "ServerScriptService": {
@@ -43,7 +47,6 @@
 
         "Workspace": {
             "$className": "Workspace",
-            "$path": "src/Workspace",
             "$ignoreUnknownInstances": true,
             "$properties": {
                 "FilteringEnabled": true
