@@ -5,6 +5,9 @@ local CollectionService = game:GetService("CollectionService")
 --# <|=============== DEPENDENCIES ===============|>
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
+--# <|=============== RUN TIME VALUES ===============|>
+local Configuration: Folder = script.Parent.Configuration
+
 
 --? <|=============== KNIT LIFECYCLE (ENTRY POINT) ===============|>
 local MapGenerationService = Knit.CreateService {
@@ -83,6 +86,15 @@ function MapGenerationService:KnitInit()
     -- ]]
 
     --# Generation Config
+    
+    self.GenerationParams = {
+        MapSize = Configuration.MapSize,
+        Seed = Configuration.Seed,
+        Amplitude = Configuration.Amplitude,
+        Octaves = Configuration.Octaves,
+        Persistance = Configuration.Persistance
+
+    } 
     self.Seed = math.random(-100_000, 100_000)    -- Determines the output of the noise result
 
     self.Amplitude   = 60     -- Determines Maximum Height of the Noise Sine
