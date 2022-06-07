@@ -88,31 +88,25 @@ function MapGenerationService:KnitInit()
     --# Generation Config
     
     self.GenerationParams = {
-        MapSize = Configuration.MapSize,
-        Seed = Configuration.Seed,
-        Amplitude = Configuration.Amplitude,
-        Octaves = Configuration.Octaves,
-        Persistance = Configuration.Persistance
+        --# Map dimensions config
+        MapSize       = Configuration.MapSize,          -- Determines the area of the map
+        TileSize      = Configuration.TileSize,         -- Determines the area of the tile
+        TileThickness = Configuration.TileThickness,    -- Determines how thick a tile is
 
+        --# Map generation config
+        Seed         = Configuration.Seed,          -- Determines the output of the noise result
+        Amplitude    = Configuration.Amplitude,     -- Determines Maximum Height of the Noise Sine
+        Frequency    = Configuration.Frequency,     -- Determines frequency of... Not sure it has to do with the co sine of the wave tho (just like amp is the sine of the wave)
+        Octaves      = Configuration.Octaves,       -- Determines level of detail, These are added together to Form noise more detailed noise [1, n]
+        Persistance  = Configuration.Persistance,   -- Determines the amplitude of each octave the rate each octave diminshes [0.0, 1.0]
+        Lacunarity   = Configuration.Lacunarity,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
+        Gain         = Configuration.Gain,          -- Scales the amplitude between each octave [0.0, 1.0]
+        TerrainScale = Configuration.TerrainScale,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
+
+        --# Fall off filter Config
+        FallOffOffset     = Configuration.FallOffOffset,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        FallOffSmoothness = Configuration.FallOffSmoothness -- Detemines how smooth is the transition of biomes from the outermost to the innermost
     } 
-    self.Seed = math.random(-100_000, 100_000)    -- Determines the output of the noise result
-
-    self.Amplitude   = 60     -- Determines Maximum Height of the Noise Sine
-    self.Frequency   = 78     -- Determines How frequent 
-    self.Octaves     = 8      -- Determines level of detail, These are added together to Form noise more detailed noise [1, n]
-    self.Persistence = 0.62  -- Determines the amplitude of each octave the rate each octave diminshes [0.0, 1.0]
-    self.Lacunarity  = 0.50   -- Determines Increase of frequency of octaves  [0.0, 1.0]
-    self.Gain        = 0.50   -- Scales the amplitude between each octave [0.0, 1.0]
-    
-    self.TerrainScaleDivision = 26     -- Determines the amplitude of the final noise result, higher == less hilly terrain, [1, n]
-    self.MapSize              = 250    -- Determines the area of the map, mapsize^2  [1, n]
-
-    self.FallOffSmoothness = 4  -- Detemines how smooth is the transition of biomes from the outermost to the innermost
-    self.FallOffOffset     = 5  -- determines the offset between the edge of the filter and land (literally padding)
-
-    self.TileSize      = 0.5
-    self.TileThickness = 1
-
     self.TileSet = {}
 end
 
