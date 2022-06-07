@@ -89,51 +89,58 @@ function MapGenerationService:KnitInit()
     
     self.GenerationParams = {
         --# Map dimensions config
-        MapSize       = Configuration.MapSize,          -- Determines the area of the map
-        TileSize      = Configuration.TileSize,         -- Determines the area of the tile
-        TileThickness = Configuration.TileThickness,    -- Determines how thick a tile is
+        MapSize       = Configuration.MapSize.Value,          -- Determines the area of the map
+        TileSize      = Configuration.TileSize.Value,         -- Determines the area of the tile
+        TileThickness = Configuration.TileThickness.Value,    -- Determines how thick a tile is
 
         --# Map generation config
-        Seed         = Configuration.Seed,          -- Determines the output of the noise result
-        Amplitude    = Configuration.Amplitude,     -- Determines Maximum Height of the Noise Sine
-        Frequency    = Configuration.Frequency,     -- Determines frequency of... Not sure it has to do with the co sine of the wave tho (just like amp is the sine of the wave)
-        Octaves      = Configuration.Octaves,       -- Determines level of detail, These are added together to Form noise more detailed noise [1, n]
-        Persistance  = Configuration.Persistance,   -- Determines the amplitude of each octave the rate each octave diminshes [0.0, 1.0]
-        Lacunarity   = Configuration.Lacunarity,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
-        Gain         = Configuration.Gain,          -- Scales the amplitude between each octave [0.0, 1.0]
-        TerrainScale = Configuration.TerrainScale,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
+        Seed         = Configuration.Seed.Value,          -- Determines the output of the noise result
+        Amplitude    = Configuration.Amplitude.Value,     -- Determines Maximum Height of the Noise Sine
+        Frequency    = Configuration.Frequency.Value,     -- Determines frequency of... Not sure it has to do with the co sine of the wave tho (just like amp is the sine of the wave)
+        Octaves      = Configuration.Octaves.Value,       -- Determines level of detail, These are added together to Form noise more detailed noise [1, n]
+        Persistance  = Configuration.Persistance.Value,   -- Determines the amplitude of each octave the rate each octave diminshes [0.0, 1.0]
+        Lacunarity   = Configuration.Lacunarity.Value,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
+        Gain         = Configuration.Gain.Value,          -- Scales the amplitude between each octave [0.0, 1.0]
+        TerrainScale = Configuration.TerrainScale.Value,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
 
         --# Fall off filter Config
-        FallOffOffset     = Configuration.FallOffOffset,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
-        FallOffSmoothness = Configuration.FallOffSmoothness -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        FallOffOffset     = Configuration.FallOffOffset.Value,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        FallOffSmoothness = Configuration.FallOffSmoothness.Value -- Detemines how smooth is the transition of biomes from the outermost to the innermost
     } 
+
     self.TileSet = {}
 end
 
 --# Start process
 function MapGenerationService:KnitStart()
-    self.Seed = 0
+    local Map: Model = Instance.new("Model")
+    Map.Name = "Map"
+    Map.Parent = workspace
+
     self:GenerateTileSet()
+    self:GenerateHeightMap()
     
-    for i = 1, 200_000 do 
-        self:GenerateHeightMap()
-        self.Seed = i
-        task.wait()
-    end
+    -- for i = 1, 200_000 do 
+    --     self:GenerateHeightMap()
+    --     self.GenerationParams.Seed.Value = i
+    --     task.wait()
+    -- end
 end
 
 
 --- <|=============== AUX FUNCTIONS ===============|>
 -- Fractal Brownian Motion noise function (full credit to Stephen Leitnick a.k.a sleitnick, src: https://github.com/Sleitnick/RDC2019-Procedural-Generation)
-local function FBM(x, z, seed, amplitude, frequency, octaves, persistence, lacunarity, gain, resultScale)
-	local result = 0
-	for _ = 1,octaves do
-		result = (result + (amplitude * math.noise(((x + seed)/frequency) * persistence, ((z + seed)/frequency) * persistence)))
-		frequency = (frequency * lacunarity)
-		amplitude = (amplitude * gain)
-	end
-	return result/resultScale
+local function FBM(x, z, seed, amplitude, octaves, persistence, frequency, lacunarity, gain, resultScale)
+    local result = 0
+    for _ = 1,octaves do
+        result = (result + (amplitude * math.noise(((x + seed)/frequency) * persistence, ((z + seed)/frequency) * persistence)))
+        frequency = (frequency * lacunarity)
+        amplitude = (amplitude * gain)
+    end
+    return result*resultScale
 end
+
+
 
 -- S shaped function to generate square filter that'll remove edges of the map
 local function GenerateSquareFallOff(x, z, mapSize, offset, smoothness)
@@ -152,16 +159,20 @@ end
 
 
 --+ <|===============  PUBLIC FUNCTIONS  ===============|>
+--!//TODO ADD SET GENERATION PARAMS METHOD!
+
 function MapGenerationService:GenerateTileSet()
-    for x = 1, self.MapSize do
-        for z = 1, self.MapSize do
+    local params: table = self.GenerationParams
+
+    for x = 1, params.MapSize do
+        for z = 1, params.MapSize do
 
             local Tile: Part = Instance.new("Part")
             table.insert(self.TileSet, Tile)
 
             Tile.Anchored   = true
             Tile.CanCollide = true
-            Tile.Size       = Vector3.new(self.TileSize, self.TileThickness, self.TileSize)
+            Tile.Size       = Vector3.new(params.TileSize, params.TileThickness, params.TileSize)
             Tile.Position   = Vector3.new(x * Tile.Size.X, 20, z * Tile.Size.Z)
             Tile.Material   = Enum.Material.SmoothPlastic
 
@@ -181,8 +192,18 @@ function MapGenerationService:GenerateHeightMap()
         local z: number = tile:GetAttribute("ZPos")
 
         --# Generate noise value
-        local noiseVal: number = FBM(x, z, self.Seed, self.Amplitude, self.Frequency, self.Octaves, self.Persistence, self.Lacunarity, self.Gain, self.TerrainScaleDivision)
-        noiseVal -= GenerateSquareFallOff(x, z, self.MapSize, self.FallOffOffset, self.FallOffSmoothness)
+        local noiseVal: number = FBM(x, z, 
+            self.GenerationParams.Seed, 
+            self.GenerationParams.Amplitude, 
+            self.GenerationParams.Octaves, 
+            self.GenerationParams.Persistance, 
+            self.GenerationParams.Frequency, 
+            self.GenerationParams.Lacunarity, 
+            self.GenerationParams.Gain, 
+            self.GenerationParams.TerrainScale
+        )
+
+        noiseVal -= GenerateSquareFallOff(x, z, self.GenerationParams.MapSize, self.GenerationParams.FallOffOffset, self.GenerationParams.FallOffSmoothness)
         noiseVal = math.clamp(noiseVal, 0, 1)
         
         --# Tile biome appearance setting 
