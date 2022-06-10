@@ -106,8 +106,8 @@ function MapGenerationService:KnitInit()
         I did my best to interpret these, to be able to define these properties. I'm utterly ignorant when it comes to math...
     -- ]]
 
+
     --# Generation Config
-    
     self.GenerationParams = {
         --# Map dimensions config
         MapSize       = Configuration.MapSize,          -- Determines the area of the map
@@ -141,11 +141,17 @@ function MapGenerationService:KnitInit()
     self.GenerationParams.Persistance.Value  = 1
     self.GenerationParams.Lacunarity.Value   = 0.525
     self.GenerationParams.Lacunarity.Value   = 0.48
+    self.GenerationParams.TerrainMask.Value  = 3
 
     self.GenerationParams.FallOffOffset.Value     = 7
     self.GenerationParams.FallOffSmoothness.Value = 5
     
+    
     self.TileSet = {}
+
+
+    --* Add-ons
+    self.TerrainMasks = require(script.Parent.AddOns.FallOff)
 end
 
 --# Start process
