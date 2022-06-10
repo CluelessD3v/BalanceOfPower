@@ -123,18 +123,24 @@ function MapGenerationService:KnitInit()
         Lacunarity   = Configuration.Lacunarity,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
         Gain         = Configuration.Gain,          -- Scales the amplitude between each octave [0.0, 1.0]
         TerrainScale = Configuration.TerrainScale,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
-        
+        TerrainMask  = Configuration.TerrainMask,
+
         --# Fall off filter Config
         FallOffOffset     = Configuration.FallOffOffset,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
         FallOffSmoothness = Configuration.FallOffSmoothness -- Detemines how smooth is the transition of biomes from the outermost to the innermost
     } 
     
 
-    self.GenerationParams.Amplitude.Value    = 100
-    self.GenerationParams.Frequency.Value    = 65
+    self.GenerationParams.MapSize.Value  = 288
+    self.GenerationParams.TileSize.Value = 1
+
+    self.GenerationParams.Amplitude.Value    = 82
+    self.GenerationParams.Frequency.Value    = 60
     self.GenerationParams.Octaves.Value      = 8
     self.GenerationParams.TerrainScale.Value = 60
     self.GenerationParams.Persistance.Value  = 1
+    self.GenerationParams.Lacunarity.Value   = 0.525
+    self.GenerationParams.Lacunarity.Value   = 0.48
 
     self.GenerationParams.FallOffOffset.Value     = 7
     self.GenerationParams.FallOffSmoothness.Value = 5
@@ -153,10 +159,16 @@ function MapGenerationService:KnitStart()
 
     for _, setting: NumberValue in pairs(self.GenerationParams) do
         setting.Changed:Connect(function(newValue)
-            print("Changed")
             self.GenerationParams[setting.Name].Value = newValue
             self:GenerateHeightMap()
         end)
+    end
+
+    for i = 1, 200_000 do
+        self: GenerateHeightMap()
+        self.GenerationParams.Seed.Value = math.random(-200_000, 200_000)
+        print(self.GenerationParams.Seed.Value)
+        task.wait(10)
     end
 end
 
@@ -253,7 +265,6 @@ function MapGenerationService:GenerateHeightMap()
             if terrain.Threshold <= noiseVal and  nextTerrain.Threshold >= noiseVal   then
                 tile.BrickColor = terrain.BrickColor
                 tile.Position   = Vector3.new(x * tile.Size.X, 20 + terrain.Elevation, z * tile.Size.Z)
-                CollectionService:AddTag(tile, terrain.Name)
                 break
             end
         end
