@@ -1,15 +1,15 @@
---# <|=============== SERVICES ===============|>
+--== <|=============== SERVICES ===============|>
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local CollectionService = game:GetService("CollectionService")
 
---# <|=============== DEPENDENCIES ===============|>
+--== <|=============== DEPENDENCIES ===============|>
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
---# <|=============== RUN TIME VALUES ===============|>
+--== <|=============== RUN TIME VALUES ===============|>
 local Configuration: Folder = script.Parent.Configuration
 
 
---? <|=============== KNIT LIFECYCLE (ENTRY POINT) ===============|>
+--== <|=============== KNIT LIFECYCLE (ENTRY POINT) ===============|>
 local MapGenerationService = Knit.CreateService {
     Name = "MapGenerationService",
     Client = {},
@@ -28,20 +28,27 @@ function MapGenerationService:KnitInit()
         },
 
         [2] = {
-            Name       = "Coast",
+            Name       = "Sea",
             Threshold  = 0.0001,
             BrickColor = BrickColor.new("Steel blue"),
             Elevation  = 0
         },
 
         [3] = {
+            Name       = "Coast",
+            Threshold  = 0.1,
+            BrickColor = BrickColor.new("Medium blue"),
+            Elevation  = 0
+        },
+
+        [4] = {
             Name       = "Beach",
             Threshold  = 0.20,
             BrickColor = BrickColor.new("Daisy orange"),
             Elevation  = 0.25
         },
 
-        [4] = {
+        [5] = {
             Name       = "Plains",
             Threshold  = 0.30,
             BrickColor = BrickColor.new("Bright green"),
@@ -49,28 +56,42 @@ function MapGenerationService:KnitInit()
         },
 
         
-        [5] = {
-            Name       = "Hills",
-            Threshold  = 0.60,
-            BrickColor = BrickColor.new("Dark green"),
-            Elevation  = 0.50
-        },
-
         [6] = {
-            Name       = "Mountains",
-            Threshold  = 0.88,
-            BrickColor = BrickColor.new("Medium stone grey"),
-            Elevation  = 0.75
+            Name       = "Forest",
+            Threshold  = 0.50,
+            BrickColor = BrickColor.new("Forest green"),
+            Elevation  = 0.25
         },
 
         [7] = {
+            Name       = "Mounds",
+            Threshold  = 0.70,
+            BrickColor = BrickColor.new("Parsley green"),
+            Elevation  = 0.50
+        },
+
+        [8] = {
+            Name       = "Hills",
+            Threshold  = 0.80,
+            BrickColor = BrickColor.new("Fossil"),
+            Elevation  = 0.75
+        },
+
+        [9] = {
+            Name       = "Mountains",
+            Threshold  = 0.90,
+            BrickColor = BrickColor.new("Smoky grey"),
+            Elevation  = 0.85
+        },
+
+        [10] = {
             Name       = "Impassable",
-            Threshold  = 0.99,
-            BrickColor = BrickColor.new("Dark stone grey"),
+            Threshold  = 0.9999,
+            BrickColor = BrickColor.new("Black"),
             Elevation  = 1.25
         },
 
-        [8] = {  --! needed placeholder due to the way appearance is set!
+        [11] = {  --! needed placeholder due to the way appearance is set!
             Name       = "Placeholder",
             Threshold  = 1.01,
             BrickColor = BrickColor.new("Daisy orange"),
@@ -89,42 +110,54 @@ function MapGenerationService:KnitInit()
     
     self.GenerationParams = {
         --# Map dimensions config
-        MapSize       = Configuration.MapSize.Value,          -- Determines the area of the map
-        TileSize      = Configuration.TileSize.Value,         -- Determines the area of the tile
-        TileThickness = Configuration.TileThickness.Value,    -- Determines how thick a tile is
+        MapSize       = Configuration.MapSize,          -- Determines the area of the map
+        TileSize      = Configuration.TileSize,         -- Determines the area of the tile
+        TileThickness = Configuration.TileThickness,    -- Determines how thick a tile is
 
         --# Map generation config
-        Seed         = Configuration.Seed.Value,          -- Determines the output of the noise result
-        Amplitude    = Configuration.Amplitude.Value,     -- Determines Maximum Height of the Noise Sine
-        Frequency    = Configuration.Frequency.Value,     -- Determines frequency of... Not sure it has to do with the co sine of the wave tho (just like amp is the sine of the wave)
-        Octaves      = Configuration.Octaves.Value,       -- Determines level of detail, These are added together to Form noise more detailed noise [1, n]
-        Persistance  = Configuration.Persistance.Value,   -- Determines the amplitude of each octave the rate each octave diminshes [0.0, 1.0]
-        Lacunarity   = Configuration.Lacunarity.Value,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
-        Gain         = Configuration.Gain.Value,          -- Scales the amplitude between each octave [0.0, 1.0]
-        TerrainScale = Configuration.TerrainScale.Value,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
-
+        Seed         = Configuration.Seed,          -- Determines the output of the noise result
+        Amplitude    = Configuration.Amplitude,     -- Determines Maximum Height of the Noise Sine
+        Frequency    = Configuration.Frequency,     -- Determines frequency of... Not sure it has to do with the co sine of the wave tho (just like amp is the sine of the wave)
+        Octaves      = Configuration.Octaves,       -- Determines level of detail, These are added together to Form noise more detailed noise [1, n]
+        Persistance  = Configuration.Persistance,   -- Determines the amplitude of each octave the rate each octave diminshes [0.0, 1.0]
+        Lacunarity   = Configuration.Lacunarity,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
+        Gain         = Configuration.Gain,          -- Scales the amplitude between each octave [0.0, 1.0]
+        TerrainScale = Configuration.TerrainScale,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
+        
         --# Fall off filter Config
-        FallOffOffset     = Configuration.FallOffOffset.Value,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
-        FallOffSmoothness = Configuration.FallOffSmoothness.Value -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        FallOffOffset     = Configuration.FallOffOffset,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        FallOffSmoothness = Configuration.FallOffSmoothness -- Detemines how smooth is the transition of biomes from the outermost to the innermost
     } 
+    
 
+    self.GenerationParams.Amplitude.Value    = 100
+    self.GenerationParams.Frequency.Value    = 65
+    self.GenerationParams.Octaves.Value      = 8
+    self.GenerationParams.TerrainScale.Value = 60
+    self.GenerationParams.Persistance.Value  = 1
+
+    self.GenerationParams.FallOffOffset.Value     = 7
+    self.GenerationParams.FallOffSmoothness.Value = 5
+    
     self.TileSet = {}
 end
 
 --# Start process
 function MapGenerationService:KnitStart()
     local Map: Model = Instance.new("Model")
-    Map.Name = "Map"
+    Map.Name = "Map"            
     Map.Parent = workspace
 
     self:GenerateTileSet()
     self:GenerateHeightMap()
-    
-    -- for i = 1, 200_000 do 
-    --     self:GenerateHeightMap()
-    --     self.GenerationParams.Seed.Value = i
-    --     task.wait()
-    -- end
+
+    for _, setting: NumberValue in pairs(self.GenerationParams) do
+        setting.Changed:Connect(function(newValue)
+            print("Changed")
+            self.GenerationParams[setting.Name].Value = newValue
+            self:GenerateHeightMap()
+        end)
+    end
 end
 
 
@@ -137,7 +170,7 @@ local function FBM(x, z, seed, amplitude, octaves, persistence, frequency, lacun
         frequency = (frequency * lacunarity)
         amplitude = (amplitude * gain)
     end
-    return result*resultScale
+    return result/resultScale
 end
 
 
@@ -164,15 +197,15 @@ end
 function MapGenerationService:GenerateTileSet()
     local params: table = self.GenerationParams
 
-    for x = 1, params.MapSize do
-        for z = 1, params.MapSize do
+    for x = 1, params.MapSize.Value do
+        for z = 1, params.MapSize.Value do
 
             local Tile: Part = Instance.new("Part")
             table.insert(self.TileSet, Tile)
 
             Tile.Anchored   = true
             Tile.CanCollide = true
-            Tile.Size       = Vector3.new(params.TileSize, params.TileThickness, params.TileSize)
+            Tile.Size       = Vector3.new(params.TileSize.Value, params.TileThickness.Value, params.TileSize.Value)
             Tile.Position   = Vector3.new(x * Tile.Size.X, 20, z * Tile.Size.Z)
             Tile.Material   = Enum.Material.SmoothPlastic
 
@@ -193,17 +226,17 @@ function MapGenerationService:GenerateHeightMap()
 
         --# Generate noise value
         local noiseVal: number = FBM(x, z, 
-            self.GenerationParams.Seed, 
-            self.GenerationParams.Amplitude, 
-            self.GenerationParams.Octaves, 
-            self.GenerationParams.Persistance, 
-            self.GenerationParams.Frequency, 
-            self.GenerationParams.Lacunarity, 
-            self.GenerationParams.Gain, 
-            self.GenerationParams.TerrainScale
+            self.GenerationParams.Seed.Value, 
+            self.GenerationParams.Amplitude.Value, 
+            self.GenerationParams.Octaves.Value, 
+            self.GenerationParams.Persistance.Value, 
+            self.GenerationParams.Frequency.Value, 
+            self.GenerationParams.Lacunarity.Value, 
+            self.GenerationParams.Gain.Value, 
+            self.GenerationParams.TerrainScale.Value
         )
 
-        noiseVal -= GenerateSquareFallOff(x, z, self.GenerationParams.MapSize, self.GenerationParams.FallOffOffset, self.GenerationParams.FallOffSmoothness)
+        noiseVal -= GenerateSquareFallOff(x, z, self.GenerationParams.MapSize.Value, self.GenerationParams.FallOffOffset.Value, self.GenerationParams.FallOffSmoothness.Value)
         noiseVal = math.clamp(noiseVal, 0, 1)
         
         --# Tile biome appearance setting 
@@ -211,8 +244,8 @@ function MapGenerationService:GenerateHeightMap()
 
             local nextTerrain = self.Terrains[index + 1] 
             
-            --# Since index + 1 can be nil when in the last index
-            --# Break from the loop and 
+            --## Since index + 1 can be nil when in the last index
+            --## Break from the loop and 
             if not nextTerrain then break end
 
             --# Compare the noiseValue with the current and next terrain
