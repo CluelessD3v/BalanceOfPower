@@ -183,7 +183,7 @@ end
 
 
 --- <|=============== AUX FUNCTIONS ===============|>
--- Fractal Brownian Motion noise function (full credit to Stephen Leitnick a.k.a sleitnick, src: https://github.com/Sleitnick/RDC2019-Procedural-Generation)
+--* Fractal Brownian Motion noise function (full credit to Stephen Leitnick a.k.a sleitnick, src: https://github.com/Sleitnick/RDC2019-Procedural-Generation)
 local function FBM(x, z, seed, amplitude, octaves, persistence, frequency, lacunarity, gain, resultScale)
     local result = 0
     for _ = 1,octaves do
@@ -192,6 +192,35 @@ local function FBM(x, z, seed, amplitude, octaves, persistence, frequency, lacun
         amplitude = (amplitude * gain)
     end
     return result/resultScale
+end
+
+--* Function to compute a noise value based in all properties set for the service... 
+--* This function exists solely to not polute the FBM function
+local function ComputeNoise(self, x, z)
+        --##Generate noise value
+        local noiseVal: number = FBM(x, z, 
+            self.GenerationParams.Seed.Value, 
+            self.GenerationParams.Amplitude.Value, 
+            self.GenerationParams.Octaves.Value, 
+            self.GenerationParams.Persistance.Value, 
+            self.GenerationParams.Frequency.Value, 
+            self.GenerationParams.Lacunarity.Value, 
+            self.GenerationParams.Gain.Value, 
+            self.GenerationParams.TerrainScale.Value
+        ) 
+
+        noiseVal -= self.TerrainMasks.GetMask(self.GenerationParams.TerrainMask.Value, 
+            x, 
+            z, 
+            self.GenerationParams.MapSize.Value, 
+            self.GenerationParams.FallOffOffset.Value, 
+            self.GenerationParams.FallOffSmoothness.Value, 
+            self.GenerationParams.MaskThreshold.Value
+        ) 
+
+        noiseVal = math.clamp(noiseVal, 0, 1) 
+
+        return noiseVal
 end
 
 --+ <|===============  PUBLIC FUNCTIONS  ===============|>
@@ -218,8 +247,16 @@ function MapGenerationService:GenerateTileSet()
     end
 end
 
+function MapGenerationService:GenerateNoiseMapFromTileSet()
+    for _, tile: BasePart in ipairs(self.TileSet) do
+        
+        local x: number = tile:GetAttribute("XPos")
+        local z: number = tile:GetAttribute("ZPos")
 
-
+        --## Generate noise value
+        local noiseVal: number = ComputeNoise(self, x, z)
+    end
+end
 
 function MapGenerationService:GenerateHeightMap()
     for _, tile: BasePart in ipairs(self.TileSet) do
@@ -227,29 +264,10 @@ function MapGenerationService:GenerateHeightMap()
         local x: number = tile:GetAttribute("XPos")
         local z: number = tile:GetAttribute("ZPos")
 
-        --# Generate noise value
-        local noiseVal: number = FBM(x, z, 
-            self.GenerationParams.Seed.Value, 
-            self.GenerationParams.Amplitude.Value, 
-            self.GenerationParams.Octaves.Value, 
-            self.GenerationParams.Persistance.Value, 
-            self.GenerationParams.Frequency.Value, 
-            self.GenerationParams.Lacunarity.Value, 
-            self.GenerationParams.Gain.Value, 
-            self.GenerationParams.TerrainScale.Value
-        ) 
-
-        noiseVal -= self.TerrainMasks.GetMask(self.GenerationParams.TerrainMask.Value, 
-            x, 
-            z, 
-            self.GenerationParams.MapSize.Value, 
-            self.GenerationParams.FallOffOffset.Value, 
-            self.GenerationParams.FallOffSmoothness.Value, 
-            self.GenerationParams.MaskThreshold.Value
-        ) 
-        noiseVal = math.clamp(noiseVal, 0, 1) 
+        --## Generate noise value
+        local noiseVal: number = ComputeNoise(self, x, z)
         
-        --# Tile biome appearance setting 
+        --## Tile biome appearance setting 
         for index, terrain in ipairs(self.Terrains) do
 
             local nextTerrain = self.Terrains[index + 1] 
