@@ -145,7 +145,7 @@ function MapGenerationService:KnitInit()
     self.GenerationParams.Gain.Value   = 0.525
 
 
-    self.GenerationParams.MaskThreshold.Value     = 100
+    self.GenerationParams.MaskThreshold.Value     = 65
     self.GenerationParams.TerrainMask.Value       = 5
     self.GenerationParams.FallOffOffset.Value     = 11
     self.GenerationParams.FallOffSmoothness.Value = 3
