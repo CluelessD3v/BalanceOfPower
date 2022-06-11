@@ -37,3 +37,4 @@ Determines how detailed terrain is. **Mathematically speaking, each octave adds 
 Persistence
 ```
 Determines the "Zoom Level" of the map, or how persistent features are
+

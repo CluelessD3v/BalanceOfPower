@@ -123,16 +123,18 @@ function MapGenerationService:KnitInit()
         Lacunarity   = Configuration.Lacunarity,    -- Determines Increase of frequency of octaves  [0.0, 1.0]
         Gain         = Configuration.Gain,          -- Scales the amplitude between each octave [0.0, 1.0]
         TerrainScale = Configuration.TerrainScale,  -- Determines the amplitude of the final noise result (how hilly or flat terrain is) [0.0, 1.0]c
-        TerrainMask  = Configuration.TerrainMask,
 
         --# Fall off filter Config
-        FallOffOffset     = Configuration.FallOffOffset,    -- Detemines how smooth is the transition of biomes from the outermost to the innermost
-        FallOffSmoothness = Configuration.FallOffSmoothness -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        TerrainMask       = Configuration.TerrainMask,
+        MaskThreshold     = Configuration.MaskThreshold,
+        FallOffOffset     = Configuration.FallOffOffset,     -- Detemines how smooth is the transition of biomes from the outermost to the innermost
+        FallOffSmoothness = Configuration.FallOffSmoothness, -- Detemines how smooth is the transition of biomes from the outermost to the innermost
     } 
     
 
-    self.GenerationParams.MapSize.Value  = 288
-    self.GenerationParams.TileSize.Value = 1
+    self.GenerationParams.MapSize.Value  = 200
+    self.GenerationParams.TileSize.Value = 0.5
+    self.GenerationParams.TileThickness.Value = 2
 
     self.GenerationParams.Amplitude.Value    = 82
     self.GenerationParams.Frequency.Value    = 60
@@ -140,12 +142,13 @@ function MapGenerationService:KnitInit()
     self.GenerationParams.TerrainScale.Value = 60
     self.GenerationParams.Persistance.Value  = 1
     self.GenerationParams.Lacunarity.Value   = 0.525
-    self.GenerationParams.Lacunarity.Value   = 0.48
-    self.GenerationParams.TerrainMask.Value  = 3
+    self.GenerationParams.Gain.Value   = 0.48
 
-    self.GenerationParams.FallOffOffset.Value     = 7
-    self.GenerationParams.FallOffSmoothness.Value = 5
-    
+
+    self.GenerationParams.MaskThreshold.Value     = 100
+    self.GenerationParams.TerrainMask.Value       = 3
+    self.GenerationParams.FallOffOffset.Value     = 11
+    self.GenerationParams.FallOffSmoothness.Value = 3
     
     self.TileSet = {}
 
@@ -170,12 +173,12 @@ function MapGenerationService:KnitStart()
         end)
     end
 
-    for i = 1, 200_000 do
-        self: GenerateHeightMap()
-        self.GenerationParams.Seed.Value = math.random(-200_000, 200_000)
-        print(self.GenerationParams.Seed.Value)
-        task.wait(10)
-    end
+    -- for i = 1, 200_000 do
+    --     self: GenerateHeightMap()
+    --     self.GenerationParams.Seed.Value = i * 3--math.random(-200_000, 200_000)
+    --     print(self.GenerationParams.Seed.Value)
+    --     task.wait(1)
+    -- end
 end
 
 
@@ -190,24 +193,6 @@ local function FBM(x, z, seed, amplitude, octaves, persistence, frequency, lacun
     end
     return result/resultScale
 end
-
-
-
--- S shaped function to generate square filter that'll remove edges of the map
-local function GenerateSquareFallOff(x, z, mapSize, offset, smoothness)
-    -- Normalization of values
-    local widthFallOff = math.abs(x/mapSize * 2 - 1)
-    local lengthFallOff = math.abs(z/mapSize * 2 - 1)
-    
-    -- Get the closest to one
-    local fallOffResult = math.clamp(math.max(widthFallOff, lengthFallOff), 0, 1)
-
-    local a = smoothness
-    local b = offset
-    local value = fallOffResult
-    return math.pow(value, a)/(math.pow(value, a)+math.pow(b - b * value, a))
-end
-
 
 --+ <|===============  PUBLIC FUNCTIONS  ===============|>
 --!//TODO ADD SET GENERATION PARAMS METHOD!
@@ -252,10 +237,17 @@ function MapGenerationService:GenerateHeightMap()
             self.GenerationParams.Lacunarity.Value, 
             self.GenerationParams.Gain.Value, 
             self.GenerationParams.TerrainScale.Value
-        )
+        ) 
 
-        noiseVal -= GenerateSquareFallOff(x, z, self.GenerationParams.MapSize.Value, self.GenerationParams.FallOffOffset.Value, self.GenerationParams.FallOffSmoothness.Value)
-        noiseVal = math.clamp(noiseVal, 0, 1)
+        noiseVal -= self.TerrainMasks.GetMask(self.GenerationParams.TerrainMask.Value, 
+            x, 
+            z, 
+            self.GenerationParams.MapSize.Value, 
+            self.GenerationParams.FallOffOffset.Value, 
+            self.GenerationParams.FallOffSmoothness.Value, 
+            self.GenerationParams.MaskThreshold.Value
+        ) 
+        noiseVal = math.clamp(noiseVal, 0, 1) 
         
         --# Tile biome appearance setting 
         for index, terrain in ipairs(self.Terrains) do
