@@ -141,12 +141,12 @@ function MapGenerationService:KnitInit()
     self.GenerationParams.Octaves.Value      = 8
     self.GenerationParams.TerrainScale.Value = 60
     self.GenerationParams.Persistance.Value  = 1
-    self.GenerationParams.Lacunarity.Value   = 0.525
-    self.GenerationParams.Gain.Value   = 0.48
+    self.GenerationParams.Lacunarity.Value   = 0.49
+    self.GenerationParams.Gain.Value   = 0.525
 
 
     self.GenerationParams.MaskThreshold.Value     = 100
-    self.GenerationParams.TerrainMask.Value       = 3
+    self.GenerationParams.TerrainMask.Value       = 5
     self.GenerationParams.FallOffOffset.Value     = 11
     self.GenerationParams.FallOffSmoothness.Value = 3
     
@@ -196,7 +196,6 @@ end
 
 --+ <|===============  PUBLIC FUNCTIONS  ===============|>
 --!//TODO ADD SET GENERATION PARAMS METHOD!
-
 function MapGenerationService:GenerateTileSet()
     local params: table = self.GenerationParams
 
@@ -214,11 +213,12 @@ function MapGenerationService:GenerateTileSet()
 
             Tile:SetAttribute("XPos", x)
             Tile:SetAttribute("ZPos", z)
-            
             Tile.Parent = workspace.Map
         end
     end
 end
+
+
 
 
 function MapGenerationService:GenerateHeightMap()

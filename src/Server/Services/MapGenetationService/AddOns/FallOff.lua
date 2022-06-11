@@ -77,7 +77,7 @@ function FallOffMap.GetFourCornersMask(value1: number, value2: number, theMapSiz
     local widthFallOff = math.abs(value1/theMapSize * 2 - 1)
     local lengthFallOff = math.abs(value2/theMapSize * 2 - 1) 
     
-    local result = math.clamp(((1- widthFallOff  - lengthFallOff)^2)/aThreshold * THRESHOLD_SCALE, 0, 1)  -- inner diamond with corners cut or "four corners"
+    local result = math.clamp(((1 - widthFallOff  - lengthFallOff)^2)/aThreshold * THRESHOLD_SCALE, 0, 1)  -- inner diamond with corners cut or "four corners"
     return result
 end
 
